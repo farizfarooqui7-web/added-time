@@ -1,0 +1,1400 @@
+[
+  {
+    "id": "wc_country_ending_in_o",
+    "count": 5,
+    "prompt": "Name a country that has played in a FIFA Men's World Cup whose name ends in the letter O",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "ballon_dor_starts_with_r",
+    "count": 8,
+    "prompt": "Name a Ballon d'Or winner whose surname or single name starts with the letter R",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "club_with_city_in_name",
+    "count": 10,
+    "prompt": "Name an English football club with the word \"City\" in its official name that has played in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "leicester_2016_squad",
+    "count": 16,
+    "prompt": "Name a footballer who made at least one Premier League appearance for Leicester City in their 2015-16 title-winning season",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "arsenal_invincibles",
+    "count": 17,
+    "prompt": "Name a footballer who made at least one Premier League appearance for Arsenal during the 2003-04 \"Invincibles\" season",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "liverpool_2005_istanbul_xi",
+    "count": 11,
+    "prompt": "Name a footballer who started for Liverpool in the 2005 UEFA Champions League Final in Istanbul",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "ballon_dor_1990s",
+    "count": 10,
+    "prompt": "Name a male footballer who won the Ballon d'Or in the 1990s",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "golden_boy_before_2015",
+    "count": 11,
+    "prompt": "Name a footballer who won the European Golden Boy award before 2015",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "scored_2010_world_cup",
+    "count": 13,
+    "prompt": "Name a footballer who scored a goal at the 2010 FIFA World Cup in South Africa",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "ancelotti_clubs",
+    "count": 10,
+    "prompt": "Name a football club managed by Carlo Ancelotti",
+    "category": "Cult Managers"
+  },
+  {
+    "id": "man_utd_no_7_shirts",
+    "count": 10,
+    "prompt": "Name a footballer who wore the number 7 shirt for Manchester United in the Premier League era",
+    "category": "Club Connections"
+  },
+  {
+    "id": "played_for_both_man_utd_arsenal",
+    "count": 8,
+    "prompt": "Name a footballer who played competitive senior matches for both Manchester United and Arsenal",
+    "category": "Club Connections"
+  },
+  {
+    "id": "played_for_both_liverpool_man_city",
+    "count": 11,
+    "prompt": "Name a footballer who played competitive senior matches for both Liverpool and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "african_champions_league_winners",
+    "count": 14,
+    "prompt": "Name an African footballer who has won the UEFA Champions League",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "pl_goalkeeper_goalscorers",
+    "count": 6,
+    "prompt": "Name a goalkeeper who has scored a goal in the Premier League",
+    "category": "Stat Milestones & Records"
+  },
+  {
+    "id": "euros_winning_nations",
+    "count": 10,
+    "prompt": "Name a country that has won the UEFA European Championship",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "puskas_award_winners",
+    "count": 13,
+    "prompt": "Name a footballer who has won the FIFA Puskás Award for the best goal of the year",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "italian_clubs_won_serie_a",
+    "count": 13,
+    "prompt": "Name an Italian football club that has won Serie A",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "won_wc_ucl_ballon_dor",
+    "count": 10,
+    "prompt": "Name a male footballer who won the FIFA World Cup, UEFA Champions League, and Ballon d'Or in their career",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "ucl_with_two_clubs",
+    "count": 12,
+    "prompt": "Name a male footballer who won the UEFA Champions League or European Cup with at least two different clubs",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "both_real_madrid_barcelona",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Real Madrid and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "wc_host_nations",
+    "count": 14,
+    "prompt": "Name a country that has hosted or co-hosted a Men's FIFA World Cup tournament",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "dutch_players_premier_league",
+    "count": 12,
+    "prompt": "Name a Dutch footballer who has played in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "world_cup_hat_trick",
+    "count": 12,
+    "prompt": "Name a footballer who has scored a hat-trick in a FIFA Men's World Cup match",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "french_world_cup_winners_2018",
+    "count": 13,
+    "prompt": "Name a footballer who was part of France's 23-man squad that won the 2018 FIFA World Cup",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "south_american_copa_america_winners",
+    "count": 8,
+    "prompt": "Name a country that has won the CONMEBOL Copa América",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "bundesliga_champions",
+    "count": 12,
+    "prompt": "Name a football club that has won the German Bundesliga",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "no_10_barcelona_premier_league",
+    "count": 10,
+    "prompt": "Name a footballer who has worn the number 10 shirt for FC Barcelona in competitive matches",
+    "category": "Club Connections"
+  },
+  {
+    "id": "champions_league_final_stadiums",
+    "count": 12,
+    "prompt": "Name a stadium that has hosted a UEFA Champions League or European Cup final",
+    "category": "Stadiums & Venues"
+  },
+  {
+    "id": "african_country_world_cup_quarterfinal",
+    "count": 4,
+    "prompt": "Name an African country that has reached at least the quarter-finals of a FIFA Men's World Cup",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "portuguese_players_premier_league",
+    "count": 10,
+    "prompt": "Name a Portuguese footballer who has scored at least 15 goals in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "clubs_coached_by_mourinho",
+    "count": 10,
+    "prompt": "Name a football club managed by José Mourinho in his senior managerial career",
+    "category": "Cult Managers"
+  },
+  {
+    "id": "premier_league_golden_boot_single_season",
+    "count": 13,
+    "prompt": "Name a footballer who has won the Premier League Golden Boot",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "both_milan_and_inter",
+    "count": 11,
+    "prompt": "Name a footballer who played senior competitive matches for both AC Milan and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "treble_winning_clubs_europe",
+    "count": 8,
+    "prompt": "Name a European football club that has won the continental European treble",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "asian_players_premier_league",
+    "count": 10,
+    "prompt": "Name an Asian footballer who has scored at least one goal in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "ballon_dor_countries",
+    "count": 14,
+    "prompt": "Name a country whose players have won at least one Men's Ballon d'Or award",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "both_barcelona_and_bayern",
+    "count": 9,
+    "prompt": "Name a footballer who played senior competitive matches for both FC Barcelona and Bayern Munich",
+    "category": "Club Connections"
+  },
+  {
+    "id": "wc_winning_captains",
+    "count": 13,
+    "prompt": "Name a footballer who captained his nation to a Men's FIFA World Cup title",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "both_chelsea_and_arsenal",
+    "count": 13,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Arsenal",
+    "category": "Club Connections"
+  },
+  {
+    "id": "south_american_ballon_dor_podium",
+    "count": 9,
+    "prompt": "Name a South American footballer who finished in the top 3 of the Ballon d'Or voting",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "defenders_won_pl_player_of_the_season",
+    "count": 4,
+    "prompt": "Name a defender who has won the Premier League Player of the Season award",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "clubs_in_four_different_countries_zlatan",
+    "count": 9,
+    "prompt": "Name a club Zlatan Ibrahimović played for in his senior career",
+    "category": "Club Connections"
+  },
+  {
+    "id": "belgian_players_premier_league",
+    "count": 8,
+    "prompt": "Name a Belgian footballer who has won the Premier League title",
+    "category": "Club Connections"
+  },
+  {
+    "id": "world_cup_final_penalty_shootouts",
+    "count": 4,
+    "prompt": "Name a country that has been involved in a FIFA Men's World Cup Final penalty shootout",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "managers_ucl_winners",
+    "count": 16,
+    "prompt": "Name a football manager who has won the UEFA Champions League or European Cup",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "french_scorers_pl_20",
+    "count": 17,
+    "prompt": "Name a French footballer who has scored at least 20 Premier League goals",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "dutch_players_barcelona",
+    "count": 16,
+    "prompt": "Name a Dutch footballer who has played for FC Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "world_cup_final_scorers",
+    "count": 18,
+    "prompt": "Name a footballer who has scored a goal in a FIFA Men's World Cup Final",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "african_scorers_pl_30",
+    "count": 16,
+    "prompt": "Name an African footballer who has scored at least 30 Premier League goals",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "uefa_cup_europa_league_winners",
+    "count": 17,
+    "prompt": "Name a football club that has won the UEFA Cup or UEFA Europa League",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "both_world_cup_and_ucl_winners",
+    "count": 16,
+    "prompt": "Name a footballer who has won both the FIFA World Cup and the UEFA Champions League or European Cup",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "england_100_caps",
+    "count": 10,
+    "prompt": "Name a male footballer who has earned 100 or more caps for the England national team",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "spain_100_caps",
+    "count": 13,
+    "prompt": "Name a male footballer who has earned 100 or more caps for the Spain national team",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "real_madrid_and_inter_milan",
+    "count": 14,
+    "prompt": "Name a footballer who has played for both Real Madrid and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "brazilians_in_serie_a",
+    "count": 15,
+    "prompt": "Name a Brazilian footballer who has played in the Italian Serie A",
+    "category": "Club Connections"
+  },
+  {
+    "id": "fa_cup_winners_outside_big_six",
+    "count": 15,
+    "prompt": "Name an English football club outside the \"Big Six\" that has won the FA Cup",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "pfa_poty_winners",
+    "count": 15,
+    "prompt": "Name a footballer who has won the PFA Players' Player of the Year award",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "portuguese_scorers_pl_10",
+    "count": 12,
+    "prompt": "Name a Portuguese footballer who has scored at least 10 Premier League goals",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "bayern_munich_world_cup_winners",
+    "count": 14,
+    "prompt": "Name a footballer who won the FIFA World Cup while playing for FC Bayern Munich",
+    "category": "Club Connections"
+  },
+  {
+    "id": "copa_libertadores_winning_clubs",
+    "count": 16,
+    "prompt": "Name a football club that has won the Copa Libertadores",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "international_goals_50_plus",
+    "count": 16,
+    "prompt": "Name a male footballer who has scored 50 or more international goals",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "italians_in_premier_league",
+    "count": 15,
+    "prompt": "Name an Italian footballer who has played in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "ucl_knockout_hat_tricks",
+    "count": 14,
+    "prompt": "Name a footballer who has scored a hat-trick in the UEFA Champions League knockout stages",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "argentine_ucl_scorers_15_plus",
+    "count": 12,
+    "prompt": "Name an Argentine footballer who has scored at least 15 goals in the UEFA Champions League",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "both_real_madrid_and_manchester_united",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Real Madrid and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "famous_stadiums_capacity_over_70k",
+    "count": 12,
+    "prompt": "Name an iconic football stadium in Europe with a capacity of over 70,000 spectators",
+    "category": "Stadium Cathedrals"
+  },
+  {
+    "id": "man_utd_1999_treble_starting_xi",
+    "count": 11,
+    "prompt": "Name a footballer who started for Manchester United in the 1999 UEFA Champions League Final against Bayern Munich",
+    "category": "Historic Finals"
+  },
+  {
+    "id": "chelsea_2012_munich_final_xi",
+    "count": 11,
+    "prompt": "Name a footballer who started for Chelsea in the 2012 UEFA Champions League Final against Bayern Munich",
+    "category": "Historic Finals"
+  },
+  {
+    "id": "spain_2010_world_cup_final_xi",
+    "count": 11,
+    "prompt": "Name a footballer who started for Spain in the 2010 FIFA World Cup Final against Netherlands",
+    "category": "World Cup Legends"
+  },
+  {
+    "id": "germany_2014_world_cup_final_xi",
+    "count": 11,
+    "prompt": "Name a footballer who started for Germany in the 2014 FIFA World Cup Final against Argentina",
+    "category": "World Cup Legends"
+  },
+  {
+    "id": "premier_league_clubs_beginning_with_b",
+    "count": 10,
+    "prompt": "Name a football club beginning with the letter B that has played in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "premier_league_clubs_beginning_with_w",
+    "count": 6,
+    "prompt": "Name a football club beginning with the letter W that has played in the Premier League",
+    "category": "Club Connections"
+  },
+  {
+    "id": "ballon_dor_winners_with_m",
+    "count": 6,
+    "prompt": "Name a Ballon d'Or winner whose surname or single name starts with the letter M",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "ballon_dor_winners_with_b",
+    "count": 7,
+    "prompt": "Name a Ballon d'Or winner whose surname starts with the letter B",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "world_cup_winners_surnames_ending_in_i",
+    "count": 9,
+    "prompt": "Name a FIFA Men's World Cup winning player whose surname ends in the letter I",
+    "category": "World Cup Legends"
+  },
+  {
+    "id": "top_flight_football_boots_brands",
+    "count": 12,
+    "prompt": "Name an official sportswear brand that has manufactured football boots worn by professionals",
+    "category": "Equipment & Brands"
+  },
+  {
+    "id": "champions_league_winning_goalkeepers",
+    "count": 16,
+    "prompt": "Name a goalkeeper who started and won a UEFA Champions League Final (1992-present)",
+    "category": "Champions League"
+  },
+  {
+    "id": "both_chelsea_and_liverpool",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_barcelona_and_inter_milan",
+    "count": 18,
+    "prompt": "Name a footballer who played senior competitive matches for both Barcelona and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_juventus_and_real_madrid",
+    "count": 16,
+    "prompt": "Name a footballer who played senior competitive matches for both Juventus and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_dortmund",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Borussia Dortmund",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_man_utd_and_man_city",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Manchester United and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_arsenal_and_man_city",
+    "count": 17,
+    "prompt": "Name a footballer who played senior competitive matches for both Arsenal and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_chelsea_and_man_city",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_barcelona_and_juventus",
+    "count": 15,
+    "prompt": "Name a footballer who played senior competitive matches for both Barcelona and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_tottenham_and_real_madrid",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Tottenham Hotspur and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_liverpool_and_real_madrid",
+    "count": 11,
+    "prompt": "Name a footballer who played senior competitive matches for both Liverpool and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ac_milan_and_real_madrid",
+    "count": 19,
+    "prompt": "Name a footballer who played senior competitive matches for both AC Milan and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_inter_and_man_utd",
+    "count": 13,
+    "prompt": "Name a footballer who played senior competitive matches for both Inter Milan and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_valencia_and_barcelona",
+    "count": 22,
+    "prompt": "Name a footballer who played senior competitive matches for both Valencia and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_sevilla_and_barcelona",
+    "count": 21,
+    "prompt": "Name a footballer who played senior competitive matches for both Sevilla and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ajax_and_barcelona",
+    "count": 22,
+    "prompt": "Name a footballer who played senior competitive matches for both Ajax and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_everton_and_man_utd",
+    "count": 18,
+    "prompt": "Name a footballer who played senior competitive matches for both Everton and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_aston_villa_and_man_city",
+    "count": 18,
+    "prompt": "Name a footballer who played senior competitive matches for both Aston Villa and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_newcastle_and_man_utd",
+    "count": 11,
+    "prompt": "Name a footballer who played senior competitive matches for both Newcastle United and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_tottenham_and_man_utd",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Tottenham Hotspur and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_man_utd",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_roma_and_liverpool",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both AS Roma and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_arsenal_and_juventus",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Arsenal and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_dortmund_and_arsenal",
+    "count": 6,
+    "prompt": "Name a footballer who played senior competitive matches for both Borussia Dortmund and Arsenal",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_real_madrid",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_milan_and_psg",
+    "count": 6,
+    "prompt": "Name a footballer who played senior competitive matches for both AC Milan and Paris Saint-Germain",
+    "category": "Club Connections"
+  },
+  {
+    "id": "brazilians_played_for_real_madrid",
+    "count": 21,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_played_for_barcelona",
+    "count": 18,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Barcelona",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "argentines_played_for_inter_milan",
+    "count": 26,
+    "prompt": "Name an Argentine footballer who played senior competitive matches for Inter Milan",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "argentines_played_for_barcelona",
+    "count": 10,
+    "prompt": "Name an Argentine footballer who played senior competitive matches for Barcelona",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_played_for_arsenal",
+    "count": 25,
+    "prompt": "Name a French footballer who played senior competitive matches for Arsenal",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "dutch_played_for_ajax",
+    "count": 60,
+    "prompt": "Name a Dutch footballer who played senior competitive matches for Ajax",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_played_for_chelsea",
+    "count": 8,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_played_for_man_city",
+    "count": 18,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Manchester City",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "italians_played_for_chelsea",
+    "count": 11,
+    "prompt": "Name an Italian footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "germans_played_for_bayern",
+    "count": 54,
+    "prompt": "Name a German footballer who played senior competitive matches for Bayern Munich",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "portuguese_played_for_wolves",
+    "count": 16,
+    "prompt": "Name a Portuguese footballer who played senior competitive matches for Wolverhampton Wanderers",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_played_for_chelsea",
+    "count": 15,
+    "prompt": "Name a French footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_played_for_chelsea",
+    "count": 11,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_played_for_man_city",
+    "count": 9,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Manchester City",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "played_in_pl_la_liga_serie_a",
+    "count": 65,
+    "prompt": "Name a footballer who played for top clubs in the Premier League, La Liga, and Serie A",
+    "category": "Globetrotters"
+  },
+  {
+    "id": "argentines_atletico_madrid",
+    "count": 23,
+    "prompt": "Name an Argentine footballer who played senior competitive matches for Atlético Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_ac_milan",
+    "count": 25,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for AC Milan",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_inter_milan",
+    "count": 21,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Inter Milan",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "dutch_real_madrid",
+    "count": 7,
+    "prompt": "Name a Dutch footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_juventus",
+    "count": 21,
+    "prompt": "Name a French footballer who played senior competitive matches for Juventus",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "germans_real_madrid",
+    "count": 8,
+    "prompt": "Name a German footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_liverpool",
+    "count": 17,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Liverpool",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_arsenal",
+    "count": 13,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Arsenal",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "portuguese_real_madrid",
+    "count": 6,
+    "prompt": "Name a Portuguese footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "portuguese_man_utd",
+    "count": 5,
+    "prompt": "Name a Portuguese footballer who played senior competitive matches for Manchester United",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "english_real_madrid",
+    "count": 7,
+    "prompt": "Name an English footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "croatians_real_madrid",
+    "count": 5,
+    "prompt": "Name a Croatian footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "belgians_chelsea",
+    "count": 6,
+    "prompt": "Name a Belgian footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "uruguayans_atletico_madrid",
+    "count": 8,
+    "prompt": "Name an Uruguayan footballer who played senior competitive matches for Atlético Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "argentines_psg",
+    "count": 11,
+    "prompt": "Name an Argentine footballer who played senior competitive matches for Paris Saint-Germain",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_psg",
+    "count": 12,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Paris Saint-Germain",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_man_utd",
+    "count": 11,
+    "prompt": "Name a French footballer who played senior competitive matches for Manchester United",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "dutch_man_utd",
+    "count": 10,
+    "prompt": "Name a Dutch footballer who played senior competitive matches for Manchester United",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "both_chelsea_and_inter",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_roma_and_juventus",
+    "count": 36,
+    "prompt": "Name a footballer who played senior competitive matches for both AS Roma and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_sevilla_and_real_madrid",
+    "count": 17,
+    "prompt": "Name a footballer who played senior competitive matches for both Sevilla and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_valencia_and_real_madrid",
+    "count": 17,
+    "prompt": "Name a footballer who played senior competitive matches for both Valencia and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ajax_and_juventus",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Ajax and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ajax_and_ac_milan",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Ajax and AC Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ajax_and_inter_milan",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Ajax and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_everton_and_liverpool",
+    "count": 6,
+    "prompt": "Name a footballer who played senior competitive matches for both Everton and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_man_city_and_tottenham",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Manchester City and Tottenham Hotspur",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_arsenal_and_liverpool",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Arsenal and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_porto_and_chelsea",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both FC Porto and Chelsea",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_benfica_and_chelsea",
+    "count": 9,
+    "prompt": "Name a footballer who played senior competitive matches for both Benfica and Chelsea",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_sporting_and_man_utd",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Sporting CP and Manchester United",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_chelsea_and_juventus",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_chelsea",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Chelsea",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_juventus",
+    "count": 13,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "goalkeepers_man_utd",
+    "count": 18,
+    "prompt": "Name a goalkeeper who made senior appearances for Manchester United",
+    "category": "Position & Club"
+  },
+  {
+    "id": "goalkeepers_arsenal",
+    "count": 13,
+    "prompt": "Name a goalkeeper who made senior appearances for Arsenal",
+    "category": "Position & Club"
+  },
+  {
+    "id": "goalkeepers_chelsea",
+    "count": 14,
+    "prompt": "Name a goalkeeper who made senior appearances for Chelsea",
+    "category": "Position & Club"
+  },
+  {
+    "id": "goalkeepers_liverpool",
+    "count": 17,
+    "prompt": "Name a goalkeeper who made senior appearances for Liverpool",
+    "category": "Position & Club"
+  },
+  {
+    "id": "goalkeepers_real_madrid",
+    "count": 18,
+    "prompt": "Name a goalkeeper who made senior appearances for Real Madrid",
+    "category": "Position & Club"
+  },
+  {
+    "id": "goalkeepers_barcelona",
+    "count": 22,
+    "prompt": "Name a goalkeeper who made senior appearances for Barcelona",
+    "category": "Position & Club"
+  },
+  {
+    "id": "forwards_liverpool",
+    "count": 49,
+    "prompt": "Name a forward who played senior competitive matches for Liverpool",
+    "category": "Position & Club"
+  },
+  {
+    "id": "forwards_arsenal",
+    "count": 48,
+    "prompt": "Name a forward who played senior competitive matches for Arsenal",
+    "category": "Position & Club"
+  },
+  {
+    "id": "forwards_chelsea",
+    "count": 58,
+    "prompt": "Name a forward who played senior competitive matches for Chelsea",
+    "category": "Position & Club"
+  },
+  {
+    "id": "forwards_man_city",
+    "count": 46,
+    "prompt": "Name a forward who played senior competitive matches for Manchester City",
+    "category": "Position & Club"
+  },
+  {
+    "id": "defenders_chelsea",
+    "count": 45,
+    "prompt": "Name a defender who played senior competitive matches for Chelsea",
+    "category": "Position & Club"
+  },
+  {
+    "id": "defenders_man_utd",
+    "count": 44,
+    "prompt": "Name a defender who played senior competitive matches for Manchester United",
+    "category": "Position & Club"
+  },
+  {
+    "id": "defenders_liverpool",
+    "count": 55,
+    "prompt": "Name a defender who played senior competitive matches for Liverpool",
+    "category": "Position & Club"
+  },
+  {
+    "id": "defenders_arsenal",
+    "count": 49,
+    "prompt": "Name a defender who played senior competitive matches for Arsenal",
+    "category": "Position & Club"
+  },
+  {
+    "id": "premier_league_clubs_london",
+    "count": 10,
+    "prompt": "Name a football club based in London that has played in the Premier League",
+    "category": "London Football"
+  },
+  {
+    "id": "world_cup_golden_boot_winners",
+    "count": 14,
+    "prompt": "Name a footballer who won the FIFA World Cup Golden Boot (or top goalscorer award)",
+    "category": "World Cup Legends"
+  },
+  {
+    "id": "premier_league_player_of_the_season_winners",
+    "count": 15,
+    "prompt": "Name a footballer who won the Premier League Player of the Season award",
+    "category": "Individual Awards"
+  },
+  {
+    "id": "world_cup_finalists_nations",
+    "count": 13,
+    "prompt": "Name a country that has reached the final of a Men's FIFA World Cup",
+    "category": "World Cup & Nations"
+  },
+  {
+    "id": "nations_won_copa_america",
+    "count": 8,
+    "prompt": "Name a nation that has won the CONMEBOL Copa America",
+    "category": "International Trophies"
+  },
+  {
+    "id": "nations_won_afcon",
+    "count": 14,
+    "prompt": "Name a country that has won the Africa Cup of Nations (AFCON)",
+    "category": "International Trophies"
+  },
+  {
+    "id": "premier_league_20_goals_season_english",
+    "count": 17,
+    "prompt": "Name an English footballer who has scored at least 20 goals in a single Premier League season",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "spanish_clubs_won_la_liga",
+    "count": 9,
+    "prompt": "Name a Spanish football club that has won the La Liga title",
+    "category": "Club Trophies"
+  },
+  {
+    "id": "italian_clubs_won_coppa_italia_5_times",
+    "count": 8,
+    "prompt": "Name an Italian football club that has won the Coppa Italia at least 5 times",
+    "category": "Club Trophies"
+  },
+  {
+    "id": "french_clubs_won_ligue_1",
+    "count": 13,
+    "prompt": "Name a French football club that has won the Ligue 1 championship",
+    "category": "Club Trophies"
+  },
+  {
+    "id": "managers_won_premier_league",
+    "count": 11,
+    "prompt": "Name a manager who has won the English Premier League title",
+    "category": "Masterminds"
+  },
+  {
+    "id": "played_for_both_bayern_and_psg",
+    "count": 6,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Paris Saint-Germain",
+    "category": "Club Connections"
+  },
+  {
+    "id": "played_for_both_dortmund_and_liverpool",
+    "count": 5,
+    "prompt": "Name a footballer who played senior competitive matches for both Borussia Dortmund and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "shirt_number_10_real_madrid",
+    "count": 10,
+    "prompt": "Name a footballer who officially wore the number 10 shirt for Real Madrid in the Champions League or La Liga era",
+    "category": "Iconic Shirts"
+  },
+  {
+    "id": "shirt_number_10_barcelona",
+    "count": 8,
+    "prompt": "Name a footballer who officially wore the number 10 shirt for FC Barcelona in the modern era",
+    "category": "Iconic Shirts"
+  },
+  {
+    "id": "goalkeepers_with_over_100_premier_league_clean_sheets",
+    "count": 14,
+    "prompt": "Name a goalkeeper who kept at least 100 clean sheets in Premier League history",
+    "category": "Safe Hands"
+  },
+  {
+    "id": "both_sevilla_and_man_city",
+    "count": 5,
+    "prompt": "Name a footballer who played senior competitive matches for both Sevilla and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_valencia_and_man_city",
+    "count": 9,
+    "prompt": "Name a footballer who played senior competitive matches for both Valencia and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_inter_and_liverpool",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Inter Milan and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_milan_and_liverpool",
+    "count": 9,
+    "prompt": "Name a footballer who played senior competitive matches for both AC Milan and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_lazio_and_inter",
+    "count": 33,
+    "prompt": "Name a footballer who played senior competitive matches for both Lazio and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_fiorentina_and_juventus",
+    "count": 34,
+    "prompt": "Name a footballer who played senior competitive matches for both Fiorentina and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_parma_and_juventus",
+    "count": 24,
+    "prompt": "Name a footballer who played senior competitive matches for both Parma and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_atletico_and_barcelona",
+    "count": 18,
+    "prompt": "Name a footballer who played senior competitive matches for both Atlético Madrid and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_atletico_and_inter",
+    "count": 15,
+    "prompt": "Name a footballer who played senior competitive matches for both Atlético Madrid and Inter Milan",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_atletico_and_man_city",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Atlético Madrid and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_monaco_and_barcelona",
+    "count": 15,
+    "prompt": "Name a footballer who played senior competitive matches for both AS Monaco and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_porto_and_real_madrid",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both FC Porto and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_benfica_and_real_madrid",
+    "count": 9,
+    "prompt": "Name a footballer who played senior competitive matches for both Benfica and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_sporting_and_real_madrid",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Sporting CP and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_ajax_and_real_madrid",
+    "count": 7,
+    "prompt": "Name a footballer who played senior competitive matches for both Ajax and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_leicester_and_chelsea",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Leicester City and Chelsea",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_southampton_and_liverpool",
+    "count": 12,
+    "prompt": "Name a footballer who played senior competitive matches for both Southampton and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_fulham_and_liverpool",
+    "count": 15,
+    "prompt": "Name a footballer who played senior competitive matches for both Fulham and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_aston_villa_and_liverpool",
+    "count": 20,
+    "prompt": "Name a footballer who played senior competitive matches for both Aston Villa and Liverpool",
+    "category": "Club Connections"
+  },
+  {
+    "id": "argentines_man_city",
+    "count": 8,
+    "prompt": "Name an Argentine footballer who played senior competitive matches for Manchester City",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_liverpool",
+    "count": 10,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Liverpool",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "brazilians_arsenal",
+    "count": 10,
+    "prompt": "Name a Brazilian footballer who played senior competitive matches for Arsenal",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "dutch_liverpool",
+    "count": 10,
+    "prompt": "Name a Dutch footballer who played senior competitive matches for Liverpool",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "germans_arsenal",
+    "count": 7,
+    "prompt": "Name a German footballer who played senior competitive matches for Arsenal",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "germans_chelsea",
+    "count": 8,
+    "prompt": "Name a German footballer who played senior competitive matches for Chelsea",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "germans_liverpool",
+    "count": 6,
+    "prompt": "Name a German footballer who played senior competitive matches for Liverpool",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_barcelona",
+    "count": 15,
+    "prompt": "Name a French footballer who played senior competitive matches for Barcelona",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "french_real_madrid",
+    "count": 15,
+    "prompt": "Name a French footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "italians_juventus",
+    "count": 108,
+    "prompt": "Name an Italian footballer who played senior competitive matches for Juventus",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "italians_ac_milan",
+    "count": 92,
+    "prompt": "Name an Italian footballer who played senior competitive matches for AC Milan",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "italians_inter_milan",
+    "count": 79,
+    "prompt": "Name an Italian footballer who played senior competitive matches for Inter Milan",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_real_madrid",
+    "count": 81,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Real Madrid",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "spanish_barcelona",
+    "count": 105,
+    "prompt": "Name a Spanish footballer who played senior competitive matches for Barcelona",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "english_man_utd",
+    "count": 53,
+    "prompt": "Name an English footballer who played senior competitive matches for Manchester United",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "english_liverpool",
+    "count": 56,
+    "prompt": "Name an English footballer who played senior competitive matches for Liverpool",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "english_arsenal",
+    "count": 49,
+    "prompt": "Name an English footballer who played senior competitive matches for Arsenal",
+    "category": "Nationality & Club"
+  },
+  {
+    "id": "champions_league_final_referees",
+    "count": 11,
+    "prompt": "Name a match referee who took charge of a UEFA Champions League Final (2000-present)",
+    "category": "Whistleblowers"
+  },
+  {
+    "id": "champions_league_final_goalscorers",
+    "count": 23,
+    "prompt": "Name a footballer who has scored at least one goal in a UEFA Champions League Final (1993-present)",
+    "category": "Trophy Vault"
+  },
+  {
+    "id": "world_cup_final_goalscorers",
+    "count": 20,
+    "prompt": "Name a male footballer who has scored a goal in a FIFA Men's World Cup Final",
+    "category": "World Cup Legends"
+  },
+  {
+    "id": "premier_league_100_goals",
+    "count": 33,
+    "prompt": "Name a footballer who has scored at least 100 Premier League goals",
+    "category": "Goal Machines"
+  },
+  {
+    "id": "both_chelsea_and_real_madrid",
+    "count": 14,
+    "prompt": "Name a footballer who played senior competitive matches for both Chelsea and Real Madrid",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_barcelona_and_chelsea",
+    "count": 16,
+    "prompt": "Name a footballer who played senior competitive matches for both Barcelona and Chelsea",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_real_madrid_and_juventus",
+    "count": 11,
+    "prompt": "Name a footballer who played senior competitive matches for both Real Madrid and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_bayern_and_dortmund",
+    "count": 10,
+    "prompt": "Name a footballer who played senior competitive matches for both Bayern Munich and Borussia Dortmund",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_liverpool_and_barcelona",
+    "count": 8,
+    "prompt": "Name a footballer who played senior competitive matches for both Liverpool and Barcelona",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_arsenal_and_man_city",
+    "count": 12,
+    "prompt": "Name a footballer who played senior competitive matches for both Arsenal and Manchester City",
+    "category": "Club Connections"
+  },
+  {
+    "id": "both_milan_and_juventus",
+    "count": 12,
+    "prompt": "Name a footballer who played senior competitive matches for both AC Milan and Juventus",
+    "category": "Club Connections"
+  },
+  {
+    "id": "arsenal_no_14",
+    "count": 6,
+    "prompt": "Name a footballer who officially wore the number 14 shirt for Arsenal in the Premier League era",
+    "category": "Iconic Shirts"
+  },
+  {
+    "id": "real_madrid_no_9",
+    "count": 11,
+    "prompt": "Name a footballer who officially wore the number 9 shirt for Real Madrid",
+    "category": "Iconic Shirts"
+  },
+  {
+    "id": "barcelona_no_10",
+    "count": 11,
+    "prompt": "Name a footballer who officially wore the number 10 shirt for FC Barcelona in La Liga",
+    "category": "Iconic Shirts"
+  },
+  {
+    "id": "countries_hosted_world_cup",
+    "count": 18,
+    "prompt": "Name a nation that has hosted or co-hosted at least one FIFA Men's World Cup tournament",
+    "category": "World Cup & Nations"
+  }
+]
