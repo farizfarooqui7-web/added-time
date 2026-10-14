@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -418,6 +418,88 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     }
     handlePlayAgain();
   };
+
+  // Proceed to Next Question or Final Scoreboard
+  const handleProceedNextQuestion = useCallback(() => {
+    if (!isPostRoundModalOpen) return;
+
+    if (!isMultiplayer) {
+      soundFX.playClick(750);
+      setIsPostRoundModalOpen(false);
+      setUserFinishedRound(false);
+      setOpponentStrikeFinished(false);
+      setOpponentLockedIn(false);
+      if (currentRoundIdx + 1 < prompts.length) {
+        setDiveState('ascending');
+        window.setTimeout(() => {
+          setCurrentRoundIdx((prev) => prev + 1);
+          setDiveState('idle-surface');
+          setDisplayDepth(0);
+          setInputVal('');
+          setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+          window.setTimeout(() => inputRef.current?.focus(), 150);
+        }, 1200);
+      } else {
+        setDiveState('game-over');
+        soundFX.playVictoryFanfare();
+      }
+    } else if (!isHost) {
+      if (!guestHasClickedReady) {
+        soundFX.playClick(750);
+        sendAction('sidenetting_player_ready', { roundIdx: currentRoundIdx });
+        setGuestHasClickedReady(true);
+      }
+    } else {
+      soundFX.playClick(750);
+      setIsPostRoundModalOpen(false);
+      setUserFinishedRound(false);
+      setOpponentStrikeFinished(false);
+      setOpponentLockedIn(false);
+      setIsGuestReadyForNext(false);
+      if (currentRoundIdx + 1 < prompts.length) {
+        const nextRound = currentRoundIdx + 1;
+        sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
+        setDiveState('ascending');
+        window.setTimeout(() => {
+          setCurrentRoundIdx(nextRound);
+          setDiveState('idle-surface');
+          setDisplayDepth(0);
+          setInputVal('');
+          setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+          window.setTimeout(() => inputRef.current?.focus(), 150);
+        }, 1200);
+      } else {
+        sendAction('sidenetting_game_over', {});
+        setDiveState('game-over');
+        soundFX.playVictoryFanfare();
+      }
+    }
+  }, [
+    isPostRoundModalOpen,
+    isMultiplayer,
+    isHost,
+    guestHasClickedReady,
+    currentRoundIdx,
+    prompts.length,
+    config.timerSeconds,
+    sendAction,
+  ]);
+
+  // Keyboard shortcut: Press Enter while on Next Question / Scoreboard breakdown modal to proceed
+  useEffect(() => {
+    if (!isPostRoundModalOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleProceedNextQuestion();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPostRoundModalOpen, handleProceedNextQuestion]);
 
   // Ball Knower classification for endgame
   const avgScore =
@@ -1552,30 +1634,11 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
               {!isMultiplayer ? (
                 <button
                   type="button"
-                  onClick={() => {
-                    soundFX.playClick(750);
-                    setIsPostRoundModalOpen(false);
-                    setUserFinishedRound(false);
-                    setOpponentStrikeFinished(false);
-                    setOpponentLockedIn(false);
-                    if (currentRoundIdx + 1 < prompts.length) {
-                      setDiveState('ascending');
-                      window.setTimeout(() => {
-                        setCurrentRoundIdx((prev) => prev + 1);
-                        setDiveState('idle-surface');
-                        setDisplayDepth(0);
-                        setInputVal('');
-                        setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
-                        window.setTimeout(() => inputRef.current?.focus(), 150);
-                      }, 1200);
-                    } else {
-                      setDiveState('game-over');
-                      soundFX.playVictoryFanfare();
-                    }
-                  }}
+                  onClick={handleProceedNextQuestion}
                   className="w-full py-3.5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.4)] cursor-pointer"
                 >
                   <span>{currentRoundIdx + 1 < prompts.length ? 'NEXT QUESTION' : 'VIEW FINAL SCOREBOARD'}</span>
+                  <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 rounded font-mono font-bold ml-1">↵ ENTER</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               ) : !isHost ? (
@@ -1583,11 +1646,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                 <button
                   type="button"
                   disabled={guestHasClickedReady}
-                  onClick={() => {
-                    soundFX.playClick(750);
-                    sendAction('sidenetting_player_ready', { roundIdx: currentRoundIdx });
-                    setGuestHasClickedReady(true);
-                  }}
+                  onClick={handleProceedNextQuestion}
                   className={`w-full py-3.5 rounded-2xl font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
                     guestHasClickedReady
                       ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
@@ -1596,36 +1655,15 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                 >
                   <Check className="w-4 h-4" />
                   <span>{guestHasClickedReady ? 'READY : WAITING FOR HOST...' : 'READY FOR NEXT'}</span>
+                  {!guestHasClickedReady && (
+                    <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 rounded font-mono font-bold ml-1">↵ ENTER</span>
+                  )}
                 </button>
               ) : (
                 /* Host */
                 <button
                   type="button"
-                  onClick={() => {
-                    soundFX.playClick(750);
-                    setIsPostRoundModalOpen(false);
-                    setUserFinishedRound(false);
-                    setOpponentStrikeFinished(false);
-                    setOpponentLockedIn(false);
-                    setIsGuestReadyForNext(false);
-                    if (currentRoundIdx + 1 < prompts.length) {
-                      const nextRound = currentRoundIdx + 1;
-                      sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
-                      setDiveState('ascending');
-                      window.setTimeout(() => {
-                        setCurrentRoundIdx(nextRound);
-                        setDiveState('idle-surface');
-                        setDisplayDepth(0);
-                        setInputVal('');
-                        setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
-                        window.setTimeout(() => inputRef.current?.focus(), 150);
-                      }, 1200);
-                    } else {
-                      sendAction('sidenetting_game_over', {});
-                      setDiveState('game-over');
-                      soundFX.playVictoryFanfare();
-                    }
-                  }}
+                  onClick={handleProceedNextQuestion}
                   className={`w-full py-3.5 rounded-2xl font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
                     isGuestReadyForNext
                       ? 'bg-[#ccff00] hover:bg-[#d8ff33] text-black shadow-[0_0_25px_rgba(204,255,0,0.6)] animate-pulse cursor-pointer'
@@ -1641,6 +1679,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                       ? 'OPPONENT READY : FINAL RESULTS'
                       : 'VIEW FINAL RESULTS'}
                   </span>
+                  <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 rounded font-mono font-bold ml-1">↵ ENTER</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               )}

@@ -101,7 +101,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
       {/* Center: Absolute Pixel-Perfect Center "ADDED TIME" */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
         <div className="flex items-center gap-2 sm:gap-2.5 select-none group pointer-events-auto">
-          <span className="font-athletic font-black text-2xl sm:text-3xl md:text-4xl tracking-tight uppercase text-white drop-shadow-[0_2px_14px_rgba(255,255,255,0.22)] whitespace-nowrap">
+          <span className="font-athletic font-black text-2xl sm:text-3xl md:text-4xl tracking-tight uppercase text-white whitespace-nowrap">
             ADDED TIME
           </span>
           <div className="flex items-center px-1.5 sm:px-2 py-0.5 rounded bg-[#0a0d14] border-2 border-[#ff6b00] shadow-[0_0_16px_rgba(255,107,0,0.55)] shrink-0">
