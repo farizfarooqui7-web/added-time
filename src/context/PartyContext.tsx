@@ -405,7 +405,10 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       case 'game_event': {
-        setLastGameEvent(msg.payload);
+        setLastGameEvent({
+          ...msg.payload,
+          _eventId: msg.payload?._eventId || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        });
         break;
       }
 
@@ -996,6 +999,7 @@ export function useGameSync(targetModeId: string) {
     clearForfeit,
     sendGameAction,
     sendGameLeave,
+    leaveParty,
   } = useParty();
 
   const isMultiplayer = party.isActive && party.members.length > 1;
@@ -1026,6 +1030,7 @@ export function useGameSync(targetModeId: string) {
     myPlayerId,
     myPlayerName: playerName,
     opponent,
+    party,
     partyMembers: party.members,
     gameInitData: isMatchMode(gameInitData?.modeId) ? gameInitData : null,
     lastGameEvent: isMatchMode(lastGameEvent?.modeId) ? lastGameEvent : null,
@@ -1033,5 +1038,6 @@ export function useGameSync(targetModeId: string) {
     clearForfeit,
     sendAction,
     sendGameLeave,
+    leaveParty,
   };
 }

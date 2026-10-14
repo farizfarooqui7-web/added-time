@@ -49,12 +49,14 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     isHost,
     opponent,
     myPlayerId,
+    party,
     gameInitData,
     lastGameEvent,
     sendAction,
     playerForfeitEvent,
     clearForfeit,
     sendGameLeave,
+    leaveParty,
   } = useGameSync('side_netting');
 
   const [initialData] = useState(() => drawMatchPrompts(config.roundCount, []));
@@ -80,6 +82,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [opponentLockedIn, setOpponentLockedIn] = useState(false);
   const [opponentSubmission, setOpponentSubmission] = useState<SideNettingRoundSubmission | null>(null);
   const [opponentTotalScore, setOpponentTotalScore] = useState(0);
+  const [opponentStrikeFinished, setOpponentStrikeFinished] = useState(false);
 
   // Answer & Input state
   const [inputVal, setInputVal] = useState<string>('');
@@ -107,6 +110,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [guestHasClickedReady, setGuestHasClickedReady] = useState(false);
   const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
   const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
+  const lastProcessedEventIdRef = useRef<number | string | null>(null);
 
   const { handleCleanExit } = useArenaBackGuard({
     isMatchOver: diveState === 'game-over',
@@ -132,6 +136,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setOpponentLockedIn(false);
     setOpponentSubmission(null);
     setUserFinishedRound(false);
+    setOpponentStrikeFinished(false);
     setIsPostRoundModalOpen(false);
     setIsGuestReadyForNext(false);
     setGuestHasClickedReady(false);
@@ -146,6 +151,11 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     if (!isMultiplayer || !lastGameEvent) return;
     if (lastGameEvent.senderId === myPlayerId) return;
 
+    if (lastGameEvent._eventId && lastProcessedEventIdRef.current === lastGameEvent._eventId) {
+      return;
+    }
+    lastProcessedEventIdRef.current = lastGameEvent._eventId || null;
+
     if (lastGameEvent.event === 'sidenetting_lock_in') {
       const { roundIdx: evRound, submission } = lastGameEvent.data || {};
       if (evRound === currentRoundIdx && submission) {
@@ -153,17 +163,27 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         setOpponentSubmission(submission);
         setOpponentTotalScore((prev) => prev + (submission.score || 0));
       }
+    } else if (lastGameEvent.event === 'sidenetting_strike_finished') {
+      const { roundIdx: evRound } = lastGameEvent.data || {};
+      if (evRound === currentRoundIdx) {
+        setOpponentStrikeFinished(true);
+      }
     } else if (lastGameEvent.event === 'sidenetting_player_ready') {
       setIsGuestReadyForNext(true);
       soundFX.playSuccess();
     } else if (lastGameEvent.event === 'sidenetting_next_round') {
       const { nextRoundIdx } = lastGameEvent.data || {};
-      if (typeof nextRoundIdx === 'number') {
+      if (typeof nextRoundIdx === 'number' && nextRoundIdx > currentRoundIdx) {
         setIsPostRoundModalOpen(false);
         setDiveState('ascending');
         soundFX.playClick(750);
         window.setTimeout(() => {
           setCurrentRoundIdx(nextRoundIdx);
+          setDiveState('idle-surface');
+          setDisplayDepth(0);
+          setInputVal('');
+          setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+          window.setTimeout(() => inputRef.current?.focus(), 150);
         }, 1200);
       }
     } else if (lastGameEvent.event === 'sidenetting_game_over') {
@@ -176,18 +196,27 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     } else if (lastGameEvent.event === 'match_restart') {
       handlePlayAgain();
     }
-  }, [isMultiplayer, lastGameEvent, myPlayerId, currentRoundIdx]);
+  }, [isMultiplayer, lastGameEvent, myPlayerId, currentRoundIdx, config.timerSeconds]);
 
   // Open post-round breakdown when both players finish strike in multiplayer
   useEffect(() => {
     if (!isMultiplayer) return;
-    if (userFinishedRound && opponentLockedIn && diveState !== 'game-over') {
+    if (userFinishedRound && opponentStrikeFinished && diveState !== 'game-over') {
       const timer = window.setTimeout(() => {
         setIsPostRoundModalOpen(true);
       }, 700);
       return () => window.clearTimeout(timer);
     }
-  }, [isMultiplayer, userFinishedRound, opponentLockedIn, diveState]);
+  }, [isMultiplayer, userFinishedRound, opponentStrikeFinished, diveState]);
+
+  // Safety fallback: if opponent locked in, ensure post-round modal opens within 4s max even if packet lost
+  useEffect(() => {
+    if (!isMultiplayer || !opponentLockedIn || opponentStrikeFinished) return;
+    const fallbackTimer = window.setTimeout(() => {
+      setOpponentStrikeFinished(true);
+    }, 4000);
+    return () => window.clearTimeout(fallbackTimer);
+  }, [isMultiplayer, opponentLockedIn, opponentStrikeFinished]);
 
   // 2. ROUND TIMER
   useEffect(() => {
@@ -279,6 +308,11 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
           // Step D: Mark strike completed; wait for opponent in multiplayer or trigger post-round modal in solo
           setUserFinishedRound(true);
+          if (isMultiplayer) {
+            sendAction('sidenetting_strike_finished', {
+              roundIdx: currentRoundIdx,
+            });
+          }
 
           if (!isMultiplayer) {
             window.setTimeout(() => {
@@ -1424,7 +1458,14 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     setIsPostRoundModalOpen(false);
                     if (currentRoundIdx + 1 < prompts.length) {
                       setDiveState('ascending');
-                      window.setTimeout(() => setCurrentRoundIdx((prev) => prev + 1), 1200);
+                      window.setTimeout(() => {
+                        setCurrentRoundIdx((prev) => prev + 1);
+                        setDiveState('idle-surface');
+                        setDisplayDepth(0);
+                        setInputVal('');
+                        setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+                        window.setTimeout(() => inputRef.current?.focus(), 150);
+                      }, 1200);
                     } else {
                       setDiveState('game-over');
                       soundFX.playVictoryFanfare();
@@ -1462,9 +1503,17 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     soundFX.playClick(750);
                     setIsPostRoundModalOpen(false);
                     if (currentRoundIdx + 1 < prompts.length) {
-                      sendAction('sidenetting_next_round', { nextRoundIdx: currentRoundIdx + 1 });
+                      const nextRound = currentRoundIdx + 1;
+                      sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
                       setDiveState('ascending');
-                      window.setTimeout(() => setCurrentRoundIdx((prev) => prev + 1), 1200);
+                      window.setTimeout(() => {
+                        setCurrentRoundIdx(nextRound);
+                        setDiveState('idle-surface');
+                        setDisplayDepth(0);
+                        setInputVal('');
+                        setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+                        window.setTimeout(() => inputRef.current?.focus(), 150);
+                      }, 1200);
                     } else {
                       sendAction('sidenetting_game_over', {});
                       setDiveState('game-over');
@@ -1499,6 +1548,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -1509,6 +1561,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           setShowForfeitModal(false);
           handleCleanExit();
         }}

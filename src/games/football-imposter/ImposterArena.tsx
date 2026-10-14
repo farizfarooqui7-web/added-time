@@ -84,6 +84,8 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
     playerForfeitEvent,
     clearForfeit,
     sendGameLeave,
+    party,
+    leaveParty,
   } = useGameSync('football-imposter');
 
   const [secretPlayer, setSecretPlayer] = useState<ImposterSecretPlayer>(() => {
@@ -2255,6 +2257,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -2265,6 +2270,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           setShowForfeitModal(false);
           handleCleanExit();
         }}

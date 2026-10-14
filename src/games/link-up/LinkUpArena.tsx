@@ -62,6 +62,8 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     playerForfeitEvent,
     clearForfeit,
     sendGameLeave,
+    party,
+    leaveParty,
   } = useGameSync('link-up');
 
   const [roundNumber, setRoundNumber] = useState<number>(1);
@@ -1186,6 +1188,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -1196,6 +1201,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           setShowForfeitModal(false);
           handleCleanExit();
         }}

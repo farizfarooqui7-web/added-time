@@ -228,7 +228,7 @@ export function App() {
     setViewMode('hub');
     setActiveMatchConfig(null);
     clearForfeit();
-    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+    if (party.isActive && (party.roomCode?.startsWith('match_') || party.visibility === 'public')) {
       leaveParty();
     }
     window.history.replaceState(null, '', window.location.pathname);
@@ -250,7 +250,7 @@ export function App() {
     setViewMode('hub');
     setActiveLinkUpConfig(null);
     clearForfeit();
-    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+    if (party.isActive && (party.roomCode?.startsWith('match_') || party.visibility === 'public')) {
       leaveParty();
     }
     window.history.replaceState(null, '', window.location.pathname);
@@ -272,7 +272,7 @@ export function App() {
     setViewMode('hub');
     setActiveRecordBooksConfig(null);
     clearForfeit();
-    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+    if (party.isActive && (party.roomCode?.startsWith('match_') || party.visibility === 'public')) {
       leaveParty();
     }
     window.history.replaceState(null, '', window.location.pathname);
@@ -294,7 +294,7 @@ export function App() {
     setViewMode('hub');
     setActiveImposterConfig(null);
     clearForfeit();
-    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+    if (party.isActive && (party.roomCode?.startsWith('match_') || party.visibility === 'public')) {
       leaveParty();
     }
     window.history.replaceState(null, '', window.location.pathname);
@@ -316,7 +316,7 @@ export function App() {
     setViewMode('hub');
     setActiveSideNettingConfig(null);
     clearForfeit();
-    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+    if (party.isActive && (party.roomCode?.startsWith('match_') || party.visibility === 'public')) {
       leaveParty();
     }
     window.history.replaceState(null, '', window.location.pathname);

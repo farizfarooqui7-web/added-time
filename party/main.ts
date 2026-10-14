@@ -1000,6 +1000,12 @@ export class TopBinsServer extends Server {
                 reason: `${member?.name || 'Opponent'} forfeited the match.`,
               },
             });
+            if (isMatchRoom) {
+              this.sendToConn(conn, {
+                type: 'party_disbanded',
+                payload: { reason: 'Opponent forfeited. Match terminated.' },
+              });
+            }
           }
         }
         if (this.partyRoom?.currentGame) {
@@ -1048,12 +1054,10 @@ export class TopBinsServer extends Server {
     if (this.partyRoom.members.length === 0 || wasHost || isMatchRoom) {
       this.partyRoom = null;
       this.sharedMatchData = null;
-      if (!isMatchRoom) {
-        this.broadcastToRoom({
-          type: 'party_disbanded',
-          payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
-        });
-      }
+      this.broadcastToRoom({
+        type: 'party_disbanded',
+        payload: { reason: wasHost ? 'Party Host disbanded the squad.' : (isMatchRoom ? 'Match ended. Squad disbanded.' : 'All members left.') },
+      });
       console.log(`[TopBinsServer Room ${this.name}] Squad ended.`);
     } else {
       this.broadcastToRoom({

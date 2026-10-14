@@ -63,6 +63,8 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     playerForfeitEvent,
     clearForfeit,
     sendGameLeave,
+    party,
+    leaveParty,
   } = useGameSync('record-books');
 
   const [clubSequence, setClubSequence] = useState<RecordBooksClubRecord[]>(() => {
@@ -1228,6 +1230,9 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -1238,6 +1243,9 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
+          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            leaveParty();
+          }
           setShowForfeitModal(false);
           handleCleanExit();
         }}
