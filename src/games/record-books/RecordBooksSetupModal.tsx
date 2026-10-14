@@ -28,21 +28,29 @@ const DIFFICULTY_PRESETS: Array<{
   id: RecordBooksDifficulty;
   title: string;
   description: string;
+  activeColor: string;
+  titleColor: string;
 }> = [
   {
     id: 'Easy',
     title: 'EASY',
     description: 'Real Madrid, Barcelona, Liverpool.',
+    activeColor: 'bg-emerald-500/15 border-emerald-400 ring-1 ring-emerald-400 text-white shadow-[0_0_14px_rgba(16,185,129,0.3)]',
+    titleColor: 'text-emerald-400',
   },
   {
     id: 'Medium',
     title: 'MEDIUM',
     description: 'Roma, Napoli, Ajax.',
+    activeColor: 'bg-amber-500/15 border-amber-400 ring-1 ring-amber-400 text-white shadow-[0_0_14px_rgba(251,191,36,0.3)]',
+    titleColor: 'text-amber-400',
   },
   {
     id: 'Hard',
     title: 'HARD',
     description: 'Leeds, Valencia, Newcastle.',
+    activeColor: 'bg-rose-500/15 border-rose-500 ring-1 ring-rose-500 text-white shadow-[0_0_14px_rgba(244,63,94,0.3)]',
+    titleColor: 'text-rose-400',
   },
 ];
 
@@ -52,7 +60,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
   onLaunchArena,
 }) => {
   const [metric, setMetric] = useState<RecordBooksMetric>('Goals');
-  const [totalRounds, setTotalRounds] = useState<5 | 10>(5);
+  const [totalRounds] = useState<10>(10);
   const [difficulty, setDifficulty] = useState<RecordBooksDifficulty>('Medium');
 
   const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
@@ -219,13 +227,15 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
                       soundFX.playClick(650);
                       setDifficulty(d.id);
                     }}
-                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`min-h-[44px] p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? 'bg-[#181e2b] border-[#00f0ff] text-white shadow-[0_0_12px_rgba(0,240,255,0.2)]'
+                        ? d.activeColor
                         : 'bg-[#12151e] border-white/10 text-slate-400 hover:bg-[#151924]'
                     }`}
                   >
-                    <span className="font-sans font-black text-xs uppercase">{d.title}</span>
+                    <span className={`font-sans font-black text-xs uppercase ${isSelected ? d.titleColor : 'text-slate-300'}`}>
+                      {d.title}
+                    </span>
                     <span className="text-[9px] font-mono text-slate-500 truncate">{d.description}</span>
                   </button>
                 );
@@ -238,24 +248,16 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
             <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
               <span className="text-[#ccff00]">03.</span> MATCH LENGTH
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              {[5, 10].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => {
-                    soundFX.playClick(650);
-                    setTotalRounds(r as 5 | 10);
-                  }}
-                  className={`py-2.5 px-3 rounded-xl border font-mono text-xs font-black uppercase transition-all cursor-pointer ${
-                    totalRounds === r
-                      ? 'bg-[#181e2b] border-[#ccff00] text-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.2)]'
-                      : 'bg-[#12151e] border-white/10 text-slate-400 hover:bg-[#151924]'
-                  }`}
-                >
-                  {r} CLUBS ({r} ROUNDS)
-                </button>
-              ))}
+            <div className="p-3 rounded-xl border border-white/10 bg-[#12151e] flex items-center justify-between min-h-[44px]">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#ccff00] shadow-[0_0_8px_rgba(204,255,0,0.8)]" />
+                <span className="font-mono text-xs font-black text-white uppercase">
+                  10 CLUBS (10 ROUNDS)
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[#ccff00] bg-[#ccff00]/10 border border-[#ccff00]/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                LOCKED
+              </span>
             </div>
           </div>
         </div>

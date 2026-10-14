@@ -20,6 +20,7 @@ import { POSITION_META } from './clubAssets';
 import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
+import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import {
   Bot,
   Building2,
@@ -111,6 +112,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   // Room Code State
   const [isMasked, setIsMasked] = useState<boolean>(config.isRoomCodeMasked);
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
+  const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const opponentLabel = isMultiplayer && opponent?.name ? opponent.name : (config.lobbyMode === 'solo' ? 'AI SCOUT' : 'OPPONENT');
@@ -836,10 +838,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               {currentPuzzle.slotTypes.map((slotType, sIdx) => {
                 const pillStyle =
                   slotType === 'Club'
-                    ? 'bg-[#ccff00]/15 text-[#ccff00] border-[#ccff00]/30'
+                    ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30'
                     : slotType === 'Nation'
-                    ? 'bg-[#00f0ff]/15 text-[#00f0ff] border-[#00f0ff]/30'
-                    : 'bg-[#fbbf24]/15 text-[#fbbf24] border-[#fbbf24]/30';
+                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    : 'bg-amber-500/15 text-amber-400 border-amber-500/30';
                 return (
                   <React.Fragment key={sIdx}>
                     <span
@@ -875,10 +877,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
             type="button"
             onClick={() => {
               soundFX.playClick(500);
-              if (isMultiplayer) sendGameLeave();
-              onExitArena();
+              setShowForfeitModal(true);
             }}
-            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-red-950/50 border border-white/10 hover:border-red-500/40 text-slate-300 hover:text-red-300 text-xs font-mono font-bold tracking-wider transition-all cursor-pointer"
+            className="min-h-[44px] px-4 py-2 rounded-full bg-white/5 hover:bg-red-950/50 border border-white/10 hover:border-red-500/40 text-slate-300 hover:text-red-300 text-xs font-mono font-bold tracking-wider transition-all cursor-pointer flex items-center justify-center"
           >
             EXIT
           </button>
@@ -1060,7 +1061,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                       }}
                       onKeyDown={handleKeyDown}
                       placeholder="Type a player name..."
-                      className="w-full h-12 md:h-13 pl-11 pr-4 rounded-2xl bg-[#12151e] border-2 border-white/15 focus:border-[#ccff00] text-white font-sans font-bold text-sm md:text-base placeholder:text-slate-500 focus:outline-none shadow-inner transition-colors"
+                      className="w-full h-12 md:h-13 pl-11 pr-4 rounded-2xl bg-[#12151e] border-2 border-white/15 focus:border-[#ccff00] text-white font-sans font-bold text-base sm:text-sm placeholder:text-slate-500 focus:outline-none shadow-inner transition-colors"
                     />
                   </div>
 
@@ -1136,6 +1137,17 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          onExitArena();
+        }}
+      />
+
+      {/* In-Game Exit / Forfeit Confirmation Guard */}
+      <ForfeitMatchModal
+        isOpen={showForfeitModal}
+        onStay={() => setShowForfeitModal(false)}
+        onForfeit={() => {
+          if (isMultiplayer) sendGameLeave();
+          setShowForfeitModal(false);
           onExitArena();
         }}
       />
@@ -1255,10 +1267,10 @@ const ClueSlotCard: React.FC<ClueSlotCardProps> = ({
       ? 'border-[#ccff00] shadow-[0_0_25px_rgba(204,255,0,0.2)]'
       : 'border-white/10 opacity-75'
     : isClub
-    ? 'border-white/15 hover:border-[#ccff00]/50'
+    ? 'border-white/15 hover:border-cyan-400/50'
     : isNation
-    ? 'border-white/15 hover:border-[#00f0ff]/50'
-    : 'border-white/15 hover:border-[#fbbf24]/50';
+    ? 'border-white/15 hover:border-emerald-400/50'
+    : 'border-white/15 hover:border-amber-400/50';
 
   // If slot is not revealed yet: show casino slot machine spinning reel animation
   if (!isRevealed) {
@@ -1305,11 +1317,11 @@ const ClueSlotCard: React.FC<ClueSlotCardProps> = ({
       <div className="w-full flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400 z-10">
         <span className="flex items-center gap-1.5 font-bold text-slate-300">
           {isClub ? (
-            <Building2 className="w-3.5 h-3.5 text-[#ccff00]" />
+            <Building2 className="w-3.5 h-3.5 text-cyan-400" />
           ) : isNation ? (
-            <Globe2 className="w-3.5 h-3.5 text-[#00f0ff]" />
+            <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
           ) : (
-            <Crosshair className="w-3.5 h-3.5 text-[#fbbf24]" />
+            <Crosshair className="w-3.5 h-3.5 text-amber-400" />
           )}
           <span>
             SLOT 0{clue.slotIndex + 1} • {clue.type}
@@ -1357,10 +1369,10 @@ const ClueSlotCard: React.FC<ClueSlotCardProps> = ({
       <div
         className={`w-full h-1 rounded-full ${
           isClub
-            ? 'bg-gradient-to-r from-transparent via-[#ccff00]/60 to-transparent'
+            ? 'bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent'
             : isNation
-            ? 'bg-gradient-to-r from-transparent via-[#00f0ff]/60 to-transparent'
-            : 'bg-gradient-to-r from-transparent via-[#fbbf24]/60 to-transparent'
+            ? 'bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent'
+            : 'bg-gradient-to-r from-transparent via-amber-400/60 to-transparent'
         }`}
       />
     </div>

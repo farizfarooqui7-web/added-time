@@ -16,6 +16,7 @@ import type { SideNettingMatchConfig } from './games/side-netting';
 import { PartyDrawer } from './components/PartyDrawer';
 import { SoloEscapeHatchModal } from './components/SoloEscapeHatchModal';
 import { MatchmakingOverlay } from './components/MatchmakingOverlay';
+import { FeedbackWidget } from './components/FeedbackWidget';
 import { useParty } from './context/PartyContext';
 import { GAME_MODES } from './data/gameModes';
 import type { GameModeInfo } from './types';
@@ -232,48 +233,78 @@ export function App() {
     setActiveSideNettingConfig(null);
   };
 
+  const handleCancelMatchmaking = (cancelledModeId: string | null) => {
+    if (!cancelledModeId) return;
+    if (cancelledModeId === 'auction-draft') {
+      setIsAuctionSetupOpen(true);
+    } else if (cancelledModeId === 'criteria-rush' || cancelledModeId === 'link-up') {
+      setIsLinkUpSetupOpen(true);
+    } else if (cancelledModeId === 'tally-race' || cancelledModeId === 'record-books') {
+      setIsRecordBooksSetupOpen(true);
+    } else if (cancelledModeId === 'football-imposter') {
+      setIsImposterSetupOpen(true);
+    } else if (cancelledModeId === 'side_netting') {
+      setIsSideNettingSetupOpen(true);
+    }
+  };
+
   if (viewMode === 'side-netting-arena' && activeSideNettingConfig) {
     return (
-      <SideNettingArena
-        config={activeSideNettingConfig}
-        onExitArena={handleExitSideNettingArena}
-      />
+      <>
+        <SideNettingArena
+          config={activeSideNettingConfig}
+          onExitArena={handleExitSideNettingArena}
+        />
+        <FeedbackWidget currentView={viewMode} />
+      </>
     );
   }
 
   if (viewMode === 'auction-arena' && activeMatchConfig) {
     return (
-      <AuctionArena
-        config={activeMatchConfig}
-        onExitMatch={handleExitAuctionArena}
-      />
+      <>
+        <AuctionArena
+          config={activeMatchConfig}
+          onExitMatch={handleExitAuctionArena}
+        />
+        <FeedbackWidget currentView={viewMode} />
+      </>
     );
   }
 
   if (viewMode === 'link-up-arena' && activeLinkUpConfig) {
     return (
-      <LinkUpArena
-        config={activeLinkUpConfig}
-        onExitArena={handleExitLinkUpArena}
-      />
+      <>
+        <LinkUpArena
+          config={activeLinkUpConfig}
+          onExitArena={handleExitLinkUpArena}
+        />
+        <FeedbackWidget currentView={viewMode} />
+      </>
     );
   }
 
   if (viewMode === 'record-books-arena' && activeRecordBooksConfig) {
     return (
-      <RecordBooksArena
-        config={activeRecordBooksConfig}
-        onExitArena={handleExitRecordBooksArena}
-      />
+      <>
+        <RecordBooksArena
+          config={activeRecordBooksConfig}
+          onExitArena={handleExitRecordBooksArena}
+        />
+        <FeedbackWidget currentView={viewMode} />
+      </>
     );
   }
 
   if (viewMode === 'imposter-arena' && activeImposterConfig) {
     return (
-      <ImposterArena
-        config={activeImposterConfig}
-        onExitArena={handleExitImposterArena}
-      />
+      <>
+        <ImposterArena
+          config={activeImposterConfig}
+          onExitArena={handleExitImposterArena}
+        />
+        <FeedbackWidget currentView={viewMode} />
+      </>
     );
   }
 
@@ -281,9 +312,9 @@ export function App() {
     <div className="min-h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col selection:bg-[#ccff00] selection:text-black overflow-x-hidden">
       {/* Centered Constrained Container with Generous Breathing Room and Dynamic Drawer Spacing */}
       <div
-        className={`w-full min-h-screen px-6 py-6 flex flex-col justify-between transition-all duration-300 ease-out ${
+        className={`w-full min-h-screen px-4 sm:px-6 py-4 sm:py-6 flex flex-col justify-between transition-all duration-300 ease-out ${
           isDrawerOpen
-            ? 'max-w-[calc(100vw-340px)] sm:max-w-[calc(100vw-370px)] lg:max-w-[calc(100vw-400px)] xl:max-w-6xl mr-[320px] sm:mr-[350px] lg:mr-[380px] xl:mr-auto ml-auto'
+            ? 'w-full md:max-w-[calc(100vw-380px)] lg:max-w-[calc(100vw-400px)] xl:max-w-6xl md:mr-[360px] lg:mr-[380px] xl:mr-auto ml-auto'
             : 'max-w-6xl mx-auto'
         }`}
       >
@@ -348,13 +379,16 @@ export function App() {
       </div>
 
       {/* Drop-In Matchmaking Radar Overlay */}
-      <MatchmakingOverlay />
+      <MatchmakingOverlay onCancel={handleCancelMatchmaking} />
 
       {/* Persistent Right-Side Party & Lobby Drawer */}
       <PartyDrawer />
 
       {/* Guest Solo Escape Hatch Modal */}
       <SoloEscapeHatchModal />
+
+      {/* Persistent Bug Reporting & Feedback Widget */}
+      <FeedbackWidget currentView={viewMode} />
     </div>
   );
 }

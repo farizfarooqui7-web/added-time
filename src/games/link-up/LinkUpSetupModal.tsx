@@ -156,9 +156,21 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
   };
 
   const renderSlotIcon = (type: LinkUpSlotType) => {
-    if (type === 'Club') return <Building2 className="w-3.5 h-3.5 text-[#ccff00]" />;
-    if (type === 'Nation') return <Globe2 className="w-3.5 h-3.5 text-[#00f0ff]" />;
+    if (type === 'Club') return <Building2 className="w-3.5 h-3.5 text-cyan-400" />;
+    if (type === 'Nation') return <Globe2 className="w-3.5 h-3.5 text-emerald-400" />;
     return <Crosshair className="w-3.5 h-3.5 text-amber-400" />;
+  };
+
+  const getSlotBadgeStyle = (type: LinkUpSlotType) => {
+    if (type === 'Club') return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
+    if (type === 'Nation') return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+    return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+  };
+
+  const getOptionActiveStyle = (type: LinkUpSlotType) => {
+    if (type === 'Club') return 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(6,182,212,0.4)]';
+    if (type === 'Nation') return 'bg-emerald-400 text-black shadow-[0_0_12px_rgba(16,185,129,0.4)]';
+    return 'bg-amber-400 text-black shadow-[0_0_12px_rgba(251,191,36,0.4)]';
   };
 
   return (
@@ -215,7 +227,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
               <button
                 type="button"
                 onClick={handleShuffleSlots}
-                className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                className="min-h-[44px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
               >
                 <Shuffle className="w-3 h-3 text-[#ccff00]" />
                 <span>SHUFFLE SLOTS</span>
@@ -227,7 +239,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                   soundFX.playClick(720);
                   setRandomizeEachRound(!randomizeEachRound);
                 }}
-                className={`px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
+                className={`min-h-[44px] px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
                   randomizeEachRound
                     ? 'bg-[#ccff00]/15 border-[#ccff00] text-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.2)]'
                     : 'bg-white/5 border-white/10 text-slate-400 hover:text-slate-200'
@@ -242,6 +254,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {([0, 1, 2] as const).map((slotIdx) => {
               const currentType = slotTypes[slotIdx];
+              const badgeStyle = getSlotBadgeStyle(currentType);
               return (
                 <div
                   key={slotIdx}
@@ -252,10 +265,10 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                       <span className="text-[10px] font-mono font-bold text-slate-400">
                         SLOT #{slotIdx + 1}
                       </span>
-                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/5 border border-white/10">
+                      <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border ${badgeStyle}`}>
                         {renderSlotIcon(currentType)}
-                        <span className="font-mono text-xs font-black text-white">
-                          {currentType.toUpperCase()}
+                        <span className="font-mono text-xs font-black uppercase tracking-wider">
+                          {currentType}
                         </span>
                       </div>
                     </div>
@@ -268,6 +281,8 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                         opt.type === 'Position' &&
                         slotTypes.some((t, i) => t === 'Position' && i !== slotIdx);
 
+                      const activeStyle = getOptionActiveStyle(opt.type);
+
                       return (
                         <button
                           key={opt.type}
@@ -277,9 +292,9 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                           title={
                             isPositionDisabled ? 'Only 1 Position slot allowed per puzzle' : opt.label
                           }
-                          className={`py-1.5 px-2 rounded-lg text-center font-mono text-[11px] font-bold uppercase transition-all ${
+                          className={`min-h-[44px] py-2 px-2 rounded-lg text-center font-mono text-[11px] font-bold uppercase transition-all flex items-center justify-center ${
                             isActive
-                              ? 'bg-[#ccff00] text-black shadow-[0_0_10px_rgba(204,255,0,0.3)]'
+                              ? activeStyle
                               : isPositionDisabled
                               ? 'bg-white/5 text-slate-400 opacity-30 cursor-not-allowed border border-dashed border-white/5'
                               : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 cursor-pointer'

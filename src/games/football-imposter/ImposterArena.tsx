@@ -36,6 +36,7 @@ import {
 } from './imposterEngine';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
+import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { soundFX } from '../../utils/audio';
 
 interface ImposterArenaProps {
@@ -151,6 +152,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   const [didYouMeanSuggestion, setDidYouMeanSuggestion] = useState<string | null>(null);
   const [imposterFinalGuessText, setImposterFinalGuessText] = useState<string>('');
   const [imposterStolenWin, setImposterStolenWin] = useState<boolean>(false);
+  const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
 
   const usedCluesSetRef = useRef<Set<string>>(new Set());
   const clueInputRef = useRef<HTMLInputElement>(null);
@@ -892,10 +894,10 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
           <button
             type="button"
             onClick={() => {
-              if (isMultiplayer) sendGameLeave();
-              onExitArena();
+              soundFX.playClick(500);
+              setShowForfeitModal(true);
             }}
-            className="w-10 h-10 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
+            className="min-h-[44px] min-w-[44px] w-11 h-11 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
             title="Exit to Hub"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -1484,7 +1486,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder="Send a message to the locker room..."
-                    className="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-white/15 focus:border-sky-400 focus:outline-none text-sm text-white placeholder:text-neutral-500"
+                    className="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-white/15 focus:border-sky-400 focus:outline-none text-base sm:text-sm text-white placeholder:text-neutral-500"
                   />
                   <button
                     type="submit"
@@ -2139,6 +2141,17 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          onExitArena();
+        }}
+      />
+
+      {/* In-Game Exit / Forfeit Confirmation Guard */}
+      <ForfeitMatchModal
+        isOpen={showForfeitModal}
+        onStay={() => setShowForfeitModal(false)}
+        onForfeit={() => {
+          if (isMultiplayer) sendGameLeave();
+          setShowForfeitModal(false);
           onExitArena();
         }}
       />

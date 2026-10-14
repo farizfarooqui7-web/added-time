@@ -16,6 +16,7 @@ import { SquadShowdown } from './SquadShowdown';
 import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
+import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import {
   Eye,
   EyeOff,
@@ -1175,40 +1176,15 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       </main>
 
       {/* ================= 3. FORFEIT CONFIRMATION MODAL ================= */}
-      {showForfeitModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="w-full max-w-sm bg-[#12151e] border border-white/10 rounded-3xl p-6 text-center shadow-2xl space-y-4">
-            <AlertTriangle className="w-10 h-10 text-red-500 mx-auto" />
-            <div>
-              <h3 className="font-sans font-black text-lg text-white uppercase">
-                FORFEIT MATCH?
-              </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Leaving the matchroom now will forfeit your remaining bankroll and return to the hub.
-              </p>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowForfeitModal(false)}
-                className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-xs font-mono font-bold text-white uppercase cursor-pointer"
-              >
-                CANCEL
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (isMultiplayer) sendGameLeave();
-                  onExitMatch();
-                }}
-                className="px-5 py-2 rounded-full bg-red-600 hover:bg-red-500 text-xs font-mono font-bold text-white uppercase shadow-lg shadow-red-600/30 cursor-pointer"
-              >
-                CONFIRM FORFEIT
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ForfeitMatchModal
+        isOpen={showForfeitModal}
+        onStay={() => setShowForfeitModal(false)}
+        onForfeit={() => {
+          if (isMultiplayer) sendGameLeave();
+          setShowForfeitModal(false);
+          onExitMatch();
+        }}
+      />
 
       {/* ================= 4. POST-MATCH SQUAD SHOWDOWN OVERLAY ================= */}
       {phase === 'showdown' && (

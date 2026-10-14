@@ -169,74 +169,81 @@ export const PartyDrawer: React.FC = () => {
   const readyCount = party.members.filter((m) => m.isReady).length;
 
   return (
-    /* Non-modal persistent companion dock: pointer-events-none on outer container so background remains 100% interactive */
-    <aside
-      aria-label="Party Companion Dock"
-      className="fixed inset-y-0 right-0 z-40 pointer-events-none flex select-none"
-    >
-      {/* Self-contained floating dock along the right edge with pointer-events-auto */}
-      <div className="pointer-events-auto w-[320px] sm:w-[350px] lg:w-[380px] h-full bg-[#090c13]/95 backdrop-blur-xl border-l border-white/15 shadow-[-16px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-300">
-        {/* Subtle Ambient Top-Right Glow */}
-        <div
-          className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-20"
-          style={{
-            background: party.isActive
-              ? 'radial-gradient(circle, #ccff00 0%, transparent 70%)'
-              : 'radial-gradient(circle, #ff6b00 0%, transparent 70%)',
-          }}
-        />
+    <>
+      {/* Mobile Backdrop overlay to dismiss on tap */}
+      <div
+        onClick={closeDrawer}
+        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden animate-in fade-in duration-200 pointer-events-auto"
+      />
 
-        {/* ================= 1. DOCK HEADER ================= */}
-        <div className="relative z-10 px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#0c101a]/90">
-          {/* Left: Branding & Status */}
-          <div className="flex items-center gap-3 min-w-0">
-            <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${
-                party.isActive
-                  ? 'bg-[#ccff00]/15 border-[#ccff00]/40 text-[#ccff00] shadow-[0_0_15px_rgba(204,255,0,0.25)]'
-                  : 'bg-[#ff6b00]/15 border-[#ff6b00]/40 text-[#ff6b00] shadow-[0_0_15px_rgba(255,107,0,0.25)]'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-white truncate">
-                  {party.isActive ? 'SQUAD LOBBY' : 'PARTY HUB'}
-                </h2>
-                {wsConnected && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" title="Real-Time Server Connected" />
-                )}
+      {/* Non-modal persistent companion dock: pointer-events-none on outer container so background remains 100% interactive */}
+      <aside
+        aria-label="Party Companion Dock"
+        className="fixed inset-y-0 right-0 z-40 pointer-events-none flex justify-end w-full md:w-auto select-none"
+      >
+        {/* Self-contained floating dock along the right edge with pointer-events-auto */}
+        <div className="pointer-events-auto w-full sm:w-[360px] lg:w-[380px] h-full bg-[#090c13]/95 backdrop-blur-xl border-l border-white/15 shadow-[-16px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-300">
+          {/* Subtle Ambient Top-Right Glow */}
+          <div
+            className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-20"
+            style={{
+              background: party.isActive
+                ? 'radial-gradient(circle, #ccff00 0%, transparent 70%)'
+                : 'radial-gradient(circle, #ff6b00 0%, transparent 70%)',
+            }}
+          />
+
+          {/* ================= 1. DOCK HEADER ================= */}
+          <div className="relative z-10 px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#0c101a]/90">
+            {/* Left: Branding & Status */}
+            <div className="flex items-center gap-3 min-w-0">
+              <div
+                className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${
+                  party.isActive
+                    ? 'bg-[#ccff00]/15 border-[#ccff00]/40 text-[#ccff00] shadow-[0_0_15px_rgba(204,255,0,0.25)]'
+                    : 'bg-[#ff6b00]/15 border-[#ff6b00]/40 text-[#ff6b00] shadow-[0_0_15px_rgba(255,107,0,0.25)]'
+                }`}
+              >
+                <Users className="w-4 h-4" />
               </div>
-              <p className="text-[10px] sm:text-[11px] font-mono text-neutral-400 mt-0.5 truncate">
-                {party.isActive
-                  ? party.isCurrentUserHost
-                    ? 'Squad Host: Control & Launch'
-                    : 'Connected: Waiting for Host'
-                  : 'Assemble teammates or link up'}
-              </p>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-white truncate">
+                    {party.isActive ? 'SQUAD LOBBY' : 'PARTY HUB'}
+                  </h2>
+                  {wsConnected && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" title="Real-Time Server Connected" />
+                  )}
+                </div>
+                <p className="text-[10px] sm:text-[11px] font-mono text-neutral-400 mt-0.5 truncate">
+                  {party.isActive
+                    ? party.isCurrentUserHost
+                      ? 'Squad Host: Control & Launch'
+                      : 'Connected: Waiting for Host'
+                    : 'Assemble teammates or link up'}
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Flush Player Counter Badge + Clean Single "X" Close Button */}
+            <div className="flex items-center gap-2 shrink-0">
+              {party.isActive && (
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/40 shadow-[0_0_10px_rgba(204,255,0,0.15)] flex items-center gap-1">
+                  <Radio className="w-3 h-3 text-[#ccff00] animate-pulse" />
+                  <span>{party.members.length}/{party.maxSlots} SQUAD</span>
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={closeDrawer}
+                className="min-w-[44px] min-h-[44px] rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-neutral-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                title="Close Dock"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </div>
-
-          {/* Right: Flush Player Counter Badge + Clean Single "X" Close Button */}
-          <div className="flex items-center gap-2 shrink-0">
-            {party.isActive && (
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/40 shadow-[0_0_10px_rgba(204,255,0,0.15)] flex items-center gap-1">
-                <Radio className="w-3 h-3 text-[#ccff00] animate-pulse" />
-                <span>{party.members.length}/{party.maxSlots} SQUAD</span>
-              </span>
-            )}
-
-            <button
-              type="button"
-              onClick={closeDrawer}
-              className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-neutral-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-              title="Close Dock"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
 
         {/* ================= 2. DRAWER BODY ================= */}
         <div className="relative z-10 flex-1 overflow-y-auto px-5 py-4 space-y-4">
@@ -556,7 +563,7 @@ export const PartyDrawer: React.FC = () => {
                           if (hostSetupError) setHostSetupError(null);
                         }}
                         placeholder="Enter Name"
-                        className="w-full h-11 px-4 rounded-xl bg-[#0a0d14] border border-white/15 focus:border-[#ccff00] text-white font-display font-black text-sm tracking-wider uppercase placeholder:text-neutral-500 placeholder:font-normal focus:outline-none transition-colors"
+                        className="w-full h-11 px-4 rounded-xl bg-[#0a0d14] border border-white/15 focus:border-[#ccff00] text-white font-display font-black text-base sm:text-sm tracking-wider uppercase placeholder:text-neutral-500 placeholder:font-normal focus:outline-none transition-colors"
                       />
                       {hostSetupError && (
                         <div className="text-[11px] font-mono text-rose-400 bg-rose-950/40 border border-rose-500/30 rounded-lg px-3 py-1.5 mt-1.5">
@@ -714,7 +721,7 @@ export const PartyDrawer: React.FC = () => {
                         value={inputNickname}
                         onChange={(e) => setInputNickname(e.target.value.toUpperCase())}
                         placeholder="ENTER NAME"
-                        className="w-full h-10 px-4 rounded-xl bg-[#0a0d14] border border-white/10 focus:border-[#ff6b00] text-white font-sans text-xs placeholder:text-neutral-500 focus:outline-none transition-colors"
+                        className="w-full h-11 px-4 rounded-xl bg-[#0a0d14] border border-white/10 focus:border-[#ff6b00] text-white font-sans text-base sm:text-xs placeholder:text-neutral-500 focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -789,5 +796,6 @@ export const PartyDrawer: React.FC = () => {
         )}
       </div>
     </aside>
+  </>
   );
 };

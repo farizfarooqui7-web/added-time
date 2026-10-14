@@ -76,11 +76,11 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
   return (
     <div className="w-full flex flex-col gap-5 md:gap-6 my-auto">
       {/* ================= ROW A: TOP FEATURED BLOCK (SPLIT 65% / 35%) ================= */}
-      <div className="w-full flex flex-col md:flex-row gap-5 md:gap-6 min-h-[350px] md:min-h-[370px]">
+      <div className="w-full flex flex-col lg:flex-row gap-5 md:gap-6 min-h-[350px] md:min-h-[370px]">
         {/* CARD A: 65% WIDTH - $20 AUCTION DRAFT (ACID VOLT / LIME YELLOW) */}
         <div
           onClick={() => handleLaunch(auctionDraftMode, 'solo')}
-          className={`w-full md:w-[65%] relative rounded-3xl overflow-hidden bg-[#10131a] border shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.12)] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 ${
+          className={`w-full lg:w-[65%] relative rounded-3xl overflow-hidden bg-[#10131a] border shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.12)] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 ${
             isAuctionBlocked
               ? 'border-amber-500/30 cursor-not-allowed opacity-90'
               : 'border-white/5 cursor-pointer hover:border-[#ccff00]/40 hover:-translate-y-0.5'
@@ -177,7 +177,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
                 e.stopPropagation();
                 handleLaunch(auctionDraftMode, 'solo');
               }}
-              className={`px-5 py-2.5 rounded-full font-sans font-bold text-xs uppercase tracking-wide transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 min-h-[44px] rounded-full font-sans font-bold text-xs uppercase tracking-wide transition-all flex items-center gap-2 ${
                 isAuctionBlocked
                   ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
                   : 'bg-[#ccff00] hover:bg-[#b8e600] text-black shadow-[0_4px_16px_rgba(204,255,0,0.25)] hover:scale-105 active:scale-95 cursor-pointer'
@@ -210,7 +210,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
         {/* CARD B: 35% WIDTH - THE LINK-UP (SPEED TRIVIA, ELECTRIC VIOLET) */}
         <div
           onClick={() => handleLaunch(linkUpMode, 'solo')}
-          className="w-full md:w-[35%] relative rounded-3xl overflow-hidden bg-[#10131a] border border-white/5 shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.12)] p-6 md:p-8 flex flex-col justify-between group cursor-pointer transition-all duration-300 hover:border-purple-500/40 hover:-translate-y-0.5"
+          className="w-full lg:w-[35%] relative rounded-3xl overflow-hidden bg-[#10131a] border border-white/5 shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.12)] p-6 md:p-8 flex flex-col justify-between group cursor-pointer transition-all duration-300 hover:border-purple-500/40 hover:-translate-y-0.5"
         >
           {/* Violet Tactical Radar Rings Texture */}
           <div className="absolute inset-0 opacity-25 pointer-events-none">
@@ -251,7 +251,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
           {/* Bottom Action Pill */}
           <div className="relative z-10 pt-3 border-t border-white/5 flex items-center justify-between">
             <span className="text-xs font-mono text-slate-400">1-8 Players</span>
-            <div className="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-sans font-bold text-xs uppercase tracking-wide flex items-center gap-1.5 shadow-[0_4px_12px_rgba(168,85,247,0.35)] transition-all">
+            <div className="px-4 py-2 min-h-[44px] rounded-full bg-purple-600 hover:bg-purple-500 text-white font-sans font-bold text-xs uppercase tracking-wide flex items-center gap-1.5 shadow-[0_4px_12px_rgba(168,85,247,0.35)] transition-all">
               <span>Play Speed Duel</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
@@ -260,7 +260,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
       </div>
 
       {/* ================= ROW B: THE BOTTOM GAME SHELF (3 EXPANDED LANDSCAPE CARDS) ================= */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 min-h-[220px] md:min-h-[235px]">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 min-h-[220px] md:min-h-[235px]">
         {/* CARD 1: THE RECORD BOOKS (STAT VAULT, TROPHY GOLD) */}
         <div
           onClick={() => handleLaunch(recordBooksMode, 'solo')}
@@ -305,7 +305,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
             <button
               type="button"
               disabled={isRecordBooksBlocked}
-              className={`font-semibold text-xs px-3.5 py-1.5 rounded-full transition-all shadow-sm flex items-center gap-1 ${
+              className={`font-semibold text-xs px-3.5 py-1.5 min-h-[44px] rounded-full transition-all shadow-sm flex items-center gap-1 ${
                 isRecordBooksBlocked
                   ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
                   : 'bg-amber-400 hover:bg-amber-300 text-black group-hover:scale-105 cursor-pointer'
@@ -380,7 +380,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
             <button
               type="button"
               disabled={isImposterBlocked}
-              className={`font-semibold text-xs px-3.5 py-1.5 rounded-full transition-all shadow-sm flex items-center gap-1 ${
+              className={`font-semibold text-xs px-3.5 py-1.5 min-h-[44px] rounded-full transition-all shadow-sm flex items-center gap-1 ${
                 isImposterBlocked
                   ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
                   : 'bg-red-500 hover:bg-red-400 text-white group-hover:scale-105 cursor-pointer'
@@ -440,7 +440,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
             <span className="text-xs font-mono text-slate-400">1-8 PLAYERS</span>
             <button
               type="button"
-              className="bg-cyan-400 text-black font-semibold text-xs px-3.5 py-1.5 rounded-full hover:bg-cyan-300 transition-all shadow-sm flex items-center gap-1 group-hover:scale-105 cursor-pointer"
+              className="bg-cyan-400 text-black font-semibold text-xs px-3.5 py-1.5 min-h-[44px] rounded-full hover:bg-cyan-300 transition-all shadow-sm flex items-center gap-1 group-hover:scale-105 cursor-pointer"
             >
               <span>AIM FOR SIDE NETTING</span>
               <ArrowRight className="w-3 h-3" />

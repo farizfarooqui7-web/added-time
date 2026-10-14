@@ -68,33 +68,28 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
         </button>
       </div>
 
-      {/* Center: Prominent Centered "ADDED TIME" Logo with 90+ Stoppage Board Accent */}
+      {/* Center: Minimalist Centered "ADDED TIME" Logo with 90+ Stoppage Board Accent */}
       <div className="w-1/3 flex items-center justify-center">
         <div className="flex items-center gap-2 select-none group">
-          <div className="flex items-center gap-2">
-            <span className="font-sans font-black text-2xl md:text-3xl tracking-tight text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.08)]">
-              ADDED TIME
-            </span>
-            <div className="flex items-center px-1.5 py-0.5 rounded bg-[#0a0d14] border border-[#ff6b00]/60 shadow-[0_0_10px_rgba(255,107,0,0.3)]">
-              <span className="font-mono text-xs font-black tracking-tight text-[#ff6b00]">
-                90+
-              </span>
-            </div>
-          </div>
-          <span className="hidden sm:inline-block font-mono text-[10px] font-bold text-neutral-400 bg-neutral-900/80 border border-neutral-800 px-2 py-0.5 rounded-full tracking-wider">
-            STOPPAGE DUELS
+          <span className="font-sans font-black text-2xl md:text-3xl tracking-tight text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.08)]">
+            ADDED TIME
           </span>
+          <div className="flex items-center px-1.5 py-0.5 rounded bg-[#0a0d14] border border-[#ff6b00]/60 shadow-[0_0_10px_rgba(255,107,0,0.3)]">
+            <span className="font-mono text-xs font-black tracking-tight text-[#ff6b00]">
+              90+
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Right: Flush Action Triggers [HOST] & [JOIN CODE] or Glowing Active Party Pill */}
       <div className="w-1/3 flex items-center justify-end gap-2.5">
         {party.isActive ? (
-          /* Glowing Active Party Pill: 🟢 SQUAD (2/4) • [CODE] */
+          /* Glowing Active Party Pill: SQUAD (2/4) • [CODE] */
           <button
             type="button"
             onClick={handleOpenActiveParty}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121824] hover:bg-[#182030] border border-[#ccff00]/50 text-white shadow-[0_0_20px_rgba(204,255,0,0.25)] hover:shadow-[0_0_25px_rgba(204,255,0,0.4)] transition-all cursor-pointer hover:scale-105 active:scale-95 group"
+            className="min-h-[44px] flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121824] hover:bg-[#182030] border border-[#ccff00]/50 text-white shadow-[0_0_20px_rgba(204,255,0,0.25)] hover:shadow-[0_0_25px_rgba(204,255,0,0.4)] transition-all cursor-pointer hover:scale-105 active:scale-95 group"
             title="Open Active Squad Lobby Drawer"
           >
             <span className="relative flex h-2 w-2">
@@ -122,7 +117,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
             <button
               type="button"
               onClick={handleHost}
-              className="bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black uppercase text-xs px-3.5 py-1.5 rounded-full shadow-lg shadow-[#ccff00]/25 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+              className="min-h-[44px] bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black uppercase text-xs px-3.5 py-1.5 rounded-full shadow-lg shadow-[#ccff00]/25 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               title="Create a new Squad Lobby"
             >
               <span>[ HOST ]</span>
@@ -131,7 +126,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
             <button
               type="button"
               onClick={handleJoin}
-              className="bg-[#ff6b00] hover:bg-[#e65f00] text-black font-sans font-black uppercase text-xs px-3.5 py-1.5 rounded-full shadow-lg shadow-[#ff6b00]/25 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+              className="min-h-[44px] bg-[#ff6b00] hover:bg-[#e65f00] text-black font-sans font-black uppercase text-xs px-3.5 py-1.5 rounded-full shadow-lg shadow-[#ff6b00]/25 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               title="Join a Squad via Room Code"
             >
               <span>[ JOIN CODE ]</span>

@@ -4,7 +4,7 @@ import { soundFX } from '../utils/audio';
 import { Zap, Clock, X, CheckCircle2 } from 'lucide-react';
 
 interface MatchmakingOverlayProps {
-  onCancel?: () => void;
+  onCancel?: (modeId: string | null) => void;
 }
 
 export const MatchmakingOverlay: React.FC<MatchmakingOverlayProps> = ({ onCancel }) => {
@@ -16,8 +16,9 @@ export const MatchmakingOverlay: React.FC<MatchmakingOverlayProps> = ({ onCancel
 
   const handleCancel = () => {
     soundFX.playClick(600);
+    const activeModeId = queueState.modeId;
     leaveQueue();
-    if (onCancel) onCancel();
+    if (onCancel) onCancel(activeModeId);
   };
 
   const modeDisplayName =

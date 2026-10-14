@@ -27,6 +27,7 @@ import {
 import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
+import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 
 interface SideNettingArenaProps {
   config: SideNettingMatchConfig;
@@ -85,6 +86,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [totalScore, setTotalScore] = useState<number>(0);
   const [maxDepthReached, setMaxDepthReached] = useState<number>(0);
   const [roundResults, setRoundResults] = useState<SideNettingRoundResult[]>([]);
+  const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const currentPrompt = prompts[currentRoundIdx] || prompts[0];
@@ -400,25 +402,32 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         }}
       >
         {/* PITCH LAYER 1: 6-YARD BOX & GOALMOUTH (0 - 500m / TAP-IN ZONE) */}
-        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#06140d] via-[#092215] to-[#0c2e1c] overflow-hidden border-b border-emerald-500/20">
-          {/* Turf Mower Stripes */}
+        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#070a10] via-[#0a0f19] to-[#0d1422] overflow-hidden border-b border-cyan-500/25">
+          {/* Tactical Carbon Turf Mower Stripes */}
+          <div
+            className="absolute inset-0 opacity-25"
+            style={{
+              background:
+                'repeating-linear-gradient(180deg, rgba(255,255,255,0.03) 0px, transparent 35px, rgba(0,0,0,0.35) 70px)',
+            }}
+          />
+          {/* Subtle Radar Lattice Overlay */}
           <div
             className="absolute inset-0 opacity-20"
             style={{
-              background:
-                'repeating-linear-gradient(180deg, rgba(255,255,255,0.06) 0px, transparent 40px, rgba(0,0,0,0.12) 80px)',
+              backgroundImage: 'radial-gradient(ellipse at 50% 30%, rgba(6,182,212,0.18) 0%, transparent 65%)',
             }}
           />
-          {/* Penalty Box White Lines */}
-          <div className="absolute top-8 inset-x-8 sm:inset-x-24 h-64 border-2 border-white/20 rounded-b-xl">
+          {/* Penalty Box Neon Lines */}
+          <div className="absolute top-8 inset-x-8 sm:inset-x-24 h-64 border-2 border-cyan-400/30 rounded-b-xl shadow-[0_0_20px_rgba(6,182,212,0.15)]">
             {/* 6-Yard Box */}
-            <div className="absolute top-0 inset-x-16 sm:inset-x-36 h-28 border-2 border-white/25 rounded-b-lg flex items-center justify-center">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-300/40 font-black">
+            <div className="absolute top-0 inset-x-16 sm:inset-x-36 h-28 border-2 border-cyan-400/40 rounded-b-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-300/60 font-black">
                 6-YARD TAP-IN ZONE (5 PTS)
               </span>
             </div>
             {/* Penalty Spot */}
-            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white/40 shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.9)]" />
           </div>
 
           {/* Aesthetic 3D Training Equipment Scattered Naturally Across Sidelines (Small & Varied Spacing) */}
@@ -470,9 +479,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         </div>
 
         {/* PITCH LAYER 2: PENALTY ARC & MIDFIELD CONE DRILL (500m - 1,500m / STARTER XI) */}
-        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#0c2e1c] via-[#0a2517] to-[#071c11] overflow-hidden border-b border-emerald-500/20">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 border-2 border-white/20 rounded-b-full border-t-0" />
-          <div className="absolute top-20 left-10 sm:left-20 text-emerald-400/30 font-mono text-xs uppercase tracking-widest font-black">
+        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#0d1422] via-[#0a101b] to-[#070b14] overflow-hidden border-b border-cyan-500/25">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 border-2 border-cyan-400/30 rounded-b-full border-t-0 shadow-[0_0_25px_rgba(6,182,212,0.15)]" />
+          <div className="absolute top-20 left-10 sm:left-20 text-cyan-400/40 font-mono text-xs uppercase tracking-widest font-black">
             PENALTY ARC &amp; MIDFIELD DRILL (STARTER XI • 30 PTS)
           </div>
 
@@ -524,12 +533,12 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         </div>
 
         {/* PITCH LAYER 3: CENTER CIRCLE & CULT HERO DRILL (1,500m - 2,800m / CULT HERO & STREETS) */}
-        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#071c11] via-[#06181a] to-[#06131c] overflow-hidden border-b border-cyan-500/20">
-          <div className="absolute top-1/2 inset-x-0 h-0.5 bg-white/20" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border-2 border-white/20 flex items-center justify-center">
-            <div className="w-4 h-4 rounded-full bg-white/40 shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
+        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#070b14] via-[#05080f] to-[#03050a] overflow-hidden border-b border-emerald-500/25">
+          <div className="absolute top-1/2 inset-x-0 h-0.5 bg-emerald-400/25 shadow-[0_0_10px_rgba(52,211,153,0.3)]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border-2 border-emerald-400/30 flex items-center justify-center shadow-[0_0_30px_rgba(52,211,153,0.15)]">
+            <div className="w-4 h-4 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.85)]" />
           </div>
-          <div className="absolute top-12 left-10 text-cyan-400/40 font-mono text-xs uppercase tracking-widest font-black">
+          <div className="absolute top-12 left-10 text-emerald-400/40 font-mono text-xs uppercase tracking-widest font-black">
             CENTER CIRCLE SLALOM (CULT HERO &amp; STREETS • 50 &amp; 85 PTS)
           </div>
 
@@ -580,8 +589,8 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           </div>
         </div>
 
-        {/* PITCH LAYER 4: OPPOSITION TOP BINS & BALLON D'OR SIDE NETTING (2,800m - 4,000m) */}
-        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#06131c] via-[#070d18] to-[#03060c] overflow-hidden">
+        {/* PITCH LAYER 4: OPPOSITION SIDE NETTING (2,800m - 4,000m) */}
+        <div className="h-[25%] w-full relative bg-gradient-to-b from-[#03050a] via-[#020306] to-[#010103] overflow-hidden">
           <div
             className="absolute -top-10 inset-x-0 h-full opacity-40"
             style={{
@@ -618,10 +627,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           <button
             type="button"
             onClick={() => {
-              if (isMultiplayer) sendGameLeave();
-              onExitArena();
+              soundFX.playClick(500);
+              setShowForfeitModal(true);
             }}
-            className="w-10 h-10 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
+            className="min-h-[44px] min-w-[44px] w-11 h-11 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
             title="Exit to Hub"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -963,7 +972,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     if (shakeMessage) setShakeMessage(null);
                   }}
                   placeholder="Type your answer..."
-                  className={`w-full px-4 py-3 rounded-xl bg-black/75 border text-sm sm:text-base font-semibold text-white placeholder:text-neutral-500 backdrop-blur-md shadow-2xl transition-all focus:outline-none ${
+                  className={`w-full px-4 py-3 rounded-xl bg-black/75 border text-base sm:text-sm font-semibold text-white placeholder:text-neutral-500 backdrop-blur-md shadow-2xl transition-all focus:outline-none ${
                     isWrongAnswerShake
                       ? 'border-rose-500 ring-2 ring-rose-500/50'
                       : didYouMeanSuggestion
@@ -1104,6 +1113,17 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          onExitArena();
+        }}
+      />
+
+      {/* In-Game Exit / Forfeit Confirmation Guard */}
+      <ForfeitMatchModal
+        isOpen={showForfeitModal}
+        onStay={() => setShowForfeitModal(false)}
+        onForfeit={() => {
+          if (isMultiplayer) sendGameLeave();
+          setShowForfeitModal(false);
           onExitArena();
         }}
       />

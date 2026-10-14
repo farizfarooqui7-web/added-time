@@ -28,6 +28,7 @@ import {
 } from './recordBooksEngine';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
+import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { soundFX } from '../../utils/audio';
 
 interface RecordBooksArenaProps {
@@ -92,6 +93,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   const [opponentTotalScore, setOpponentTotalScore] = useState(0);
   const [roundHistory, setRoundHistory] = useState<RecordBooksRoundResult[]>([]);
   const [isMatchOver, setIsMatchOver] = useState(false);
+  const [showForfeitModal, setShowForfeitModal] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -639,10 +641,10 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
           <button
             type="button"
             onClick={() => {
-              if (isMultiplayer) sendGameLeave();
-              onExitArena();
+              soundFX.playClick(500);
+              setShowForfeitModal(true);
             }}
-            className="w-9 h-9 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
+            className="min-h-[44px] min-w-[44px] w-11 h-11 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition-all cursor-pointer"
             title="Exit to Hub"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -981,7 +983,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                       onFocus={() => setShowDropdown(true)}
                       onKeyDown={handleKeyDown}
                       placeholder={`Search ${currentClub.name} ${config.metric.toLowerCase()} leader...`}
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-black/55 border border-white/15 focus:border-[#ff9f1c] focus:outline-none text-sm font-semibold text-white placeholder:text-neutral-500 transition-colors"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-black/55 border border-white/15 focus:border-[#ff9f1c] focus:outline-none text-base sm:text-sm font-semibold text-white placeholder:text-neutral-500 transition-colors"
                     />
 
                     {/* Instant Fuzzy Autocomplete Dropdown */}
@@ -1096,6 +1098,17 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
+          onExitArena();
+        }}
+      />
+
+      {/* In-Game Exit / Forfeit Confirmation Guard */}
+      <ForfeitMatchModal
+        isOpen={showForfeitModal}
+        onStay={() => setShowForfeitModal(false)}
+        onForfeit={() => {
+          if (isMultiplayer) sendGameLeave();
+          setShowForfeitModal(false);
           onExitArena();
         }}
       />
