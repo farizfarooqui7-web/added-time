@@ -58,6 +58,8 @@ export function App() {
   const [isSideNettingSetupOpen, setIsSideNettingSetupOpen] = useState(false);
   const [activeSideNettingConfig, setActiveSideNettingConfig] = useState<SideNettingMatchConfig | null>(null);
 
+  const [matchSessionId, setMatchSessionId] = useState<number>(() => Date.now());
+
   const {
     party,
     launchMatch,
@@ -66,68 +68,90 @@ export function App() {
     togglePartyHost,
     toggleJoinCode,
     isDrawerOpen,
+    clearForfeit,
+    leaveParty,
   } = useParty();
 
-  // Listen for remote match launch from party host
+  // Listen for remote match launch from party host or matchmaker
   useEffect(() => {
     if (!lastRemoteMatch) return;
     const { modeId, config } = lastRemoteMatch;
+    const cfg = (config || {}) as any;
+
+    clearForfeit();
+    setMatchSessionId(Date.now());
+
     if (modeId === 'auction-draft') {
-      setActiveMatchConfig(
-        (config as MatchConfig) || {
-          budget: 20,
-          turnTimerSeconds: 15,
-          rounds: 5,
-          isMultiplayer: true,
-          opponentType: 'online',
-        }
-      );
+      const fullConfig: MatchConfig = {
+        formationId: cfg.formationId || 'balanced-1-1-2-1',
+        deckId: cfg.deckId || 'global',
+        mode: cfg.mode || (party.isCurrentUserHost ? 'host' : 'join'),
+        roomCode: cfg.roomCode || party.roomCode || 'MATCH',
+        isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
+        isMultiplayer: true,
+        ...cfg,
+      };
+      setActiveMatchConfig(fullConfig);
       setIsAuctionSetupOpen(false);
       setViewMode('auction-arena');
     } else if (modeId === 'criteria-rush' || modeId === 'link-up') {
-      setActiveLinkUpConfig(
-        (config as LinkUpMatchConfig) || {
-          timerSeconds: 30,
-          rounds: 3,
-          isMultiplayer: true,
-          difficulty: 'normal',
-        }
-      );
+      const fullConfig: LinkUpMatchConfig = {
+        lobbyMode: cfg.lobbyMode || (party.isCurrentUserHost ? 'host' : 'join'),
+        roomCode: cfg.roomCode || party.roomCode || 'MATCH',
+        isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
+        difficulty: cfg.difficulty || 'Medium',
+        slotTypes: cfg.slotTypes || ['Club', 'Nation', 'Position'],
+        randomizeSlotsEachRound: Boolean(cfg.randomizeSlotsEachRound),
+        totalRounds: cfg.totalRounds || 10,
+        isMultiplayer: true,
+        ...cfg,
+      };
+      setActiveLinkUpConfig(fullConfig);
       setIsLinkUpSetupOpen(false);
       setViewMode('link-up-arena');
     } else if (modeId === 'tally-race' || modeId === 'record-books') {
-      setActiveRecordBooksConfig(
-        (config as RecordBooksMatchConfig) || {
-          targetPoints: 50,
-          turnTimerSeconds: 15,
-          isMultiplayer: true,
-        }
-      );
+      const fullConfig: RecordBooksMatchConfig = {
+        lobbyMode: cfg.lobbyMode || (party.isCurrentUserHost ? 'host' : 'join'),
+        roomCode: cfg.roomCode || party.roomCode || 'MATCH',
+        isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
+        metric: cfg.metric || 'Goals',
+        difficulty: cfg.difficulty || 'Medium',
+        totalRounds: cfg.totalRounds || 10,
+        isMultiplayer: true,
+        ...cfg,
+      };
+      setActiveRecordBooksConfig(fullConfig);
       setIsRecordBooksSetupOpen(false);
       setViewMode('record-books-arena');
     } else if (modeId === 'football-imposter') {
-      setActiveImposterConfig(
-        (config as ImposterMatchConfig) || {
-          playerCount: Math.max(3, party.members.length),
-          imposterCount: 1,
-          timerSeconds: 45,
-          vagueClueCount: 1,
-        }
-      );
+      const fullConfig: ImposterMatchConfig = {
+        lobbyMode: cfg.lobbyMode || (party.isCurrentUserHost ? 'host' : 'sandbox'),
+        roomCode: cfg.roomCode || party.roomCode || 'MATCH',
+        isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
+        category: cfg.category || 'Global Icons',
+        clueRounds: cfg.clueRounds || 2,
+        botCount: cfg.botCount || 4,
+        rolePreference: cfg.rolePreference || 'random',
+        imposterClueEnabled: cfg.imposterClueEnabled ?? true,
+        isMultiplayer: true,
+        ...cfg,
+      };
+      setActiveImposterConfig(fullConfig);
       setIsImposterSetupOpen(false);
       setViewMode('imposter-arena');
     } else if (modeId === 'side_netting') {
-      setActiveSideNettingConfig(
-        (config as SideNettingMatchConfig) || {
-          rounds: 5,
-          timerSeconds: 20,
-        }
-      );
+      const fullConfig: SideNettingMatchConfig = {
+        roundCount: cfg.roundCount || 10,
+        timerSeconds: cfg.timerSeconds !== undefined ? cfg.timerSeconds : 60,
+        isMultiplayer: true,
+        ...cfg,
+      };
+      setActiveSideNettingConfig(fullConfig);
       setIsSideNettingSetupOpen(false);
       setViewMode('side-netting-arena');
     }
     clearRemoteMatch();
-  }, [lastRemoteMatch, party.members.length, clearRemoteMatch]);
+  }, [lastRemoteMatch, party.members.length, party.isCurrentUserHost, party.roomCode, party.isCodeMasked, clearRemoteMatch, clearForfeit]);
 
   const handleHostParty = () => {
     togglePartyHost();
@@ -203,12 +227,18 @@ export function App() {
   const handleExitAuctionArena = () => {
     setViewMode('hub');
     setActiveMatchConfig(null);
+    clearForfeit();
+    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+      leaveParty();
+    }
     window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterLinkUpArena = (config: LinkUpMatchConfig) => {
     setActiveLinkUpConfig(config);
     setIsLinkUpSetupOpen(false);
+    clearForfeit();
+    setMatchSessionId(Date.now());
     window.history.replaceState({ game: 'link-up' }, '', '?game=link-up');
     setViewMode('link-up-arena');
     if (party.isActive && party.isCurrentUserHost) {
@@ -219,12 +249,18 @@ export function App() {
   const handleExitLinkUpArena = () => {
     setViewMode('hub');
     setActiveLinkUpConfig(null);
+    clearForfeit();
+    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+      leaveParty();
+    }
     window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterRecordBooksArena = (config: RecordBooksMatchConfig) => {
     setActiveRecordBooksConfig(config);
     setIsRecordBooksSetupOpen(false);
+    clearForfeit();
+    setMatchSessionId(Date.now());
     window.history.replaceState({ game: 'record-books' }, '', '?game=record-books');
     setViewMode('record-books-arena');
     if (party.isActive && party.isCurrentUserHost) {
@@ -235,12 +271,18 @@ export function App() {
   const handleExitRecordBooksArena = () => {
     setViewMode('hub');
     setActiveRecordBooksConfig(null);
+    clearForfeit();
+    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+      leaveParty();
+    }
     window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterImposterArena = (config: ImposterMatchConfig) => {
     setActiveImposterConfig(config);
     setIsImposterSetupOpen(false);
+    clearForfeit();
+    setMatchSessionId(Date.now());
     window.history.replaceState({ game: 'football-imposter' }, '', '?game=football-imposter');
     setViewMode('imposter-arena');
     if (party.isActive && party.isCurrentUserHost) {
@@ -251,12 +293,18 @@ export function App() {
   const handleExitImposterArena = () => {
     setViewMode('hub');
     setActiveImposterConfig(null);
+    clearForfeit();
+    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+      leaveParty();
+    }
     window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterSideNettingArena = (config: SideNettingMatchConfig) => {
     setActiveSideNettingConfig(config);
     setIsSideNettingSetupOpen(false);
+    clearForfeit();
+    setMatchSessionId(Date.now());
     window.history.replaceState({ game: 'side-netting' }, '', '?game=side-netting');
     setViewMode('side-netting-arena');
     if (party.isActive && party.isCurrentUserHost) {
@@ -267,6 +315,10 @@ export function App() {
   const handleExitSideNettingArena = () => {
     setViewMode('hub');
     setActiveSideNettingConfig(null);
+    clearForfeit();
+    if (party.isActive && (party.roomCode.startsWith('match_') || party.visibility === 'public')) {
+      leaveParty();
+    }
     window.history.replaceState(null, '', window.location.pathname);
   };
 
@@ -289,6 +341,7 @@ export function App() {
     return (
       <>
         <SideNettingArena
+          key={matchSessionId}
           config={activeSideNettingConfig}
           onExitArena={handleExitSideNettingArena}
         />
@@ -301,6 +354,7 @@ export function App() {
     return (
       <>
         <AuctionArena
+          key={matchSessionId}
           config={activeMatchConfig}
           onExitMatch={handleExitAuctionArena}
         />
@@ -313,6 +367,7 @@ export function App() {
     return (
       <>
         <LinkUpArena
+          key={matchSessionId}
           config={activeLinkUpConfig}
           onExitArena={handleExitLinkUpArena}
         />
@@ -325,6 +380,7 @@ export function App() {
     return (
       <>
         <RecordBooksArena
+          key={matchSessionId}
           config={activeRecordBooksConfig}
           onExitArena={handleExitRecordBooksArena}
         />
@@ -337,6 +393,7 @@ export function App() {
     return (
       <>
         <ImposterArena
+          key={matchSessionId}
           config={activeImposterConfig}
           onExitArena={handleExitImposterArena}
         />

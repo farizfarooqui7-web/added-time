@@ -9,6 +9,8 @@ import {
   Sparkles,
   SkipForward,
   Radio,
+  Check,
+  ChevronRight,
 } from 'lucide-react';
 import type {
   SideNettingMatchConfig,
@@ -98,6 +100,14 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [roundResults, setRoundResults] = useState<SideNettingRoundResult[]>([]);
   const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
 
+  // Strike completion, post-round popup & rematch states
+  const [userFinishedRound, setUserFinishedRound] = useState(false);
+  const [isPostRoundModalOpen, setIsPostRoundModalOpen] = useState(false);
+  const [isGuestReadyForNext, setIsGuestReadyForNext] = useState(false);
+  const [guestHasClickedReady, setGuestHasClickedReady] = useState(false);
+  const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
+  const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
+
   const { handleCleanExit } = useArenaBackGuard({
     isMatchOver: diveState === 'game-over',
     onTriggerForfeit: () => setShowForfeitModal(true),
@@ -121,6 +131,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setCurrentSubmission(null);
     setOpponentLockedIn(false);
     setOpponentSubmission(null);
+    setUserFinishedRound(false);
+    setIsPostRoundModalOpen(false);
+    setIsGuestReadyForNext(false);
+    setGuestHasClickedReady(false);
     if (config.timerSeconds > 0) {
       setSecondsLeft(config.timerSeconds);
     }
@@ -139,9 +153,13 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         setOpponentSubmission(submission);
         setOpponentTotalScore((prev) => prev + (submission.score || 0));
       }
+    } else if (lastGameEvent.event === 'sidenetting_player_ready') {
+      setIsGuestReadyForNext(true);
+      soundFX.playSuccess();
     } else if (lastGameEvent.event === 'sidenetting_next_round') {
       const { nextRoundIdx } = lastGameEvent.data || {};
       if (typeof nextRoundIdx === 'number') {
+        setIsPostRoundModalOpen(false);
         setDiveState('ascending');
         soundFX.playClick(750);
         window.setTimeout(() => {
@@ -149,10 +167,27 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         }, 1200);
       }
     } else if (lastGameEvent.event === 'sidenetting_game_over') {
+      setIsPostRoundModalOpen(false);
       setDiveState('game-over');
       soundFX.playVictoryFanfare();
+    } else if (lastGameEvent.event === 'player_rematch_ready') {
+      setIsOpponentRematchReady(true);
+      soundFX.playSuccess();
+    } else if (lastGameEvent.event === 'match_restart') {
+      handlePlayAgain();
     }
   }, [isMultiplayer, lastGameEvent, myPlayerId, currentRoundIdx]);
+
+  // Open post-round breakdown when both players finish strike in multiplayer
+  useEffect(() => {
+    if (!isMultiplayer) return;
+    if (userFinishedRound && opponentLockedIn && diveState !== 'game-over') {
+      const timer = window.setTimeout(() => {
+        setIsPostRoundModalOpen(true);
+      }, 700);
+      return () => window.clearTimeout(timer);
+    }
+  }, [isMultiplayer, userFinishedRound, opponentLockedIn, diveState]);
 
   // 2. ROUND TIMER
   useEffect(() => {
@@ -242,38 +277,14 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
             { prompt: currentPrompt, submission: evaluated },
           ]);
 
-          // Step D: Hold at depth for 2.2s, then ascend back to top or finish
-          window.setTimeout(() => {
-            if (isMultiplayer) {
-              if (isHost) {
-                if (currentRoundIdx + 1 < prompts.length) {
-                  sendAction('sidenetting_next_round', { nextRoundIdx: currentRoundIdx + 1 });
-                  setDiveState('ascending');
-                  soundFX.playClick(750);
-                  window.setTimeout(() => {
-                    setCurrentRoundIdx((prev) => prev + 1);
-                  }, 1200);
-                } else {
-                  sendAction('sidenetting_game_over', {});
-                  setDiveState('game-over');
-                  soundFX.playVictoryFanfare();
-                }
-              }
-              // In multiplayer, guest holds until host broadcasts sidenetting_next_round or sidenetting_game_over
-            } else {
-              if (currentRoundIdx + 1 < prompts.length) {
-                setDiveState('ascending');
-                soundFX.playClick(750);
-                // Ascend takes 1.2s, then loads next question
-                window.setTimeout(() => {
-                  setCurrentRoundIdx((prev) => prev + 1);
-                }, 1200);
-              } else {
-                setDiveState('game-over');
-                soundFX.playVictoryFanfare();
-              }
-            }
-          }, 2200);
+          // Step D: Mark strike completed; wait for opponent in multiplayer or trigger post-round modal in solo
+          setUserFinishedRound(true);
+
+          if (!isMultiplayer) {
+            window.setTimeout(() => {
+              setIsPostRoundModalOpen(true);
+            }, 1000);
+          }
         }
       }, 35);
     }, 750);
@@ -344,10 +355,30 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setDisplayDepth(0);
     setTotalScore(0);
     setMaxDepthReached(0);
+    setOpponentTotalScore(0);
     setRoundResults([]);
+    setUserFinishedRound(false);
+    setIsPostRoundModalOpen(false);
+    setIsGuestReadyForNext(false);
+    setGuestHasClickedReady(false);
+    setIsOpponentRematchReady(false);
+    setHasRequestedRematch(false);
 
     setDiveState('idle-surface');
     window.setTimeout(() => inputRef.current?.focus(), 120);
+  };
+
+  const handleRequestOrExecuteRematch = () => {
+    if (isMultiplayer) {
+      if (!isHost) {
+        sendAction('player_rematch_ready', {});
+        setHasRequestedRematch(true);
+        soundFX.playClick(900);
+        return;
+      }
+      sendAction('match_restart', {});
+    }
+    handlePlayAgain();
   };
 
   // Ball Knower classification for endgame
@@ -730,7 +761,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
             <span className={`w-2 h-2 rounded-full ${opponentLockedIn ? 'bg-[#ccff00] animate-pulse' : 'bg-[#00f0ff]'}`} />
             <span className="text-slate-300 uppercase font-bold">{opponent.name}:</span>
             <span className={opponentLockedIn ? 'text-[#ccff00] font-bold' : 'text-slate-400'}>
-              {opponentLockedIn ? (opponentSubmission?.matchedAnswer?.text ? `LOCKED (${opponentSubmission.matchedAnswer.text})` : opponentSubmission?.rawInput ? `LOCKED (${opponentSubmission.rawInput})` : 'LOCKED IN') : 'THINKING...'}
+              {opponentLockedIn ? 'LOCKED IN' : 'THINKING...'}
             </span>
           </div>
         )}
@@ -829,6 +860,18 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
               <h1 className="font-sans text-base sm:text-lg lg:text-xl font-semibold tracking-normal text-white text-balance leading-relaxed">
                 "{currentPrompt.prompt}"
               </h1>
+            </div>
+          </div>
+        )}
+
+        {/* Waiting for Opponent Strike Banner in Multiplayer */}
+        {isMultiplayer && userFinishedRound && !isPostRoundModalOpen && diveState === 'at-depth' && (
+          <div className="flex items-center justify-center pt-2">
+            <div className="px-5 py-2 rounded-2xl bg-black/80 border border-cyan-500/40 backdrop-blur-md shadow-[0_0_25px_rgba(0,240,255,0.25)] flex items-center gap-2.5 animate-pulse">
+              <Clock className="w-4 h-4 animate-spin text-cyan-400" />
+              <span className="font-mono text-xs font-bold text-cyan-300 uppercase tracking-wider">
+                STRIKE REGISTERED : WAITING FOR {opponent?.name.toUpperCase() || 'OPPONENT'} TO FINISH...
+              </span>
             </div>
           </div>
         )}
@@ -1124,36 +1167,101 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
               />
             </div>
 
-            <span className="px-4 py-1 rounded-full text-xs font-mono font-black uppercase tracking-[0.2em] bg-emerald-500/20 border border-emerald-400/40 text-emerald-300">
-              DRILL COMPLETED
-            </span>
-
-            <h1 className="font-display text-4xl font-black uppercase text-white mt-3">
-              SESSION CONCLUDED
-            </h1>
+            {/* Multiplayer Result Banner or Solo Drill Tag */}
+            {isMultiplayer ? (
+              <div className="mb-2">
+                <span
+                  className={`px-4 py-1.5 rounded-full text-xs font-mono font-black uppercase tracking-[0.2em] inline-block ${
+                    totalScore > opponentTotalScore
+                      ? 'bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                      : opponentTotalScore > totalScore
+                      ? 'bg-rose-500/20 border border-rose-500/40 text-rose-300 shadow-[0_0_20px_rgba(244,63,94,0.3)]'
+                      : 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                  }`}
+                >
+                  {totalScore > opponentTotalScore
+                    ? 'VICTORY : SQUAD OUTCLASSED'
+                    : opponentTotalScore > totalScore
+                    ? 'DEFEAT : OPPONENT PREVAILS'
+                    : 'HONOURS EVEN : STALEMATE'}
+                </span>
+                <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white mt-2">
+                  {totalScore > opponentTotalScore
+                    ? 'MATCH WON'
+                    : opponentTotalScore > totalScore
+                    ? 'MATCH LOST'
+                    : 'DRAW'}
+                </h1>
+              </div>
+            ) : (
+              <div>
+                <span className="px-4 py-1 rounded-full text-xs font-mono font-black uppercase tracking-[0.2em] bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 inline-block">
+                  DRILL COMPLETED
+                </span>
+                <h1 className="font-display text-4xl font-black uppercase text-white mt-3">
+                  SESSION CONCLUDED
+                </h1>
+              </div>
+            )}
 
             {/* Scoreboard Comparison */}
-            <div className="grid grid-cols-2 gap-4 my-6">
-              <div className="p-5 rounded-2xl bg-black/60 border-2 border-emerald-400/40">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block mb-1">
-                  TOTAL POINTS
-                </span>
-                <span className="font-display text-4xl sm:text-5xl font-black text-emerald-300">
-                  {totalScore}
-                </span>
-                <span className="text-xs font-mono text-neutral-400 block mt-1">ACROSS {prompts.length} ROUNDS</span>
-              </div>
+            {isMultiplayer ? (
+              <div className="grid grid-cols-2 gap-4 my-5">
+                <div
+                  className={`p-5 rounded-2xl bg-black/60 border-2 ${
+                    totalScore >= opponentTotalScore
+                      ? 'border-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]'
+                      : 'border-white/15'
+                  }`}
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 block mb-1">
+                    YOU
+                  </span>
+                  <span className="font-display text-4xl sm:text-5xl font-black text-emerald-300">
+                    {totalScore}
+                  </span>
+                  <span className="text-xs font-mono text-neutral-400 block mt-1">TOTAL POINTS</span>
+                </div>
 
-              <div className="p-5 rounded-2xl bg-black/60 border border-white/15">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block mb-1">
-                  FURTHEST STRIKE
-                </span>
-                <span className="font-display text-4xl sm:text-5xl font-black text-cyan-300">
-                  {maxDepthReached}m
-                </span>
-                <span className="text-xs font-mono text-neutral-400 block mt-1">MAX PITCH RANGE</span>
+                <div
+                  className={`p-5 rounded-2xl bg-black/60 border-2 ${
+                    opponentTotalScore >= totalScore
+                      ? 'border-sky-400/50 shadow-[0_0_20px_rgba(56,189,248,0.2)]'
+                      : 'border-white/15'
+                  }`}
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-sky-400 block mb-1">
+                    {opponent?.name.toUpperCase() || 'OPPONENT'}
+                  </span>
+                  <span className="font-display text-4xl sm:text-5xl font-black text-sky-300">
+                    {opponentTotalScore}
+                  </span>
+                  <span className="text-xs font-mono text-neutral-400 block mt-1">TOTAL POINTS</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 my-6">
+                <div className="p-5 rounded-2xl bg-black/60 border-2 border-emerald-400/40">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block mb-1">
+                    TOTAL POINTS
+                  </span>
+                  <span className="font-display text-4xl sm:text-5xl font-black text-emerald-300">
+                    {totalScore}
+                  </span>
+                  <span className="text-xs font-mono text-neutral-400 block mt-1">ACROSS {prompts.length} ROUNDS</span>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-black/60 border border-white/15">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block mb-1">
+                    FURTHEST STRIKE
+                  </span>
+                  <span className="font-display text-4xl sm:text-5xl font-black text-cyan-300">
+                    {maxDepthReached}m
+                  </span>
+                  <span className="text-xs font-mono text-neutral-400 block mt-1">MAX PITCH RANGE</span>
+                </div>
+              </div>
+            )}
 
             {/* Ball Knower Rating Badge */}
             <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 mb-6 flex items-center justify-between text-left">
@@ -1190,16 +1298,201 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
               </button>
               <button
                 type="button"
-                onClick={handlePlayAgain}
-                className="flex-1 py-4 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-black text-xs font-display font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_10px_28px_rgba(16,185,129,0.4)] cursor-pointer"
+                disabled={isMultiplayer && !isHost && hasRequestedRematch}
+                onClick={handleRequestOrExecuteRematch}
+                className={`flex-1 py-4 rounded-2xl font-display font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                  isMultiplayer && !isHost && hasRequestedRematch
+                    ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                    : isMultiplayer && isHost && isOpponentRematchReady
+                    ? 'bg-[#ccff00] hover:bg-[#d8ff33] text-black shadow-[0_0_25px_rgba(204,255,0,0.6)] animate-pulse cursor-pointer'
+                    : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-[0_10px_28px_rgba(16,185,129,0.4)] cursor-pointer'
+                }`}
               >
-                <RotateCcw className="w-4 h-4" />
-                PLAY AGAIN
+                <RotateCcw className={`w-4 h-4 ${isMultiplayer && !isHost && hasRequestedRematch ? 'animate-spin' : ''}`} />
+                <span>
+                  {isMultiplayer && !isHost
+                    ? hasRequestedRematch
+                      ? 'HOST NOTIFIED : WAITING FOR HOST'
+                      : 'PLAY AGAIN'
+                    : isMultiplayer && isHost
+                    ? isOpponentRematchReady
+                      ? 'OPPONENT READY : PLAY AGAIN'
+                      : 'PLAY AGAIN'
+                    : 'PLAY AGAIN'}
+                </span>
               </button>
             </div>
           </div>
         )}
       </main>
+
+      {/* ================= POST-ROUND RESULT BREAKDOWN MODAL ================= */}
+      {isPostRoundModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#080d14]/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-xl bg-[#0c121d] border border-cyan-500/35 rounded-[32px] p-6 sm:p-8 shadow-[0_28px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(0,240,255,0.15)] flex flex-col gap-5">
+            {/* Header: Round & Prompt */}
+            <div className="text-center pb-3 border-b border-white/10">
+              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 inline-block mb-2">
+                ROUND {currentRoundIdx + 1} OF {prompts.length} : STRIKE BREAKDOWN
+              </span>
+              <h3 className="font-sans text-base sm:text-lg font-semibold text-white tracking-tight leading-snug">
+                "{currentPrompt.prompt}"
+              </h3>
+            </div>
+
+            {/* Answer & Score Comparison Cards */}
+            <div className={`grid ${isMultiplayer ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
+              {/* YOU */}
+              <div className="p-4 rounded-2xl bg-black/60 border border-white/15 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                    YOUR STRIKE
+                  </span>
+                  <span className="font-display text-base sm:text-lg font-black text-white uppercase block truncate">
+                    {currentSubmission?.matchedAnswer?.text || currentSubmission?.rawInput || 'NO ANSWER'}
+                  </span>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <span className="text-xs font-mono font-bold text-emerald-400">
+                      {displayDepth}m
+                    </span>
+                    <span className="text-neutral-600">•</span>
+                    <span className="text-[10px] font-mono font-bold uppercase text-neutral-300">
+                      {currentSubmission?.tier || 'MISSED'}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase text-neutral-400">POINTS:</span>
+                  <span className="font-mono text-base font-black text-emerald-300">
+                    +{currentSubmission?.score || 0}
+                  </span>
+                </div>
+              </div>
+
+              {/* OPPONENT */}
+              {isMultiplayer && (
+                <div className="p-4 rounded-2xl bg-black/60 border border-white/15 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 block mb-1">
+                      {opponent?.name.toUpperCase() || 'OPPONENT'}
+                    </span>
+                    <span className="font-display text-base sm:text-lg font-black text-white uppercase block truncate">
+                      {opponentSubmission?.matchedAnswer?.text || opponentSubmission?.rawInput || 'NO ANSWER'}
+                    </span>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-xs font-mono font-bold text-sky-400">
+                        {opponentSubmission?.matchedAnswer?.rarityScore ? Math.round((opponentSubmission.matchedAnswer.rarityScore / 100) * 4000) : 0}m
+                      </span>
+                      <span className="text-neutral-600">•</span>
+                      <span className="text-[10px] font-mono font-bold uppercase text-neutral-300">
+                        {opponentSubmission?.tier || 'MISSED'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase text-neutral-400">POINTS:</span>
+                    <span className="font-mono text-base font-black text-sky-300">
+                      +{opponentSubmission?.score || 0}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Live Overall Score Strip */}
+            {isMultiplayer && (
+              <div className="py-2.5 px-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-around font-mono text-xs">
+                <div>
+                  <span className="text-neutral-400 uppercase text-[10px] block">YOU</span>
+                  <span className="text-emerald-400 font-black text-base">{totalScore} PTS</span>
+                </div>
+                <span className="text-neutral-600 font-black">:</span>
+                <div className="text-right">
+                  <span className="text-neutral-400 uppercase text-[10px] block">{opponent?.name.toUpperCase() || 'OPPONENT'}</span>
+                  <span className="text-sky-400 font-black text-base">{opponentTotalScore} PTS</span>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="pt-2">
+              {!isMultiplayer ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playClick(750);
+                    setIsPostRoundModalOpen(false);
+                    if (currentRoundIdx + 1 < prompts.length) {
+                      setDiveState('ascending');
+                      window.setTimeout(() => setCurrentRoundIdx((prev) => prev + 1), 1200);
+                    } else {
+                      setDiveState('game-over');
+                      soundFX.playVictoryFanfare();
+                    }
+                  }}
+                  className="w-full py-3.5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.4)] cursor-pointer"
+                >
+                  <span>{currentRoundIdx + 1 < prompts.length ? 'NEXT QUESTION' : 'VIEW FINAL SCOREBOARD'}</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              ) : !isHost ? (
+                /* Guest */
+                <button
+                  type="button"
+                  disabled={guestHasClickedReady}
+                  onClick={() => {
+                    soundFX.playClick(750);
+                    sendAction('sidenetting_player_ready', { roundIdx: currentRoundIdx });
+                    setGuestHasClickedReady(true);
+                  }}
+                  className={`w-full py-3.5 rounded-2xl font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                    guestHasClickedReady
+                      ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                      : 'bg-cyan-400 hover:bg-cyan-300 text-black shadow-[0_0_20px_rgba(0,240,255,0.4)] cursor-pointer'
+                  }`}
+                >
+                  <Check className="w-4 h-4" />
+                  <span>{guestHasClickedReady ? 'READY : WAITING FOR HOST...' : 'READY FOR NEXT'}</span>
+                </button>
+              ) : (
+                /* Host */
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playClick(750);
+                    setIsPostRoundModalOpen(false);
+                    if (currentRoundIdx + 1 < prompts.length) {
+                      sendAction('sidenetting_next_round', { nextRoundIdx: currentRoundIdx + 1 });
+                      setDiveState('ascending');
+                      window.setTimeout(() => setCurrentRoundIdx((prev) => prev + 1), 1200);
+                    } else {
+                      sendAction('sidenetting_game_over', {});
+                      setDiveState('game-over');
+                      soundFX.playVictoryFanfare();
+                    }
+                  }}
+                  className={`w-full py-3.5 rounded-2xl font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                    isGuestReadyForNext
+                      ? 'bg-[#ccff00] hover:bg-[#d8ff33] text-black shadow-[0_0_25px_rgba(204,255,0,0.6)] animate-pulse cursor-pointer'
+                      : 'bg-cyan-400 hover:bg-cyan-300 text-black shadow-[0_0_20px_rgba(0,240,255,0.4)] cursor-pointer'
+                  }`}
+                >
+                  <span>
+                    {currentRoundIdx + 1 < prompts.length
+                      ? isGuestReadyForNext
+                        ? 'OPPONENT READY : NEXT QUESTION'
+                        : 'NEXT QUESTION'
+                      : isGuestReadyForNext
+                      ? 'OPPONENT READY : FINAL RESULTS'
+                      : 'VIEW FINAL RESULTS'}
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Multiplayer Opponent Forfeit Dialog */}
       <MultiplayerForfeitModal

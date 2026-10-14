@@ -9,6 +9,10 @@ interface SquadShowdownProps {
   botState: ManagerState;
   onRematch: () => void;
   onReturnToHub: () => void;
+  isMultiplayer?: boolean;
+  isHost?: boolean;
+  isOpponentRematchReady?: boolean;
+  hasRequestedRematch?: boolean;
 }
 
 export const SquadShowdown: React.FC<SquadShowdownProps> = ({
@@ -16,6 +20,10 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
   botState,
   onRematch,
   onReturnToHub,
+  isMultiplayer = false,
+  isHost = false,
+  isOpponentRematchReady = false,
+  hasRequestedRematch = false,
 }) => {
   // Step-by-step reveal: 0 = start, 1 = slot 1, 2 = slot 2, 3 = slot 3, 4 = slot 4, 5 = all 5 revealed
   const [revealedSlotCount, setRevealedSlotCount] = useState<number>(0);
@@ -227,10 +235,27 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
                 soundFX.playClick(900);
                 onRematch();
               }}
-              className="px-7 py-3.5 rounded-full bg-[#ccff00] hover:bg-[#b8e600] text-black font-sans font-black text-xs uppercase tracking-wider shadow-[0_4px_20px_rgba(204,255,0,0.3)] transition-all flex items-center gap-2 hover:scale-105 active:scale-95"
+              disabled={isMultiplayer && !isHost && hasRequestedRematch}
+              className={`px-7 py-3.5 rounded-full font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
+                isMultiplayer && !isHost && hasRequestedRematch
+                  ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                  : isMultiplayer && isHost && isOpponentRematchReady
+                  ? 'bg-[#ccff00] hover:bg-[#b8e600] text-black shadow-[0_0_25px_rgba(204,255,0,0.6)] animate-pulse hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'bg-[#ccff00] hover:bg-[#b8e600] text-black shadow-[0_4px_20px_rgba(204,255,0,0.3)] hover:scale-105 active:scale-95 cursor-pointer'
+              }`}
             >
-              <RotateCcw className="w-4 h-4" />
-              <span>[ RUN IT BACK ]</span>
+              <RotateCcw className={`w-4 h-4 ${isMultiplayer && !isHost && hasRequestedRematch ? 'animate-spin' : ''}`} />
+              <span>
+                {isMultiplayer && !isHost
+                  ? hasRequestedRematch
+                    ? 'HOST NOTIFIED : WAITING FOR HOST'
+                    : '[ RUN IT BACK ]'
+                  : isMultiplayer && isHost
+                  ? isOpponentRematchReady
+                    ? 'OPPONENT READY : PLAY AGAIN'
+                    : '[ RUN IT BACK ]'
+                  : '[ RUN IT BACK ]'}
+              </span>
             </button>
 
             {/* Return to Hub Button */}

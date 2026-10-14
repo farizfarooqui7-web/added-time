@@ -37,6 +37,7 @@ export interface PartyState {
   members: PartyMember[];
   isCurrentUserHost: boolean;
   currentUserId: string;
+  pendingSetup?: Record<string, any>;
 }
 
 export interface RemoteMatchLaunch {
@@ -61,6 +62,7 @@ export interface GameEventPayload {
   data?: any;
   senderId?: string;
   senderName?: string;
+  _eventId?: number | string;
 }
 
 export interface PlayerForfeitPayload {
@@ -100,6 +102,7 @@ interface PartyContextType {
   kickMember: (memberId: string) => void;
   expandSlots: (newMax?: number) => void;
   launchMatch: (modeId: string, config?: unknown) => void;
+  syncSetupSettings: (modeId: string, settings: any) => void;
   lastRemoteMatch: RemoteMatchLaunch | null;
   clearRemoteMatch: () => void;
   // Matchmaking & Live Presence
@@ -339,9 +342,24 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         break;
       }
 
+      case 'party_setup_update': {
+        const { modeId, settings } = msg.payload || {};
+        if (modeId && settings) {
+          setParty((prev) => ({
+            ...prev,
+            pendingSetup: {
+              ...(prev.pendingSetup || {}),
+              [modeId]: settings,
+            },
+          }));
+        }
+        break;
+      }
+
       case 'match_launched': {
         const { modeId, config } = msg.payload;
         soundFX.playPhaseShift();
+        setPlayerForfeitEvent(null);
         setQueueState({
           isQueued: false,
           modeId: null,
@@ -864,6 +882,24 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  const syncSetupSettings = (modeId: string, settings: any) => {
+    setParty((prev) => ({
+      ...prev,
+      pendingSetup: {
+        ...(prev.pendingSetup || {}),
+        [modeId]: settings,
+      },
+    }));
+    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
+      roomSocketRef.current.send(
+        JSON.stringify({
+          type: 'party_setup_sync',
+          payload: { modeId, settings },
+        })
+      );
+    }
+  };
+
   const clearRemoteMatch = () => {
     setLastRemoteMatch(null);
   };
@@ -915,6 +951,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         kickMember,
         expandSlots,
         launchMatch,
+        syncSetupSettings,
         lastRemoteMatch,
         clearRemoteMatch,
         gameInitData,

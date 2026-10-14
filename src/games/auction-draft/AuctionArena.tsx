@@ -324,6 +324,38 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     }
   }, [matchIntroCount]);
 
+  // Turn-based bidding state: alternating turns between user and gaffer/opponent
+  const [roundStarter, setRoundStarter] = useState<'user' | 'gaffer'>(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.startingBidderId) {
+      return gameInitData.sharedData.startingBidderId === myPlayerId ? 'user' : 'gaffer';
+    }
+    return Math.random() < 0.5 ? 'user' : 'gaffer';
+  });
+
+  const [activeTurn, setActiveTurn] = useState<'user' | 'gaffer'>(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.startingBidderId) {
+      return gameInitData.sharedData.startingBidderId === myPlayerId ? 'user' : 'gaffer';
+    }
+    return Math.random() < 0.5 ? 'user' : 'gaffer';
+  });
+
+  // Rematch readiness sync
+  const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
+  const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
+
+  // Sync startingBidderId if gameInitData arrives asynchronously
+  const hasSyncedStarterRef = useRef(false);
+  useEffect(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.startingBidderId && !hasSyncedStarterRef.current) {
+      hasSyncedStarterRef.current = true;
+      const starter = gameInitData.sharedData.startingBidderId === myPlayerId ? 'user' : 'gaffer';
+      setRoundStarter(starter);
+      setActiveTurn(starter);
+    }
+  }, [isMultiplayer, gameInitData, myPlayerId]);
+
+  const lastProcessedEventIdRef = useRef<number | string | null>(null);
+
   // Main High-Precision Auction Timer (100ms ticks)
   useEffect(() => {
     if (phase !== 'bidding' || matchIntroCount !== null || isTransitioning || !currentLot) return;
@@ -347,19 +379,47 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     return () => clearInterval(interval);
   }, [phase, matchIntroCount, isTransitioning, currentLot]);
 
-  // Clean Hammer Drop Trigger when Round Timer hits 0
+  // Turn Timeout Trigger when Round Timer hits 0
   useEffect(() => {
     if (roundTimer <= 0 && phase === 'bidding' && !isTransitioning && matchIntroCount === null && currentLot) {
-      console.log('[AuctionArena] Round timer reached 0s, triggering hammer drop');
-      handleHammerDrop();
+      console.log(`[AuctionArena] Turn timer reached 0s for ${activeTurn}`);
+      if (activeTurn === 'user') {
+        // User ran out of time
+        if (highBidderId === 'gaffer') {
+          handleHammerDrop('gaffer', currentBid, false);
+        } else {
+          // Pass at $0
+          setUserState((prev) => ({ ...prev, hasFolded: true }));
+          if (botState.hasFolded) {
+            handleHammerDrop(null, 0, false);
+          } else {
+            setActiveTurn('gaffer');
+            setRoundTimer(8.0);
+          }
+        }
+      } else {
+        // Opponent / Gaffer ran out of time
+        if (highBidderId === 'user') {
+          handleHammerDrop('user', currentBid, false);
+        } else {
+          // Pass at $0
+          setBotState((prev) => ({ ...prev, hasFolded: true }));
+          if (userState.hasFolded) {
+            handleHammerDrop(null, 0, false);
+          } else {
+            setActiveTurn('user');
+            setRoundTimer(8.0);
+          }
+        }
+      }
     }
-  }, [roundTimer, phase, isTransitioning, matchIntroCount, currentLot]);
+  }, [roundTimer, phase, isTransitioning, matchIntroCount, currentLot, activeTurn, highBidderId, currentBid, botState.hasFolded, userState.hasFolded]);
 
-  // Bot Autonomous Bidding Trigger (disabled in multiplayer)
+  // Bot Autonomous Bidding Trigger (solo mode only, when activeTurn === 'gaffer')
   useEffect(() => {
     if (isMultiplayer) return;
     if (phase !== 'bidding' || matchIntroCount !== null || isTransitioning || !currentLot) return;
-    if (highBidderId === 'gaffer') return;
+    if (activeTurn !== 'gaffer') return;
     if (botState.hasFolded) return;
 
     // Forced Slot Acquisition: Bot is already 100% full
@@ -373,21 +433,35 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       const forcedBotCost = botRemainingCash > 0 ? 1 : 0;
       botTimeoutRef.current = setTimeout(() => {
         executeBid('gaffer', forcedBotCost);
-        setRoundTimer(2.0); // Accelerate clock so match flows cleanly
+        setActiveTurn('user');
       }, 800);
       return;
     }
 
     const decision = evaluateBotBid(botState, userState, currentLot, currentBid, highBidderId);
 
-    if (decision.shouldBid && decision.bidAmount) {
+    if (decision.shouldBid && decision.bidAmount && decision.bidAmount > currentBid) {
       if (botTimeoutRef.current) clearTimeout(botTimeoutRef.current);
 
       botTimeoutRef.current = setTimeout(() => {
         executeBid('gaffer', decision.bidAmount!);
-      }, decision.delayMs || 1200);
-    } else if (decision.reason === 'position-filled' || decision.reason === 'overpriced') {
-      setBotState((prev) => ({ ...prev, hasFolded: true }));
+        setActiveTurn('user');
+      }, decision.delayMs || 1000);
+    } else {
+      // Bot folds
+      if (botTimeoutRef.current) clearTimeout(botTimeoutRef.current);
+      botTimeoutRef.current = setTimeout(() => {
+        setBotState((prev) => ({ ...prev, hasFolded: true }));
+        if (highBidderId === 'user') {
+          handleHammerDrop('user', currentBid, false);
+        } else {
+          setActiveTurn('user');
+          setRoundTimer(8.0);
+          if (userState.hasFolded) {
+            handleHammerDrop(null, 0, false);
+          }
+        }
+      }, 700);
     }
 
     return () => {
@@ -400,7 +474,9 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     isTransitioning,
     currentBid,
     highBidderId,
+    activeTurn,
     botState.hasFolded,
+    userState.hasFolded,
     currentLot,
     botRemainingCash,
     isUserFull,
@@ -413,16 +489,31 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     if (!isMultiplayer || !lastGameEvent) return;
     if (lastGameEvent.senderId === myPlayerId) return;
 
+    if (lastGameEvent._eventId && lastProcessedEventIdRef.current === lastGameEvent._eventId) {
+      return;
+    }
+    lastProcessedEventIdRef.current = lastGameEvent._eventId || null;
+
     if (lastGameEvent.event === 'auction_bid') {
-      const { amount } = lastGameEvent.data || {};
-      if (typeof amount === 'number') {
+      const { amount, lotNumber: evLot } = lastGameEvent.data || {};
+      if (typeof amount === 'number' && (evLot === undefined || evLot === lotNumber)) {
         executeBid('gaffer', amount);
+        setActiveTurn('user');
       }
     } else if (lastGameEvent.event === 'auction_pass') {
       soundFX.playClick(400);
       setBotState((prev) => ({ ...prev, hasFolded: true }));
-      if (highBidderId === 'user' && roundTimer > 2.0) {
-        setRoundTimer(2.0);
+      if (highBidderId === 'user') {
+        if (isHost) {
+          handleHammerDrop('user', currentBid, false);
+        }
+      } else {
+        // Passed at $0, turn flips to user
+        setActiveTurn('user');
+        setRoundTimer(8.0);
+        if (userState.hasFolded && isHost) {
+          handleHammerDrop(null, 0, false);
+        }
       }
     } else if (lastGameEvent.event === 'auction_hammer_outcome') {
       const { winnerPlayerId, finalCost: authCost, isBankruptFreeClaim: authFree, lotNumber: authLot } = lastGameEvent.data || {};
@@ -430,8 +521,13 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         const resolvedWinnerId = winnerPlayerId === myPlayerId ? 'user' : (winnerPlayerId ? 'gaffer' : null);
         handleHammerDrop(resolvedWinnerId, typeof authCost === 'number' ? authCost : 0, Boolean(authFree));
       }
+    } else if (lastGameEvent.event === 'player_rematch_ready') {
+      setIsOpponentRematchReady(true);
+      soundFX.playSuccess();
+    } else if (lastGameEvent.event === 'match_restart') {
+      handleRematch();
     }
-  }, [isMultiplayer, isHost, lastGameEvent, myPlayerId, highBidderId, roundTimer, lotNumber, phase, isTransitioning]);
+  }, [isMultiplayer, isHost, lastGameEvent, myPlayerId, highBidderId, lotNumber, phase, isTransitioning, currentBid, userState.hasFolded]);
 
   // Execute a Provisional Bid
   const executeBid = (managerId: 'user' | 'gaffer', amount: number) => {
@@ -439,8 +535,8 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     setCurrentBid(amount);
     setHighBidderId(managerId);
 
-    // Any counter-bid resets clock to 7.0 seconds (extended reaction time)
-    setRoundTimer(7.0);
+    // Each placed bid resets clock to 8.0 seconds for the next manager's turn
+    setRoundTimer(8.0);
 
     if (managerId === 'user') {
       setUserState((prev) => ({ ...prev, hasFolded: false }));
@@ -451,11 +547,12 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
 
   // User Bidding Handlers
   const handleConfirmUserBid = () => {
-    if (selectedBidAmount === null || !currentLot || isTransitioning) return;
+    if (selectedBidAmount === null || !currentLot || isTransitioning || activeTurn !== 'user') return;
     if (selectedBidAmount > userRemainingCash) return;
     if (!canManagerAcceptCard(userState.slots, currentLot)) return;
 
     executeBid('user', selectedBidAmount);
+    setActiveTurn('gaffer');
     if (isMultiplayer) {
       sendAction('auction_bid', { amount: selectedBidAmount, lotNumber });
     }
@@ -463,7 +560,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   };
 
   const handleUserPass = () => {
-    if (isTransitioning || phase !== 'bidding' || isBotFull) return;
+    if (isTransitioning || phase !== 'bidding' || isBotFull || activeTurn !== 'user') return;
     soundFX.playClick(400);
     setUserState((prev) => ({ ...prev, hasFolded: true }));
     setSelectedBidAmount(null);
@@ -472,8 +569,16 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       sendAction('auction_pass', { lotNumber });
     }
 
-    if (highBidderId === 'gaffer' && roundTimer > 2.0) {
-      setRoundTimer(2.0);
+    if (highBidderId === 'gaffer') {
+      // Opponent held high bid: pass immediately forfeits the lot to high bidder
+      handleHammerDrop('gaffer', currentBid, false);
+    } else {
+      // User passed at $0: turn passes to gaffer
+      setActiveTurn('gaffer');
+      setRoundTimer(8.0);
+      if (botState.hasFolded) {
+        handleHammerDrop(null, 0, false);
+      }
     }
   };
 
@@ -649,7 +754,10 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
             setCurrentLot(nextCard);
             setCurrentBid(0);
             setHighBidderId(null);
-            setRoundTimer(15.0); // Reset to 15.0 seconds for next lot
+            const nextStarter = roundStarter === 'user' ? 'gaffer' : 'user';
+            setRoundStarter(nextStarter);
+            setActiveTurn(nextStarter);
+            setRoundTimer(10.0); // 10.0 seconds opening turn clock
             setSelectedBidAmount(null);
             setUserState((prev) => ({ ...prev, hasFolded: false }));
             setBotState((prev) => ({ ...prev, hasFolded: false }));
@@ -698,13 +806,31 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     );
     setCurrentBid(0);
     setHighBidderId(null);
-    setRoundTimer(15.0);
+    const starter = Math.random() < 0.5 ? 'user' : 'gaffer';
+    setRoundStarter(starter);
+    setActiveTurn(starter);
+    setIsOpponentRematchReady(false);
+    setHasRequestedRematch(false);
+    setRoundTimer(10.0);
     setPhase('bidding');
     setSelectedBidAmount(null);
     setMatchIntroCount(3);
     setStampText(null);
     setFlyDirection(null);
     setFlashingSlotId(null);
+  };
+
+  const handleRequestOrExecuteRematch = () => {
+    if (isMultiplayer) {
+      if (!isHost) {
+        sendAction('player_rematch_ready', {});
+        setHasRequestedRematch(true);
+        soundFX.playClick(900);
+        return;
+      }
+      sendAction('match_restart', {});
+    }
+    handleRematch();
   };
 
   // Streamer Code Copy
@@ -1099,6 +1225,21 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
               </div>
             ) : null}
 
+            {/* Turn Status Banner */}
+            {!isUserUncontested && !isBotUncontested && !isUserFull && !(isBotFull && canUserAcceptCurrentLot) && (
+              activeTurn === 'user' ? (
+                <div className="py-1 px-2.5 rounded-lg bg-[#ccff00]/15 border border-[#ccff00]/40 text-center text-[11px] font-mono text-[#ccff00] font-black tracking-wider uppercase animate-pulse flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(204,255,0,0.15)]">
+                  <span className="w-2 h-2 rounded-full bg-[#ccff00] animate-ping" />
+                  <span>YOUR TURN TO BID OR PASS ({roundTimer.toFixed(1)}s)</span>
+                </div>
+              ) : (
+                <div className="py-1 px-2.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center text-[11px] font-mono text-amber-300 font-bold tracking-wider uppercase flex items-center justify-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 animate-spin text-amber-300" />
+                  <span>WAITING FOR {botState.name.toUpperCase()} TO BID... ({roundTimer.toFixed(1)}s)</span>
+                </div>
+              )
+            )}
+
             {/* Action Buttons Section */}
             {isUserUncontested || isBotUncontested ? (
               <div className="w-full py-3 flex items-center justify-center gap-2 text-xs font-mono text-[#ccff00] animate-pulse">
@@ -1127,7 +1268,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
               <>
                 {/* Dynamic Absolute Number Track (Horizontal Swipe Belt) */}
                 {canUserAcceptCurrentLot && !isUserBankrupt && !isUserHighBidder && canUserAffordMinBid && (
-                  <div className="w-full flex flex-col gap-1">
+                  <div className={`w-full flex flex-col gap-1 transition-opacity ${activeTurn !== 'user' ? 'opacity-40 pointer-events-none' : ''}`}>
                     <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 px-1">
                       <span className="uppercase tracking-wider">CHOOSE EXACT BID:</span>
                       <span>MAX BANKROLL: ${userRemainingCash}</span>
@@ -1140,7 +1281,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                           <button
                             key={amount}
                             type="button"
-                            disabled={phase !== 'bidding'}
+                            disabled={phase !== 'bidding' || activeTurn !== 'user'}
                             onClick={() => {
                               soundFX.playClick(600);
                               setSelectedBidAmount(amount);
@@ -1164,10 +1305,10 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                   {/* CONFIRM BID $X Button (2 cols) */}
                   <button
                     type="button"
-                    disabled={phase !== 'bidding' || selectedBidAmount === null}
+                    disabled={phase !== 'bidding' || selectedBidAmount === null || activeTurn !== 'user'}
                     onClick={handleConfirmUserBid}
                     className={`col-span-2 h-11 md:h-12 rounded-xl font-sans font-black text-xs md:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-lg ${
-                      selectedBidAmount !== null && phase === 'bidding'
+                      selectedBidAmount !== null && phase === 'bidding' && activeTurn === 'user'
                         ? 'bg-[#ccff00] hover:bg-[#d8ff33] text-black shadow-[#ccff00]/20 active:scale-95 cursor-pointer animate-pulse'
                         : 'bg-white/5 border border-white/10 text-slate-500 opacity-50 cursor-not-allowed'
                     }`}
@@ -1181,7 +1322,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                   {/* Independent PASS Button (1 col) */}
                   <button
                     type="button"
-                    disabled={phase !== 'bidding' || userState.hasFolded}
+                    disabled={phase !== 'bidding' || userState.hasFolded || activeTurn !== 'user'}
                     onClick={handleUserPass}
                     className="col-span-1 h-11 md:h-12 rounded-xl bg-[#ef4444]/20 hover:bg-[#ef4444] border border-[#ef4444] text-[#ef4444] hover:text-white font-mono font-black text-xs md:text-sm uppercase tracking-wider transition-all flex items-center justify-center active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
                   >
@@ -1275,7 +1416,11 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
             ...botState,
             bankroll: botRemainingCash,
           }}
-          onRematch={handleRematch}
+          onRematch={handleRequestOrExecuteRematch}
+          isMultiplayer={isMultiplayer}
+          isHost={isHost}
+          isOpponentRematchReady={isOpponentRematchReady}
+          hasRequestedRematch={hasRequestedRematch}
           onReturnToHub={() => {
             if (isMultiplayer) sendGameLeave();
             handleCleanExit();

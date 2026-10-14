@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type {
   LinkUpDifficulty,
   LinkUpLobbyMode,
@@ -84,20 +84,48 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
   const [randomizeEachRound, setRandomizeEachRound] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<LinkUpDifficulty>('Easy');
 
-  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
+  const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length >= 2 && party.members.length <= 8;
+
+  // Real-time synchronization of setup settings from host
+  useEffect(() => {
+    const pending = party.pendingSetup?.['link-up'] || party.pendingSetup?.['criteria-rush'];
+    if (pending) {
+      if (pending.slotTypes) setSlotTypes(pending.slotTypes);
+      if (pending.difficulty) setDifficulty(pending.difficulty);
+      if (pending.randomizeEachRound !== undefined) setRandomizeEachRound(pending.randomizeEachRound);
+    }
+  }, [party.pendingSetup?.['link-up'], party.pendingSetup?.['criteria-rush']]);
 
   if (!isOpen) return null;
 
   const handleSlotChange = (index: 0 | 1 | 2, newType: LinkUpSlotType) => {
     soundFX.playClick(680);
-    setSlotTypes((prev) => updateSlotConfiguration(prev, index, newType));
+    const updated = updateSlotConfiguration(slotTypes, index, newType);
+    setSlotTypes(updated);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('link-up', { slotTypes: updated, difficulty, randomizeEachRound });
+    }
   };
 
   const handleShuffleSlots = () => {
     soundFX.playClick(820);
-    setSlotTypes(randomizeSlotConfiguration());
+    const shuffled = randomizeSlotConfiguration();
+    setSlotTypes(shuffled);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('link-up', { slotTypes: shuffled, difficulty, randomizeEachRound });
+    }
+  };
+
+  const handleDifficultyChange = (d: LinkUpDifficulty) => {
+    soundFX.playClick(650);
+    setDifficulty(d);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('link-up', { slotTypes, difficulty: d, randomizeEachRound });
+    }
   };
 
   const handleLaunchSolo = () => {
@@ -114,7 +142,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
       });
     };
 
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
@@ -127,7 +155,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
       onClose();
       joinQueue('criteria-rush', 'duel');
     };
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(start, 'matchmaking');
       return;
     }
@@ -364,8 +392,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                   key={preset.id}
                   onClick={() => {
                     if (isGuestInParty) return;
-                    soundFX.playClick(640);
-                    setDifficulty(preset.id);
+                    handleDifficultyChange(preset.id);
                   }}
                   className={`px-4 py-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1.5 ${
                     isGuestInParty

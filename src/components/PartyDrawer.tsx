@@ -51,6 +51,7 @@ export const PartyDrawer: React.FC = () => {
 
   // Join form state
   const [inputCode, setInputCode] = useState('');
+  const [isCodeMaskedJoin, setIsCodeMaskedJoin] = useState(true);
   const [inputNickname, setInputNickname] = useState(playerName || '');
   const [joinError, setJoinError] = useState<string | null>(null);
 
@@ -710,21 +711,45 @@ export const PartyDrawer: React.FC = () => {
 
                   <div className="space-y-2">
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                        ROOM CODE (4-6 CHARACTERS)
-                      </label>
-                      <input
-                        ref={joinInputRef}
-                        type="text"
-                        maxLength={8}
-                        value={inputCode}
-                        onChange={(e) => {
-                          setInputCode(e.target.value.toUpperCase());
-                          if (joinError) setJoinError(null);
-                        }}
-                        placeholder="ROOM CODE"
-                        className="w-full h-11 px-4 rounded-xl bg-[#0a0d14] border border-white/15 focus:border-[#ff6b00] text-white font-mono font-black text-center text-base uppercase tracking-widest focus:outline-none transition-colors"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                          ROOM CODE (4-6 CHARACTERS)
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundFX.playClick(600);
+                            setIsCodeMaskedJoin((prev) => !prev);
+                          }}
+                          className="flex items-center gap-1 text-[10px] font-mono text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          {isCodeMaskedJoin ? (
+                            <>
+                              <EyeOff className="w-3 h-3 text-[#ff6b00]" />
+                              <span>SHOW</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="w-3 h-3 text-neutral-400" />
+                              <span>HIDE</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <input
+                          ref={joinInputRef}
+                          type={isCodeMaskedJoin ? 'password' : 'text'}
+                          maxLength={8}
+                          value={inputCode}
+                          onChange={(e) => {
+                            setInputCode(e.target.value.toUpperCase());
+                            if (joinError) setJoinError(null);
+                          }}
+                          placeholder={isCodeMaskedJoin ? '••••••' : 'ROOM CODE'}
+                          className="w-full h-11 px-4 rounded-xl bg-[#0a0d14] border border-white/15 focus:border-[#ff6b00] text-white font-mono font-black text-center text-base uppercase tracking-widest focus:outline-none transition-colors"
+                        />
+                      </div>
                     </div>
 
                     <div>

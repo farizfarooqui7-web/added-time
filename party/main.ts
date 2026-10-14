@@ -71,7 +71,7 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       sharedData = { puzzles, totalRounds: 10 };
     } else if (normMode === 'tally-race') {
       const clubSequence = generateClubSequence('Medium', 10);
-      sharedData = { clubSequence, totalRounds: 10 };
+      sharedData = { clubSequence, totalRounds: 10, metric: 'Goals' };
     } else if (normMode === 'football-imposter') {
       const secret = pickSecretPlayer('Global Icons');
       const memberIds = members.map((m) => m.id);
@@ -106,16 +106,70 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       }
     } else if (normMode === 'side_netting') {
       const promptResult = drawMatchPrompts(10, []);
-      sharedData = { prompts: promptResult.prompts, totalRounds: 10 };
+      sharedData = { prompts: promptResult.prompts, totalRounds: 10, timerSeconds: 60 };
     } else if (normMode === 'auction-draft') {
       const shuffled = [...PREMIER_LEAGUE_DECK].sort(() => Math.random() - 0.5);
-      sharedData = { cards: shuffled, totalRounds: 10 };
+      const startingBidderId = members[Math.floor(Math.random() * members.length)]?.id || members[0]?.id;
+      sharedData = { cards: shuffled, totalRounds: 10, startingBidderId };
     }
   } catch (err) {
     console.error('[Added Time Match Engine] Failed to generate shared match data:', err);
   }
 
   return { sharedData, assignedRoles };
+}
+
+function generateDefaultModeConfig(normMode: string, roomId: string): any {
+  if (normMode === 'criteria-rush' || normMode === 'link-up') {
+    return {
+      lobbyMode: 'host',
+      roomCode: roomId,
+      isRoomCodeMasked: true,
+      difficulty: 'Medium',
+      slotTypes: ['Club', 'Nation', 'Position'],
+      randomizeSlotsEachRound: false,
+      totalRounds: 10,
+      isMultiplayer: true,
+    };
+  }
+  if (normMode === 'tally-race' || normMode === 'record-books') {
+    return {
+      lobbyMode: 'host',
+      roomCode: roomId,
+      isRoomCodeMasked: true,
+      metric: 'Goals',
+      difficulty: 'Medium',
+      totalRounds: 10,
+      isMultiplayer: true,
+    };
+  }
+  if (normMode === 'side_netting') {
+    return {
+      roundCount: 10,
+      timerSeconds: 60,
+      isMultiplayer: true,
+    };
+  }
+  if (normMode === 'football-imposter') {
+    return {
+      lobbyMode: 'host',
+      roomCode: roomId,
+      isRoomCodeMasked: true,
+      category: 'Global Icons',
+      botCount: 4,
+      rolePreference: 'random',
+      imposterClueEnabled: true,
+      isMultiplayer: true,
+    };
+  }
+  return {
+    formationId: 'balanced-1-1-2-1',
+    deckId: 'global',
+    mode: 'host',
+    roomCode: roomId,
+    isRoomCodeMasked: true,
+    isMultiplayer: true,
+  };
 }
 
 // ================= QUEUED ENTRY TYPE =================
@@ -410,6 +464,8 @@ export class TopBinsServer extends Server {
             currentGame: { modeId: normMode, status: 'in-game' },
           };
 
+          const defaultConfig = generateDefaultModeConfig(normMode, ephemeralRoomId);
+
           // Notify Player 1
           if (waitingConn) {
             this.sendToConn(waitingConn, {
@@ -422,7 +478,7 @@ export class TopBinsServer extends Server {
             });
             this.sendToConn(waitingConn, {
               type: 'match_launched',
-              payload: { modeId: normMode, config: { isMultiplayer: true } },
+              payload: { modeId: normMode, config: defaultConfig },
             });
           }
 
@@ -437,7 +493,7 @@ export class TopBinsServer extends Server {
           });
           this.sendToConn(sender, {
             type: 'match_launched',
-            payload: { modeId: normMode, config: { isMultiplayer: true } },
+            payload: { modeId: normMode, config: defaultConfig },
           });
 
           // Generate authoritative shared match data
@@ -448,7 +504,7 @@ export class TopBinsServer extends Server {
               type: 'game_init',
               payload: {
                 modeId: normMode,
-                config: { isMultiplayer: true },
+                config: defaultConfig,
                 sharedData,
                 assignedRole: assignedRoles[waiting.playerId],
                 myPlayerId: waiting.playerId,
@@ -460,7 +516,7 @@ export class TopBinsServer extends Server {
             type: 'game_init',
             payload: {
               modeId: normMode,
-              config: { isMultiplayer: true },
+              config: defaultConfig,
               sharedData,
               assignedRole: assignedRoles[playerId],
               myPlayerId: playerId,
@@ -570,6 +626,8 @@ export class TopBinsServer extends Server {
       payload: { modeId: normMode, status: 'timeout_bot', elapsedSeconds: 10, queueType },
     });
 
+    const defaultConfig = generateDefaultModeConfig(normMode, ephemeralRoomId);
+
     this.sendToConn(conn, {
       type: 'party_created',
       payload: { room: ephemeralRoom, myPlayerId: playerId },
@@ -577,7 +635,7 @@ export class TopBinsServer extends Server {
 
     this.sendToConn(conn, {
       type: 'match_launched',
-      payload: { modeId: normMode, config: { isMultiplayer: true } },
+      payload: { modeId: normMode, config: defaultConfig },
     });
 
     const { sharedData, assignedRoles } = generateAuthoritativeMatchData(normMode, ephemeralRoom.members);
@@ -586,7 +644,7 @@ export class TopBinsServer extends Server {
       type: 'game_init',
       payload: {
         modeId: normMode,
-        config: { isMultiplayer: true },
+        config: defaultConfig,
         sharedData,
         assignedRole: assignedRoles[playerId],
         myPlayerId: playerId,
@@ -796,6 +854,26 @@ export class TopBinsServer extends Server {
             payload: { room: this.partyRoom },
           });
         }
+        break;
+      }
+
+      case 'party_setup_sync': {
+        if (!this.partyRoom) return;
+        const playerId = this.connToPlayerId.get(sender.id) || sender.id;
+        if (this.partyRoom.hostId !== playerId) return;
+
+        const { modeId, settings } = msg.payload || {};
+        if (!modeId || !settings) return;
+
+        if (!(this.partyRoom as any).pendingSetup) {
+          (this.partyRoom as any).pendingSetup = {};
+        }
+        (this.partyRoom as any).pendingSetup[modeId] = settings;
+
+        this.broadcastToRoom({
+          type: 'party_setup_update',
+          payload: { modeId, settings },
+        });
         break;
       }
 

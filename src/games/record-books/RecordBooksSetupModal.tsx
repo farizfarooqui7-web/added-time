@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type {
   RecordBooksDifficulty,
   RecordBooksMatchConfig,
@@ -63,11 +63,38 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
   const [totalRounds] = useState<10>(10);
   const [difficulty, setDifficulty] = useState<RecordBooksDifficulty>('Medium');
 
-  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
+  const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length === 2;
 
+  // Real-time synchronization of setup settings from host
+  useEffect(() => {
+    const pending = party.pendingSetup?.['record-books'] || party.pendingSetup?.['tally-race'];
+    if (pending) {
+      if (pending.metric) setMetric(pending.metric);
+      if (pending.difficulty) setDifficulty(pending.difficulty);
+    }
+  }, [party.pendingSetup?.['record-books'], party.pendingSetup?.['tally-race']]);
+
   if (!isOpen) return null;
+
+  const handleMetricChange = (val: RecordBooksMetric) => {
+    soundFX.playClick(650);
+    setMetric(val);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('record-books', { metric: val, difficulty });
+    }
+  };
+
+  const handleDifficultyChange = (val: RecordBooksDifficulty) => {
+    soundFX.playClick(650);
+    setDifficulty(val);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('record-books', { metric, difficulty: val });
+    }
+  };
 
   const handleLaunchSolo = () => {
     soundFX.playClick(1000);
@@ -82,7 +109,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
       });
     };
 
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
@@ -95,7 +122,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
       onClose();
       joinQueue('tally-race', 'duel');
     };
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(start, 'matchmaking');
       return;
     }
@@ -198,8 +225,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
                   key={m.id}
                   onClick={() => {
                     if (isGuestInParty) return;
-                    soundFX.playClick(700);
-                    setMetric(m.id as RecordBooksMetric);
+                    handleMetricChange(m.id as RecordBooksMetric);
                   }}
                   className={`p-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1.5 ${
                     isGuestInParty
@@ -244,10 +270,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
                     key={d.id}
                     type="button"
                     disabled={isGuestInParty}
-                    onClick={() => {
-                      soundFX.playClick(650);
-                      setDifficulty(d.id);
-                    }}
+                    onClick={() => handleDifficultyChange(d.id)}
                     className={`min-h-[44px] p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
                       isGuestInParty
                         ? isSelected

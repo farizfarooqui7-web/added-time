@@ -4,6 +4,7 @@ import { ShieldAlert, LogOut, X } from 'lucide-react';
 
 export const SoloEscapeHatchModal: React.FC = () => {
   const {
+    party,
     isSoloEscapeModalOpen,
     escapeHatchIntent,
     dismissSoloEscapeHatch,
@@ -13,6 +14,7 @@ export const SoloEscapeHatchModal: React.FC = () => {
   if (!isSoloEscapeModalOpen) return null;
 
   const isMatchmaking = escapeHatchIntent === 'matchmaking';
+  const isHost = party.isActive && party.isCurrentUserHost;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
@@ -31,10 +33,10 @@ export const SoloEscapeHatchModal: React.FC = () => {
             </div>
             <div>
               <h3 className="font-display text-lg font-black uppercase text-white leading-tight">
-                LEAVE SQUAD?
+                {isHost ? 'LEAVE SQUAD AS HOST?' : 'LEAVE SQUAD?'}
               </h3>
               <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">
-                {isMatchmaking ? 'MATCHMAKING CONFLICT' : 'PARTY HOST EXCLUSIVE ACTION'}
+                {isHost ? 'HOST AUTHORITY ALERT' : isMatchmaking ? 'MATCHMAKING CONFLICT' : 'PARTY GUEST ACTION'}
               </span>
             </div>
           </div>
@@ -50,16 +52,30 @@ export const SoloEscapeHatchModal: React.FC = () => {
 
         {/* Modal Message */}
         <div className="rounded-2xl bg-black/40 border border-white/10 p-4 mb-6">
-          <p className="text-sm text-neutral-200 leading-relaxed font-sans">
-            {isMatchmaking
-              ? 'Leave Squad? You are currently in a squad. Would you like to leave the squad to join matchmaking solo?'
-              : 'Leave Squad? You are currently in a squad. Would you like to leave the squad to play solo?'}
-          </p>
-          <p className="text-[11px] font-mono text-neutral-400 mt-2">
-            {isMatchmaking
-              ? 'Leaving will disconnect you from this squad room and enter the matchmaking queue.'
-              : 'Leaving will disconnect you from this squad room and start your solo practice session.'}
-          </p>
+          {isHost ? (
+            <>
+              <p className="text-sm text-neutral-200 leading-relaxed font-sans">
+                You are currently the <strong className="text-amber-300 font-bold">Party Host</strong> of an active squad ({party.members.length} ballers).
+                Launching {isMatchmaking ? '1v1 Quick Match' : 'Solo Mode'} will leave your party.
+              </p>
+              <p className="text-[11px] font-mono text-amber-300/90 mt-2 bg-amber-500/10 border border-amber-500/20 rounded-lg p-2.5">
+                Tip: If you want to play with your squad members, close this and click <strong className="text-[#ccff00]">"LAUNCH WITH SQUAD"</strong> instead!
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-neutral-200 leading-relaxed font-sans">
+                {isMatchmaking
+                  ? 'You are currently in a squad. Would you like to leave the squad to join matchmaking solo?'
+                  : 'You are currently in a squad. Would you like to leave the squad to play solo?'}
+              </p>
+              <p className="text-[11px] font-mono text-neutral-400 mt-2">
+                {isMatchmaking
+                  ? 'Leaving will disconnect you from this squad room and enter the matchmaking queue.'
+                  : 'Leaving will disconnect you from this squad room and start your solo practice session.'}
+              </p>
+            </>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -69,7 +85,7 @@ export const SoloEscapeHatchModal: React.FC = () => {
             onClick={dismissSoloEscapeHatch}
             className="py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 font-sans font-bold text-xs uppercase tracking-wider transition-all cursor-pointer hover:text-white text-center"
           >
-            STAY IN SQUAD
+            STAY WITH SQUAD
           </button>
 
           <button
@@ -78,7 +94,15 @@ export const SoloEscapeHatchModal: React.FC = () => {
             className="py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-95 text-center"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>{isMatchmaking ? 'LEAVE & MATCHMAKE' : 'LEAVE & PLAY SOLO'}</span>
+            <span>
+              {isHost
+                ? isMatchmaking
+                  ? 'LEAVE & MATCHMAKE'
+                  : 'LEAVE & PLAY SOLO'
+                : isMatchmaking
+                ? 'LEAVE & MATCHMAKE'
+                : 'LEAVE & PLAY SOLO'}
+            </span>
           </button>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type {
   LinkUpClue,
-  LinkUpDifficulty,
   LinkUpMatchConfig,
   LinkUpPlayerEvaluation,
   LinkUpPlayerRecord,
@@ -36,7 +35,6 @@ import {
   Home,
   RotateCcw,
   Search,
-  Shuffle,
   SkipForward,
   Sparkles,
   Trophy,
@@ -67,13 +65,14 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   } = useGameSync('link-up');
 
   const [roundNumber, setRoundNumber] = useState<number>(1);
-  const [activeDifficulty, setActiveDifficulty] = useState<LinkUpDifficulty>(config.difficulty);
-  const [activeSlots, setActiveSlots] = useState<[LinkUpSlotType, LinkUpSlotType, LinkUpSlotType]>(
+  const [activeSlots] = useState<[LinkUpSlotType, LinkUpSlotType, LinkUpSlotType]>(
     config.slotTypes
   );
-  const [autoRandomizeSlots, setAutoRandomizeSlots] = useState<boolean>(
-    config.randomizeSlotsEachRound
-  );
+
+  // Synchronized round transition curtain & rematch readiness
+  const [roundTransitionCount, setRoundTransitionCount] = useState<number | null>(null);
+  const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
+  const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
 
   const usedSeedIdsRef = useRef<Set<string>>(new Set());
 
@@ -263,6 +262,11 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
       if (nextRound && nextRound > roundNumber) {
         handleNextRound(nextRound);
       }
+    } else if (lastGameEvent.event === 'player_rematch_ready') {
+      setIsOpponentRematchReady(true);
+      soundFX.playSuccess();
+    } else if (lastGameEvent.event === 'match_restart') {
+      handleRestartMatch();
     }
   }, [isMultiplayer, lastGameEvent, myPlayerId, roundNumber, userSubmittedEval]);
 
@@ -488,14 +492,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     if (isMultiplayer && gameInitData?.sharedData?.puzzles?.[nextRoundNum - 1]) {
       nextPuzzle = gameInitData.sharedData.puzzles[nextRoundNum - 1];
     } else {
-      const nextSlots = autoRandomizeSlots ? randomizeSlotConfiguration() : activeSlots;
-      if (autoRandomizeSlots) {
-        setActiveSlots(nextSlots);
-      }
       nextPuzzle = generateLinkUpPuzzle(
         nextRoundNum,
-        activeDifficulty,
-        nextSlots,
+        config.difficulty,
+        activeSlots,
         usedSeedIdsRef.current
       );
       usedSeedIdsRef.current.add(nextPuzzle.seedPlayer.id);
@@ -512,6 +512,11 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     setOpponentLockedEval(null);
     setPressureTimeLeft(null);
     setPhase('playing');
+    setRoundTransitionCount(1);
+    setTimeout(() => {
+      setRoundTransitionCount(null);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }, 1000);
   };
 
   // Keyboard shortcut listener: Second Enter on round-result explicitly advances to the next round
@@ -532,52 +537,15 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
     window.addEventListener('keydown', handleWindowKeyDown);
     return () => window.removeEventListener('keydown', handleWindowKeyDown);
-  }, [phase, roundNumber, config.totalRounds, autoRandomizeSlots, activeSlots, activeDifficulty, isMultiplayer, isHost]);
-
-  const handleInstantRegenerate = (
-    overrideDiff?: LinkUpDifficulty,
-    overrideSlots?: [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType]
-  ) => {
-    soundFX.playClick(780);
-    const targetDiff = overrideDiff || activeDifficulty;
-    const targetSlots = overrideSlots || activeSlots;
-
-    if (overrideDiff) setActiveDifficulty(overrideDiff);
-    if (overrideSlots) setActiveSlots(overrideSlots);
-
-    const freshPuzzle = generateLinkUpPuzzle(
-      roundNumber,
-      targetDiff,
-      targetSlots,
-      usedSeedIdsRef.current
-    );
-    usedSeedIdsRef.current.add(freshPuzzle.seedPlayer.id);
-
-    setCurrentPuzzle(freshPuzzle);
-    setSearchInput('');
-    setSuggestions([]);
-    setLastRoundResult(null);
-    setPhase('playing');
-  };
-
-  const handleToggleRandomizeSlots = () => {
-    soundFX.playClick(760);
-    const nextState = !autoRandomizeSlots;
-    setAutoRandomizeSlots(nextState);
-    if (nextState && phase === 'playing') {
-      const nextRandom = randomizeSlotConfiguration();
-      handleInstantRegenerate(undefined, nextRandom);
-    }
-  };
+  }, [phase, roundNumber, config.totalRounds, activeSlots, isMultiplayer, isHost]);
 
   const handleRestartMatch = () => {
     soundFX.playClick(900);
     usedSeedIdsRef.current.clear();
-    const initialSlots = autoRandomizeSlots ? randomizeSlotConfiguration() : config.slotTypes;
     const firstPuzzle = generateLinkUpPuzzle(
       1,
-      activeDifficulty,
-      initialSlots,
+      config.difficulty,
+      config.slotTypes,
       usedSeedIdsRef.current
     );
     usedSeedIdsRef.current.add(firstPuzzle.seedPlayer.id);
@@ -590,7 +558,27 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     setSearchInput('');
     setSuggestions([]);
     setLastRoundResult(null);
+    setIsOpponentRematchReady(false);
+    setHasRequestedRematch(false);
     setPhase('playing');
+    setRoundTransitionCount(1);
+    setTimeout(() => {
+      setRoundTransitionCount(null);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }, 1000);
+  };
+
+  const handleRequestOrExecuteRematch = () => {
+    if (isMultiplayer) {
+      if (!isHost) {
+        sendAction('player_rematch_ready', {});
+        setHasRequestedRematch(true);
+        soundFX.playClick(900);
+        return;
+      }
+      sendAction('match_restart', {});
+    }
+    handleRestartMatch();
   };
 
   const handleCopyCode = async () => {
@@ -716,11 +704,28 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
           <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-center gap-4">
             <button
               type="button"
-              onClick={handleRestartMatch}
-              className="px-7 py-3 rounded-full bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black text-xs md:text-sm uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
+              disabled={isMultiplayer && !isHost && hasRequestedRematch}
+              onClick={handleRequestOrExecuteRematch}
+              className={`px-7 py-3 rounded-full font-sans font-black text-xs md:text-sm uppercase tracking-wider flex items-center gap-2 transition-all ${
+                isMultiplayer && !isHost && hasRequestedRematch
+                  ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                  : isMultiplayer && isHost && isOpponentRematchReady
+                  ? 'bg-[#ccff00] hover:bg-[#d8ff33] text-black shadow-[0_0_25px_rgba(204,255,0,0.6)] animate-pulse cursor-pointer'
+                  : 'bg-[#ccff00] hover:bg-[#d8ff33] text-black cursor-pointer'
+              }`}
             >
-              <RotateCcw className="w-4 h-4" />
-              <span>PLAY AGAIN</span>
+              <RotateCcw className={`w-4 h-4 ${isMultiplayer && !isHost && hasRequestedRematch ? 'animate-spin' : ''}`} />
+              <span>
+                {isMultiplayer && !isHost
+                  ? hasRequestedRematch
+                    ? 'HOST NOTIFIED : WAITING FOR HOST'
+                    : 'PLAY AGAIN'
+                  : isMultiplayer && isHost
+                  ? isOpponentRematchReady
+                    ? 'OPPONENT READY : PLAY AGAIN'
+                    : 'PLAY AGAIN'
+                  : 'PLAY AGAIN'}
+              </span>
             </button>
             <button
               type="button"
@@ -792,12 +797,29 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         </div>
       )}
 
+      {/* Synchronized Round Transition Curtain */}
+      {roundTransitionCount !== null && (
+        <div className="absolute inset-0 z-50 bg-[#080a0f]/90 backdrop-blur-md flex flex-col items-center justify-center animate-in fade-in duration-150">
+          <div className="text-center space-y-3">
+            <span className="font-mono text-xs tracking-widest text-[#a855f7] uppercase block">
+              ROUND {roundNumber} OF {config.totalRounds}
+            </span>
+            <h2 className="font-sans font-black text-3xl md:text-5xl text-white uppercase tracking-tight animate-pulse">
+              REVEALING CLUES...
+            </h2>
+            <div className="w-36 h-1 rounded-full bg-white/10 mx-auto overflow-hidden">
+              <div className="h-full bg-[#a855f7] rounded-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Subtle Stadium Pitch Grid Background */}
       <div className="absolute inset-0 pitch-grid-bg opacity-40 pointer-events-none" />
 
       {/* ================= 1. TOP BROADCAST HUD BAR ================= */}
       <header className="relative z-10 w-full max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10 shrink-0">
-        {/* Left: Round Pill + Difficulty Switcher */}
+        {/* Left: Round Pill + Static Difficulty Indicator */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 bg-[#12151e] border border-white/10 px-3 py-1.5 rounded-full">
             <span className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
@@ -806,29 +828,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
             </span>
           </div>
 
-          {/* Quick Difficulty Switcher Pills */}
-          <div className="hidden sm:flex items-center bg-[#12151e] border border-white/10 p-0.5 rounded-full">
-            {(['Easy', 'Medium', 'Hard'] as LinkUpDifficulty[]).map((diff) => {
-              const active = activeDifficulty === diff;
-              return (
-                <button
-                  key={diff}
-                  type="button"
-                  onClick={() => handleInstantRegenerate(diff, undefined)}
-                  className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                    active
-                      ? diff === 'Easy'
-                        ? 'bg-[#ccff00] text-black'
-                        : diff === 'Medium'
-                        ? 'bg-[#00f0ff] text-black'
-                        : 'bg-[#ff6b00] text-black'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {diff}
-                </button>
-              );
-            })}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#12151e] border border-white/10 font-mono text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+            <span className="text-slate-500">DIFF:</span>
+            <span className="text-[#00f0ff] font-black">{config.difficulty}</span>
           </div>
         </div>
 
@@ -883,10 +885,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
           )}
         </div>
 
-        {/* Right: Active Slot Strip + Randomize Slots ON/OFF Toggle + Exit */}
+        {/* Right: Active Slot Strip + Exit */}
         <div className="flex items-center gap-2">
-          {/* Active Slot Formula Strip + Randomize Slots ON/OFF Toggle */}
-          <div className="flex items-center bg-[#12151e] border border-white/10 rounded-full p-1 pl-2.5 gap-2">
+          {/* Active Slot Formula Strip */}
+          <div className="flex items-center bg-[#12151e] border border-white/10 rounded-full px-3 py-1.5 gap-2">
             <div className="flex items-center gap-1" title="Current 3-Slot Link Formula">
               {currentPuzzle.slotTypes.map((slotType, sIdx) => {
                 const pillStyle =
@@ -907,23 +909,6 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                 );
               })}
             </div>
-
-            <button
-              type="button"
-              onClick={handleToggleRandomizeSlots}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-black tracking-wider flex items-center gap-1.5 transition-all cursor-pointer border ${
-                autoRandomizeSlots
-                  ? 'bg-[#ccff00] text-black border-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.3)]'
-                  : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
-              }`}
-              title="Toggle Randomize Slots Each Round"
-            >
-              <Shuffle className="w-3 h-3" />
-              <span className="hidden md:inline">
-                RANDOMIZE SLOTS: {autoRandomizeSlots ? 'ON' : 'OFF'}
-              </span>
-              <span className="md:hidden">{autoRandomizeSlots ? 'ON' : 'OFF'}</span>
-            </button>
           </div>
 
           <button

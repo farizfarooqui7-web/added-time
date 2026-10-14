@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Play,
   Sparkles,
@@ -24,11 +24,28 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
 }) => {
   const [timerSeconds, setTimerSeconds] = useState<30 | 45 | 60 | 0>(45);
 
-  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
+  const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length >= 2;
 
+  // Real-time synchronization of setup settings from host
+  useEffect(() => {
+    if (party.pendingSetup?.side_netting?.timerSeconds !== undefined) {
+      setTimerSeconds(party.pendingSetup.side_netting.timerSeconds);
+    }
+  }, [party.pendingSetup?.side_netting?.timerSeconds]);
+
   if (!isOpen) return null;
+
+  const handleTimerChange = (val: 30 | 45 | 60 | 0) => {
+    soundFX.playClick(650);
+    setTimerSeconds(val);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('side_netting', { timerSeconds: val });
+    }
+  };
 
   const handleLaunchSolo = () => {
     soundFX.playClick(1000);
@@ -39,7 +56,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
       });
     };
 
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
@@ -53,7 +70,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
       joinQueue('side_netting', 'duel');
     };
 
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(startQuickMatch, 'matchmaking');
       return;
     }
@@ -170,10 +187,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
                   key={t.val}
                   type="button"
                   disabled={isGuestInParty}
-                  onClick={() => {
-                    soundFX.playClick(650);
-                    setTimerSeconds(t.val as 30 | 45 | 60 | 0);
-                  }}
+                  onClick={() => handleTimerChange(t.val as 30 | 45 | 60 | 0)}
                   className={`py-2 px-1 rounded-xl border font-mono text-[11px] sm:text-xs font-black transition-all truncate min-w-0 ${
                     isGuestInParty
                       ? 'opacity-60 cursor-not-allowed bg-white/[0.02] border-white/10 text-neutral-400'

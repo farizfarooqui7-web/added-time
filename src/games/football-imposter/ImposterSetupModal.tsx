@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Database,
   Flame,
@@ -64,11 +64,39 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
   const [category, setCategory] = useState<ImposterCategory>('All Players');
   const [imposterClueEnabled, setImposterClueEnabled] = useState<boolean>(true);
 
-  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
+  const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length >= 3 && party.members.length <= 8;
 
+  // Real-time synchronization of setup settings from host
+  useEffect(() => {
+    const pending = party.pendingSetup?.['football-imposter'];
+    if (pending) {
+      if (pending.category) setCategory(pending.category);
+      if (pending.imposterClueEnabled !== undefined) setImposterClueEnabled(pending.imposterClueEnabled);
+    }
+  }, [party.pendingSetup?.['football-imposter']]);
+
   if (!isOpen) return null;
+
+  const handleCategoryChange = (c: ImposterCategory) => {
+    soundFX.playClick(600);
+    setCategory(c);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('football-imposter', { category: c, imposterClueEnabled });
+    }
+  };
+
+  const handleToggleClue = () => {
+    soundFX.playClick(600);
+    const nextVal = !imposterClueEnabled;
+    setImposterClueEnabled(nextVal);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('football-imposter', { category, imposterClueEnabled: nextVal });
+    }
+  };
 
   const handleFindPublicGame = () => {
     soundFX.playClick(850);
@@ -76,7 +104,7 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
       onClose();
       joinQueue('football-imposter', 'ffa');
     };
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(start, 'matchmaking');
       return;
     }
@@ -180,8 +208,8 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
                   type="button"
                   disabled={isGuestInParty}
                   onClick={() => {
-                    soundFX.playClick(620);
-                    setCategory(cat.id);
+                    if (isGuestInParty) return;
+                    handleCategoryChange(cat.id);
                   }}
                   className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all ${
                     isFullSpan ? 'sm:col-span-2' : ''
@@ -227,8 +255,8 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
                   type="button"
                   disabled={isGuestInParty}
                   onClick={() => {
-                    soundFX.playClick(650);
-                    setImposterClueEnabled(opt.val);
+                    if (isGuestInParty) return;
+                    handleToggleClue();
                   }}
                   className={`p-2.5 rounded-xl border text-left transition-all ${
                     isGuestInParty

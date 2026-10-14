@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FORMATION_PRESETS } from './formations';
 import type { FormationId, MatchConfig, LeagueDeckId } from './types';
 import { soundFX } from '../../utils/audio';
@@ -58,11 +58,38 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
   const [selectedFormation, setSelectedFormation] = useState<FormationId>('balanced-1-1-2-1');
   const [selectedDeck, setSelectedDeck] = useState<LeagueDeckId>('global');
 
-  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
+  const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length === 2;
 
+  // Real-time synchronization of setup settings from host
+  useEffect(() => {
+    const pending = party.pendingSetup?.['auction-draft'];
+    if (pending) {
+      if (pending.formationId) setSelectedFormation(pending.formationId);
+      if (pending.deckId) setSelectedDeck(pending.deckId);
+    }
+  }, [party.pendingSetup?.['auction-draft']]);
+
   if (!isOpen) return null;
+
+  const handleFormationChange = (f: FormationId) => {
+    soundFX.playClick(600);
+    setSelectedFormation(f);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('auction-draft', { formationId: f, deckId: selectedDeck });
+    }
+  };
+
+  const handleDeckChange = (d: LeagueDeckId) => {
+    soundFX.playClick(600);
+    setSelectedDeck(d);
+    if (party.isActive && party.isCurrentUserHost) {
+      syncSetupSettings('auction-draft', { formationId: selectedFormation, deckId: d });
+    }
+  };
 
   const handleLaunchSolo = () => {
     soundFX.playClick(1000);
@@ -76,7 +103,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
       });
     };
 
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
@@ -89,7 +116,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
       onClose();
       joinQueue('auction-draft', 'duel');
     };
-    if (isGuestInParty) {
+    if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(start, 'matchmaking');
       return;
     }
@@ -177,8 +204,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
                   key={formation.id}
                   onClick={() => {
                     if (isGuestInParty) return;
-                    soundFX.playClick(700);
-                    setSelectedFormation(formation.id);
+                    handleFormationChange(formation.id);
                   }}
                   className={`p-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
                     isGuestInParty
@@ -220,8 +246,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
                   key={deck.id}
                   onClick={() => {
                     if (isGuestInParty) return;
-                    soundFX.playClick(650);
-                    setSelectedDeck(deck.id);
+                    handleDeckChange(deck.id);
                   }}
                   className={`p-2.5 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
                     isGuestInParty

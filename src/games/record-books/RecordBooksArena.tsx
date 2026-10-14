@@ -82,6 +82,11 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   const [roundIdx, setRoundIdx] = useState(0);
   const [stage, setStage] = useState<RoundStage>('club-intro');
 
+  // Synchronized round transition curtain & rematch readiness
+  const [roundTransitionCount, setRoundTransitionCount] = useState<number | null>(null);
+  const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
+  const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
+
   // Round timer
   const [secondsLeft, setSecondsLeft] = useState<number>(ROUND_DURATION_SECONDS);
 
@@ -183,6 +188,11 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       if (typeof nextRoundIdx === 'number' && nextRoundIdx > roundIdx) {
         handleNextRound(nextRoundIdx);
       }
+    } else if (lastGameEvent.event === 'player_rematch_ready') {
+      setIsOpponentRematchReady(true);
+      soundFX.playSuccess();
+    } else if (lastGameEvent.event === 'match_restart') {
+      handleRematch();
     }
   }, [isMultiplayer, lastGameEvent, myPlayerId, roundIdx]);
 
@@ -386,7 +396,11 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     setUserTickerValue(0);
     setOpponentTickerValue(0);
     setSecondsLeft(ROUND_DURATION_SECONDS);
-    setStage('club-intro');
+    setRoundTransitionCount(1);
+    setTimeout(() => {
+      setRoundTransitionCount(null);
+      setStage('club-intro');
+    }, 1000);
   };
 
   // Keyboard shortcut: Press ENTER on round-done screen to immediately proceed to NEXT CLUB / Final Scoreboard
@@ -406,6 +420,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   }, [stage, roundIdx, config.totalRounds, isMultiplayer, isHost]);
 
   const handleRematch = () => {
+    soundFX.playClick(900);
     setClubSequence(generateClubSequence(config.difficulty, config.totalRounds));
     setRoundIdx(0);
     setQuery('');
@@ -418,8 +433,27 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     setOpponentTotalScore(0);
     setRoundHistory([]);
     setIsMatchOver(false);
+    setIsOpponentRematchReady(false);
+    setHasRequestedRematch(false);
     setSecondsLeft(ROUND_DURATION_SECONDS);
-    setStage('club-intro');
+    setRoundTransitionCount(1);
+    setTimeout(() => {
+      setRoundTransitionCount(null);
+      setStage('club-intro');
+    }, 1000);
+  };
+
+  const handleRequestOrExecuteRematch = () => {
+    if (isMultiplayer) {
+      if (!isHost) {
+        sendAction('player_rematch_ready', {});
+        setHasRequestedRematch(true);
+        soundFX.playClick(900);
+        return;
+      }
+      sendAction('match_restart', {});
+    }
+    handleRematch();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -629,11 +663,28 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
             </button>
             <button
               type="button"
-              onClick={handleRematch}
-              className="flex-1 py-3.5 rounded-xl bg-[#ff9f1c] hover:bg-[#ffad3b] text-black text-xs font-display font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_10px_28px_rgba(255,159,28,0.3)] cursor-pointer"
+              disabled={isMultiplayer && !isHost && hasRequestedRematch}
+              onClick={handleRequestOrExecuteRematch}
+              className={`flex-1 py-3.5 rounded-xl font-display font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                isMultiplayer && !isHost && hasRequestedRematch
+                  ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                  : isMultiplayer && isHost && isOpponentRematchReady
+                  ? 'bg-[#ff9f1c] hover:bg-[#ffad3b] text-black shadow-[0_0_25px_rgba(255,159,28,0.6)] animate-pulse cursor-pointer'
+                  : 'bg-[#ff9f1c] hover:bg-[#ffad3b] text-black shadow-[0_10px_28px_rgba(255,159,28,0.3)] cursor-pointer'
+              }`}
             >
-              <RotateCcw className="w-4 h-4" />
-              PLAY AGAIN
+              <RotateCcw className={`w-4 h-4 ${isMultiplayer && !isHost && hasRequestedRematch ? 'animate-spin' : ''}`} />
+              <span>
+                {isMultiplayer && !isHost
+                  ? hasRequestedRematch
+                    ? 'HOST NOTIFIED : WAITING FOR HOST'
+                    : 'PLAY AGAIN'
+                  : isMultiplayer && isHost
+                  ? isOpponentRematchReady
+                    ? 'OPPONENT READY : PLAY AGAIN'
+                    : 'PLAY AGAIN'
+                  : 'PLAY AGAIN'}
+              </span>
             </button>
           </div>
         </div>
@@ -685,6 +736,23 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
             'radial-gradient(circle at 50% 18%, rgba(255,159,28,0.16), transparent 55%), radial-gradient(circle at 85% 82%, rgba(56,189,248,0.10), transparent 55%)',
         }}
       />
+
+      {/* Synchronized Round Transition Curtain */}
+      {roundTransitionCount !== null && (
+        <div className="absolute inset-0 z-50 bg-[#07090e]/92 backdrop-blur-md flex flex-col items-center justify-center animate-in fade-in duration-150">
+          <div className="text-center space-y-3">
+            <span className="font-mono text-xs tracking-widest text-[#ff9f1c] uppercase block">
+              ROUND {roundIdx + 1} OF {config.totalRounds}
+            </span>
+            <h2 className="font-sans font-black text-3xl md:text-5xl text-white uppercase tracking-tight animate-pulse">
+              REVEALING CLUB...
+            </h2>
+            <div className="w-36 h-1 rounded-full bg-white/10 mx-auto overflow-hidden">
+              <div className="h-full bg-[#ff9f1c] rounded-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TOP BROADCAST HUD */}
       <header className="relative z-10 max-w-5xl w-full mx-auto flex items-center justify-between gap-3 bg-[#10141d]/90 border border-white/10 rounded-2xl px-4 py-3 backdrop-blur-md">

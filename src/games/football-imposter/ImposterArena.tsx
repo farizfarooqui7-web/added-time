@@ -75,6 +75,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
 }) => {
   const {
     isMultiplayer,
+    isHost,
     partyMembers,
     myPlayerId,
     gameInitData,
@@ -92,6 +93,8 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
     return pickSecretPlayer(config.category);
   });
   const [usedSecretIds, setUsedSecretIds] = useState<string[]>([]);
+  const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
+  const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
   const [participants, setParticipants] = useState<ImposterParticipant[]>(() => {
     if (isMultiplayer && partyMembers && partyMembers.length > 1) {
       const colors = [
@@ -372,6 +375,11 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
           return updated;
         });
       }
+    } else if (lastGameEvent.event === 'player_rematch_ready') {
+      setIsOpponentRematchReady(true);
+      soundFX.playSuccess();
+    } else if (lastGameEvent.event === 'match_restart') {
+      handlePlayAgain();
     }
   }, [isMultiplayer, lastGameEvent, myPlayerId, participants]);
 
@@ -866,7 +874,22 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
     setActiveSpeakerIdx(0);
     setSecondsLeft(CLUE_TURN_SECONDS);
     setOpeningCountdown(3);
+    setIsOpponentRematchReady(false);
+    setHasRequestedRematch(false);
     setStage('opening-countdown');
+  };
+
+  const handleRequestOrExecuteRematch = () => {
+    if (isMultiplayer) {
+      if (!isHost) {
+        sendAction('player_rematch_ready', {});
+        setHasRequestedRematch(true);
+        soundFX.playClick(900);
+        return;
+      }
+      sendAction('match_restart', {});
+    }
+    handlePlayAgain();
   };
 
   const crewWonMatch = imposterCaught && !imposterStolenWin;
@@ -2199,11 +2222,28 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
               </button>
               <button
                 type="button"
-                onClick={handlePlayAgain}
-                className="flex-1 py-4 rounded-xl bg-[#ff2a5f] hover:bg-[#ff4270] text-white text-xs font-display font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_10px_28px_rgba(255,42,95,0.35)] cursor-pointer"
+                disabled={isMultiplayer && !isHost && hasRequestedRematch}
+                onClick={handleRequestOrExecuteRematch}
+                className={`flex-1 py-4 rounded-xl font-display font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                  isMultiplayer && !isHost && hasRequestedRematch
+                    ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
+                    : isMultiplayer && isHost && isOpponentRematchReady
+                    ? 'bg-[#ff2a5f] hover:bg-[#ff4270] text-white shadow-[0_0_25px_rgba(255,42,95,0.6)] animate-pulse cursor-pointer'
+                    : 'bg-[#ff2a5f] hover:bg-[#ff4270] text-white shadow-[0_10px_28px_rgba(255,42,95,0.35)] cursor-pointer'
+                }`}
               >
-                <RotateCcw className="w-4 h-4" />
-                PLAY AGAIN
+                <RotateCcw className={`w-4 h-4 ${isMultiplayer && !isHost && hasRequestedRematch ? 'animate-spin' : ''}`} />
+                <span>
+                  {isMultiplayer && !isHost
+                    ? hasRequestedRematch
+                      ? 'HOST NOTIFIED : WAITING FOR HOST'
+                      : 'PLAY AGAIN'
+                    : isMultiplayer && isHost
+                    ? isOpponentRematchReady
+                      ? 'OPPONENT READY : PLAY AGAIN'
+                      : 'PLAY AGAIN'
+                    : 'PLAY AGAIN'}
+                </span>
               </button>
             </div>
           </div>
