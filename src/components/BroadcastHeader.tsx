@@ -100,12 +100,12 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
 
       {/* Center: Absolute Pixel-Perfect Center "ADDED TIME" */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-        <div className="flex items-center gap-1.5 sm:gap-2 select-none group pointer-events-auto">
-          <span className="font-brand font-bold text-base sm:text-xl md:text-2xl tracking-[0.06em] text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.1)] whitespace-nowrap">
+        <div className="flex items-center gap-2 sm:gap-2.5 select-none group pointer-events-auto">
+          <span className="font-athletic font-black text-2xl sm:text-3xl md:text-4xl tracking-tight uppercase text-white drop-shadow-[0_2px_14px_rgba(255,255,255,0.22)] whitespace-nowrap">
             ADDED TIME
           </span>
-          <div className="flex items-center px-1 sm:px-1.5 py-0.5 rounded bg-[#0a0d14] border border-[#ff6b00]/60 shadow-[0_0_10px_rgba(255,107,0,0.3)] shrink-0">
-            <span className="font-mono text-[9px] sm:text-[11px] font-black tracking-tight text-[#ff6b00]">
+          <div className="flex items-center px-1.5 sm:px-2 py-0.5 rounded bg-[#0a0d14] border-2 border-[#ff6b00] shadow-[0_0_16px_rgba(255,107,0,0.55)] shrink-0">
+            <span className="font-mono text-[11px] sm:text-xs md:text-sm font-black tracking-tight text-[#ff6b00]">
               90+
             </span>
           </div>

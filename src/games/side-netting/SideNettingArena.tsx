@@ -436,11 +436,11 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   // As the ball gets struck deeper down the pitch, the pitch scrolls down smoothly
   const pitchTranslateY = -(drillProgress * 65);
 
-  // Ball horizontal slalom zigzag calculation based on progress
-  // Ball weaves between the cones: sin wave that dampens at the end
+  // Ball horizontal slalom banana curve calculation based on progress
+  // Ball bends aggressively around training cones with dynamic curved trajectory
   const ballZigzagX =
     diveState === 'diving'
-      ? Math.sin(drillProgress * Math.PI * 6) * 48
+      ? Math.sin(drillProgress * Math.PI * 4) * (64 + Math.sin(drillProgress * Math.PI) * 42)
       : 0;
 
   // High-tech Loading Skeleton while waiting for server authoritative gameInitData
@@ -495,39 +495,80 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         }
         @keyframes ballSpinFast {
           0% { transform: rotate(0deg); }
-          100% { transform: rotate(1080deg); }
+          100% { transform: rotate(1440deg); }
         }
         .spin-fast {
-          animation: ballSpinFast 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+          animation: ballSpinFast 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
         }
         .spin-idle {
           animation: ballSpinSlow 12s linear infinite;
         }
 
-        @keyframes bootKickStrike {
+        @keyframes bootKickPowerStrike {
           0% {
-            transform: translate(-38px, -30px) rotate(-42deg) scale(0.9);
+            transform: translate(-48px, -36px) rotate(-55deg) scale(0.85);
             opacity: 0;
+            filter: drop-shadow(0 0 0px transparent);
           }
           20% {
-            transform: translate(-22px, -18px) rotate(-30deg) scale(1.05);
+            transform: translate(-32px, -24px) rotate(-38deg) scale(1.1);
             opacity: 1;
+            filter: drop-shadow(0 0 16px rgba(0,240,255,0.75));
           }
-          55% {
-            transform: translate(12px, 8px) rotate(16deg) scale(1.12);
+          50% {
+            transform: translate(14px, 10px) rotate(18deg) scale(1.22);
             opacity: 1;
+            filter: drop-shadow(0 0 28px rgba(255,255,255,0.95)) brightness(1.2);
           }
-          80% {
-            transform: translate(22px, 14px) rotate(22deg) scale(1.04);
+          75% {
+            transform: translate(28px, 16px) rotate(26deg) scale(1.08);
             opacity: 0.9;
           }
           100% {
-            transform: translate(28px, 18px) rotate(26deg) scale(0.95);
+            transform: translate(38px, 22px) rotate(32deg) scale(0.95);
             opacity: 0;
           }
         }
         .animate-boot-kick {
-          animation: bootKickStrike 0.72s cubic-bezier(0.18, 0.9, 0.25, 1) forwards;
+          animation: bootKickPowerStrike 0.68s cubic-bezier(0.12, 0.95, 0.2, 1) forwards;
+        }
+
+        @keyframes impactShockwave {
+          0% {
+            transform: scale(0.2);
+            opacity: 1;
+            border-width: 4px;
+          }
+          50% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(3.8);
+            opacity: 0;
+            border-width: 1px;
+          }
+        }
+        .animate-impact-shockwave {
+          animation: impactShockwave 0.62s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes coneSpringWobble {
+          0% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(-22deg) scale(1.1); }
+          50% { transform: rotate(16deg) scale(0.95); }
+          75% { transform: rotate(-8deg) scale(1.02); }
+          100% { transform: rotate(0deg) scale(1); }
+        }
+        .animate-cone-wobble {
+          animation: coneSpringWobble 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes floodlightBeam {
+          0%, 100% { opacity: 0.35; transform: scaleX(1); }
+          50% { opacity: 0.5; transform: scaleX(1.08); }
+        }
+        .animate-floodlight {
+          animation: floodlightBeam 4s ease-in-out infinite;
         }
       `}</style>
 
@@ -537,6 +578,25 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           isWrongAnswerShake ? 'opacity-40 bg-rose-950/60' : 'opacity-0'
         }`}
       />
+
+      {/* ATMOSPHERIC STADIUM FLOODLIGHT BEAMS (Dual Angled Neon Cones) */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+        <div
+          className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-35 animate-floodlight"
+          style={{
+            background:
+              'radial-gradient(ellipse at 0% 0%, rgba(0, 240, 255, 0.45) 0%, rgba(0, 240, 255, 0.1) 40%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute -top-20 -right-20 w-[500px] h-[500px] opacity-30 animate-floodlight"
+          style={{
+            background:
+              'radial-gradient(ellipse at 100% 0%, rgba(255, 107, 0, 0.4) 0%, rgba(255, 107, 0, 0.08) 40%, transparent 70%)',
+            animationDelay: '-2s',
+          }}
+        />
+      </div>
 
       {/* ================= FLOODLIT TRAINING GROUND & TACTICAL PITCH SCENERY ================= */}
       <div
@@ -573,6 +633,19 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
             </div>
             {/* Penalty Spot */}
             <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.9)]" />
+          </div>
+
+          {/* Active Slalom Cone 1 (Near Penalty Spot): Wobbles dynamically as the ball bends past */}
+          <div
+            className={`absolute bottom-20 left-1/2 translate-x-12 sm:translate-x-16 pointer-events-none select-none z-10 transition-transform ${
+              diveState === 'diving' ? 'animate-cone-wobble' : ''
+            }`}
+          >
+            <img
+              src="/assets/training_cone_3d.png"
+              alt="Slalom Cone"
+              className="w-10 h-12 sm:w-12 sm:h-14 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)] filter brightness-110"
+            />
           </div>
 
           {/* Aesthetic 3D Training Equipment Scattered Naturally Across Sidelines (Small & Varied Spacing) */}
@@ -975,13 +1048,35 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
               >
                 {/* 3D SOCCER BOOT: SWINGS IN AND KICKS THE BALL */}
                 {diveState === 'answered-bubble' && (
-                  <div className="absolute -left-12 -top-10 sm:-left-16 sm:-top-12 z-40 w-20 h-20 sm:w-26 sm:h-26 pointer-events-none select-none animate-boot-kick">
-                    <img
-                      src="/assets/football_boot_3d.png"
-                      alt="Striking Boot"
-                      className="w-full h-full object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.85)] filter brightness-110"
-                    />
-                  </div>
+                  <>
+                    {/* Explosive Impact Shockwave Ring */}
+                    <div className="absolute inset-0 -m-4 w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-cyan-400 pointer-events-none animate-impact-shockwave shadow-[0_0_35px_rgba(0,240,255,0.85)]" />
+
+                    {/* Impact Flash Burst */}
+                    <div className="absolute -left-3 top-3 w-16 h-16 rounded-full bg-cyan-300/80 blur-md pointer-events-none animate-ping" />
+
+                    {/* Striking 3D Boot */}
+                    <div className="absolute -left-14 -top-12 sm:-left-18 sm:-top-14 z-40 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none select-none animate-boot-kick">
+                      <img
+                        src="/assets/football_boot_3d.png"
+                        alt="Striking Boot"
+                        className="w-full h-full object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.9)] filter brightness-125"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* SWERVING SPEED TRACER TAIL DURING FLIGHT */}
+                {diveState === 'diving' && (
+                  <div
+                    className="absolute -top-12 inset-x-0 mx-auto w-12 h-32 pointer-events-none opacity-80 blur-sm rounded-full transition-all"
+                    style={{
+                      background: `linear-gradient(to top, ${
+                        matchedTierConfig?.glowColor || '#00f0ff'
+                      }, transparent)`,
+                      transform: `rotate(${ballZigzagX > 0 ? -15 : 15}deg)`,
+                    }}
+                  />
                 )}
 
                 {/* HIGH-FIDELITY 3D MATCH FOOTBALL PNG */}
@@ -994,14 +1089,14 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                       isWrongAnswerShake
                         ? 'drop-shadow(0 0 20px rgba(244,63,94,0.9))'
                         : matchedTierConfig
-                        ? `drop-shadow(0 0 30px ${matchedTierConfig.glowColor})`
+                        ? `drop-shadow(0 0 35px ${matchedTierConfig.glowColor})`
                         : 'drop-shadow(0 10px 24px rgba(16,185,129,0.5))',
                   }}
                 >
                   <img
                     src="/assets/soccer_ball_3d.png"
                     alt="Match Football"
-                    className="w-full h-full object-contain pointer-events-none select-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)]"
+                    className="w-full h-full object-contain pointer-events-none select-none drop-shadow-[0_10px_25px_rgba(0,0,0,0.9)]"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                     }}
