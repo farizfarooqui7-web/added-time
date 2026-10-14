@@ -78,13 +78,15 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none">
-      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto rounded-[32px] bg-[#0c121d] border border-cyan-500/35 shadow-[0_32px_100px_rgba(0,240,255,0.2)] p-5 sm:p-8 flex flex-col justify-between">
-        {/* Ambient Stadium Floodlight Glow */}
-        <div
-          className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full blur-3xl opacity-20"
-          style={{ background: 'radial-gradient(circle, #00f0ff 0%, transparent 70%)' }}
-        />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none overflow-y-auto overflow-x-hidden">
+      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto overflow-x-hidden rounded-[32px] bg-[#0c121d] border border-cyan-500/35 shadow-[0_32px_100px_rgba(0,240,255,0.2)] p-5 sm:p-8 flex flex-col justify-between">
+        {/* Ambient Stadium Floodlight Glow (strictly clipped) */}
+        <div className="pointer-events-none absolute inset-0 rounded-[32px] overflow-hidden">
+          <div
+            className="absolute -top-24 -right-24 w-80 h-80 rounded-full blur-3xl opacity-20"
+            style={{ background: 'radial-gradient(circle, #00f0ff 0%, transparent 70%)' }}
+          />
+        </div>
 
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-5 shrink-0 gap-3">
@@ -157,7 +159,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
             <label className="text-[11px] font-mono font-bold uppercase tracking-widest text-neutral-400 block mb-2">
               ROUND COUNTDOWN SPEED
             </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
               {[
                 { val: 30, label: '30s Blitz' },
                 { val: 45, label: '45s Standard' },
@@ -172,7 +174,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
                     soundFX.playClick(650);
                     setTimerSeconds(t.val as 30 | 45 | 60 | 0);
                   }}
-                  className={`py-2.5 rounded-xl border font-mono text-xs font-black transition-all ${
+                  className={`py-2 px-1 rounded-xl border font-mono text-[11px] sm:text-xs font-black transition-all truncate min-w-0 ${
                     isGuestInParty
                       ? 'opacity-60 cursor-not-allowed bg-white/[0.02] border-white/10 text-neutral-400'
                       : timerSeconds === t.val
@@ -193,13 +195,13 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
           <button
             type="button"
             onClick={handleLaunchSolo}
-            className="w-full py-3.5 px-4 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between shadow-[0_8px_25px_rgba(0,240,255,0.35)] cursor-pointer"
+            className="w-full py-3.5 px-4 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-black font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between shadow-[0_8px_25px_rgba(0,240,255,0.35)] cursor-pointer min-w-0"
           >
-            <div className="flex items-center gap-2.5">
-              <Play className="w-4 h-4 fill-black" />
-              <span>SOLO HIGH-SCORE RUN</span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Play className="w-4 h-4 fill-black shrink-0" />
+              <span className="truncate">SOLO HIGH-SCORE RUN</span>
             </div>
-            <span className="text-[10px] font-mono font-bold bg-black/20 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-mono font-bold bg-black/20 px-2 py-0.5 rounded shrink-0">
               PERSONAL BEST
             </span>
           </button>
@@ -208,14 +210,15 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
           <button
             type="button"
             onClick={handleQuickMatch}
-            className="w-full py-3 px-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-cyan-400/40 text-cyan-300 font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer hover:border-cyan-300"
+            className="w-full py-3 px-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-cyan-400/40 text-cyan-300 font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer hover:border-cyan-300 min-w-0"
           >
-            <div className="flex items-center gap-2.5">
-              <Zap className="w-4 h-4 text-cyan-400 fill-current" />
-              <span>1v1 OBSCURITY DUEL</span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Zap className="w-4 h-4 text-cyan-400 fill-current shrink-0" />
+              <span className="truncate">1v1 OBSCURITY DUEL</span>
             </div>
-            <span className="text-[10px] font-mono font-bold bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 px-2 py-0.5 rounded">
-              QUICK MATCH (DROP-IN)
+            <span className="text-[10px] font-mono font-bold bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 px-2 py-0.5 rounded shrink-0">
+              <span className="hidden sm:inline">QUICK MATCH (DROP-IN)</span>
+              <span className="sm:hidden">QUICK MATCH</span>
             </span>
           </button>
 
