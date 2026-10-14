@@ -175,6 +175,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
       const { nextRoundIdx } = lastGameEvent.data || {};
       if (typeof nextRoundIdx === 'number' && nextRoundIdx > currentRoundIdx) {
         setIsPostRoundModalOpen(false);
+        setUserFinishedRound(false);
+        setOpponentStrikeFinished(false);
+        setOpponentLockedIn(false);
+        setGuestHasClickedReady(false);
         setDiveState('ascending');
         soundFX.playClick(750);
         window.setTimeout(() => {
@@ -201,7 +205,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   // Open post-round breakdown when both players finish strike in multiplayer
   useEffect(() => {
     if (!isMultiplayer) return;
-    if (userFinishedRound && opponentStrikeFinished && diveState !== 'game-over') {
+    if (userFinishedRound && opponentStrikeFinished && diveState === 'at-depth') {
       const timer = window.setTimeout(() => {
         setIsPostRoundModalOpen(true);
       }, 700);
@@ -1456,6 +1460,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   onClick={() => {
                     soundFX.playClick(750);
                     setIsPostRoundModalOpen(false);
+                    setUserFinishedRound(false);
+                    setOpponentStrikeFinished(false);
+                    setOpponentLockedIn(false);
                     if (currentRoundIdx + 1 < prompts.length) {
                       setDiveState('ascending');
                       window.setTimeout(() => {
@@ -1502,6 +1509,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   onClick={() => {
                     soundFX.playClick(750);
                     setIsPostRoundModalOpen(false);
+                    setUserFinishedRound(false);
+                    setOpponentStrikeFinished(false);
+                    setOpponentLockedIn(false);
+                    setIsGuestReadyForNext(false);
                     if (currentRoundIdx + 1 < prompts.length) {
                       const nextRound = currentRoundIdx + 1;
                       sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
@@ -1548,9 +1559,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
-            leaveParty();
-          }
+          leaveParty();
           handleCleanExit();
         }}
       />

@@ -244,7 +244,7 @@ function launchEphemeralMatch(
   queueType: 'duel' | 'ffa' = 'duel'
 ) {
   const normMode = normalizeModeId(modeId);
-  const roomId = generateRoomId();
+  const roomId = `match_${normMode}_${generateRoomId()}`;
 
   const member1: PartyMember = {
     id: player1.playerId,
@@ -353,7 +353,7 @@ function launchEphemeralMatch(
 // Launch a multiplayer match with 3+ real human players (used for Football Imposter drop-in)
 function launchGroupMatch(players: ClientSession[], modeId: string) {
   const normMode = normalizeModeId(modeId);
-  const roomId = generateRoomId();
+  const roomId = `match_${normMode}_${generateRoomId()}`;
 
   const members: PartyMember[] = players.map((p, idx) => ({
     id: p.playerId,
@@ -833,13 +833,16 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
 
     case 'game_leave': {
       if (!session.roomId) return;
-      const room = rooms.get(session.roomId);
+      const roomId = session.roomId;
+      const room = rooms.get(roomId);
       if (!room) return;
 
-      if (room.currentGame?.status === 'in-game') {
-        room.currentGame.status = 'lobby';
+      const isMatchRoom = roomId.startsWith('match_') || room.visibility === 'public';
+
+      if (room.currentGame?.status === 'in-game' || isMatchRoom) {
+        if (room.currentGame) room.currentGame.status = 'lobby';
         for (const client of clients.values()) {
-          if (client.roomId === session.roomId && client.playerId !== session.playerId && client.socket.readyState === WebSocket.OPEN) {
+          if (client.roomId === roomId && client.playerId !== session.playerId && client.socket.readyState === WebSocket.OPEN) {
             send(client.socket, {
               type: 'player_forfeit',
               payload: {
@@ -848,8 +851,19 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
                 reason: `${session.name} forfeited the match.`,
               },
             });
+            if (isMatchRoom) {
+              send(client.socket, {
+                type: 'party_disbanded',
+                payload: { reason: 'Opponent forfeited. Match terminated.' },
+              });
+            }
           }
         }
+      }
+
+      if (isMatchRoom) {
+        rooms.delete(roomId);
+        session.roomId = undefined;
       }
       break;
     }
@@ -898,8 +912,10 @@ function handleLeaveParty(session: ClientSession) {
 
   if (!room) return;
 
-  if (room.currentGame?.status === 'in-game') {
-    room.currentGame.status = 'lobby';
+  const isMatchRoom = roomId.startsWith('match_') || room.visibility === 'public';
+
+  if (room.currentGame?.status === 'in-game' || isMatchRoom) {
+    if (room.currentGame) room.currentGame.status = 'lobby';
     for (const client of clients.values()) {
       if (client.roomId === roomId && client.playerId !== session.playerId && client.socket.readyState === WebSocket.OPEN) {
         send(client.socket, {
@@ -910,6 +926,12 @@ function handleLeaveParty(session: ClientSession) {
             reason: `${session.name} disconnected from the match.`,
           },
         });
+        if (isMatchRoom) {
+          send(client.socket, {
+            type: 'party_disbanded',
+            payload: { reason: 'Opponent left. Match ended.' },
+          });
+        }
       }
     }
   }
@@ -917,11 +939,11 @@ function handleLeaveParty(session: ClientSession) {
   const wasHost = room.hostId === session.playerId;
   room.members = room.members.filter((m) => m.id !== session.playerId);
 
-  if (room.members.length === 0 || wasHost) {
+  if (room.members.length === 0 || wasHost || isMatchRoom) {
     rooms.delete(roomId);
     broadcastToRoom(roomId, {
       type: 'party_disbanded',
-      payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
+      payload: { reason: wasHost ? 'Party Host disbanded the squad.' : (isMatchRoom ? 'Match ended. Squad disbanded.' : 'All members left.') },
     });
     console.log(`[Added Time WS] Room ${roomId} disbanded.`);
   } else {

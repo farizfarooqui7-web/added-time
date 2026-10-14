@@ -385,41 +385,35 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   useEffect(() => {
     if (roundTimer <= 0 && phase === 'bidding' && !isTransitioning && matchIntroCount === null && currentLot) {
       console.log(`[AuctionArena] Turn timer reached 0s for ${activeTurn}`);
-      if (isMultiplayer && activeTurn === 'user') {
-        sendAction('auction_pass', { lotNumber });
-      }
 
       if (activeTurn === 'user') {
         // User ran out of time
         if (highBidderId === 'gaffer') {
+          if (isMultiplayer) {
+            sendAction('auction_pass', { lotNumber });
+          }
           handleHammerDrop('gaffer', currentBid, false);
         } else {
-          // Pass at $0
-          setUserState((prev) => ({ ...prev, hasFolded: true }));
-          if (botState.hasFolded) {
-            if (!isMultiplayer || isHost) {
-              handleHammerDrop(null, 0, false);
-            }
-          } else {
-            setActiveTurn('gaffer');
-            setRoundTimer(8.0);
+          // No bids placed yet ($0): auto-bid $1 on behalf of user and flip turn
+          executeBid('user', 1);
+          if (isMultiplayer) {
+            sendAction('auction_bid', { amount: 1, lotNumber });
           }
+          setActiveTurn('gaffer');
+          setRoundTimer(8.0);
         }
       } else {
         // Opponent / Gaffer ran out of time
         if (highBidderId === 'user') {
           handleHammerDrop('user', currentBid, false);
         } else {
-          // Pass at $0
-          setBotState((prev) => ({ ...prev, hasFolded: true }));
-          if (userState.hasFolded) {
-            if (!isMultiplayer || isHost) {
-              handleHammerDrop(null, 0, false);
-            }
-          } else {
-            setActiveTurn('user');
-            setRoundTimer(8.0);
+          // No bids placed yet ($0): auto-bid $1 on behalf of gaffer and flip turn
+          executeBid('gaffer', 1);
+          if (isMultiplayer && isHost) {
+            sendAction('auction_bid', { amount: 1, lotNumber });
           }
+          setActiveTurn('user');
+          setRoundTimer(8.0);
         }
       }
     }
@@ -461,15 +455,14 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       // Bot folds
       if (botTimeoutRef.current) clearTimeout(botTimeoutRef.current);
       botTimeoutRef.current = setTimeout(() => {
-        setBotState((prev) => ({ ...prev, hasFolded: true }));
         if (highBidderId === 'user') {
+          setBotState((prev) => ({ ...prev, hasFolded: true }));
           handleHammerDrop('user', currentBid, false);
         } else {
+          // No high bidder yet ($0): bot auto-bids $1 and passes to user
+          executeBid('gaffer', 1);
           setActiveTurn('user');
           setRoundTimer(8.0);
-          if (userState.hasFolded) {
-            handleHammerDrop(null, 0, false);
-          }
         }
       }, 700);
     }
@@ -581,14 +574,13 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       // Opponent held high bid: pass immediately forfeits the lot to high bidder
       handleHammerDrop('gaffer', currentBid, false);
     } else {
-      // User passed at $0: turn passes to gaffer
+      // User passed at $0: auto-bid $1 and pass turn
+      executeBid('user', 1);
+      if (isMultiplayer) {
+        sendAction('auction_bid', { amount: 1, lotNumber });
+      }
       setActiveTurn('gaffer');
       setRoundTimer(8.0);
-      if (botState.hasFolded) {
-        if (!isMultiplayer || isHost) {
-          handleHammerDrop(null, 0, false);
-        }
-      }
     }
   };
 
@@ -658,29 +650,28 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       });
     }
 
-    console.log(`[AuctionArena] Lot ${lotNumber} outcome: winner=${winnerId}, finalCost=$${finalCost}, isFreeClaim=${isBankruptFreeClaim}`);
+    const effectiveWinnerId = winnerId || (activeTurn === 'user' ? 'user' : 'gaffer');
+    const effectiveFinalCost = winnerId ? finalCost : 1;
+
+    console.log(`[AuctionArena] Lot ${lotNumber} outcome: winner=${effectiveWinnerId}, finalCost=$${effectiveFinalCost}, isFreeClaim=${isBankruptFreeClaim}`);
 
     // Step 1: Stamp bold diagonal watermark across center card (1.2s freeze)
-    if (winnerId === 'user') {
+    if (effectiveWinnerId === 'user') {
       soundFX.playHammer();
       window.setTimeout(() => soundFX.playSuccess(), 120);
-      setStampText(isBankruptFreeClaim ? 'FREE DROP TO YOU! ($0)' : `SOLD TO YOU! ($${finalCost})`);
+      setStampText(isBankruptFreeClaim ? 'FREE DROP TO YOU! ($0)' : `SOLD TO YOU! ($${effectiveFinalCost})`);
       setStampColor('volt');
-    } else if (winnerId === 'gaffer') {
-      soundFX.playHammer();
-      setStampText(isBankruptFreeClaim ? 'FREE DROP TO THE GAFFER! ($0)' : `SOLD TO THE GAFFER! ($${finalCost})`);
-      setStampColor('red');
     } else {
-      soundFX.playVoltBuzz();
-      setStampText('LOT BURNED!');
-      setStampColor('amber');
+      soundFX.playHammer();
+      setStampText(isBankruptFreeClaim ? 'FREE DROP TO THE GAFFER! ($0)' : `SOLD TO THE GAFFER! ($${effectiveFinalCost})`);
+      setStampColor('red');
     }
 
     // Step 2: At +1.2s: Card flies with CSS curve toward winner's dugout slot
     flyTimeoutRef.current = setTimeout(() => {
-      if (winnerId === 'user') {
+      if (effectiveWinnerId === 'user') {
         setFlyDirection('left');
-      } else if (winnerId === 'gaffer') {
+      } else {
         setFlyDirection('right');
       }
     }, 1200);
@@ -692,12 +683,12 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       let nextBotSlots = botState.slots;
 
       // Permanent deduction happens strictly when won card is assigned to slot
-      if (winnerId === 'user' && currentLot) {
+      if (effectiveWinnerId === 'user' && currentLot) {
         const targetIdx = findFirstEligibleSlotIndex(userState.slots, currentLot);
-        nextUserSlots = assignCardToSlot(userState.slots, currentLot, finalCost);
+        nextUserSlots = assignCardToSlot(userState.slots, currentLot, effectiveFinalCost);
         setUserState((prev) => ({
           ...prev,
-          bankroll: Math.max(0, INITIAL_BANKROLL - (userSpent + finalCost)),
+          bankroll: Math.max(0, INITIAL_BANKROLL - (userSpent + effectiveFinalCost)),
           slots: nextUserSlots,
         }));
         draftedCardIdsRef.current.add(currentLot.id);
@@ -706,12 +697,12 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           setFlashingSlotId(nextUserSlots[targetIdx].id);
         }
         soundFX.playCardFlip();
-      } else if (winnerId === 'gaffer' && currentLot) {
+      } else if (effectiveWinnerId === 'gaffer' && currentLot) {
         const targetIdx = findFirstEligibleSlotIndex(botState.slots, currentLot);
-        nextBotSlots = assignCardToSlot(botState.slots, currentLot, finalCost);
+        nextBotSlots = assignCardToSlot(botState.slots, currentLot, effectiveFinalCost);
         setBotState((prev) => ({
           ...prev,
-          bankroll: Math.max(0, INITIAL_BANKROLL - (botSpent + finalCost)),
+          bankroll: Math.max(0, INITIAL_BANKROLL - (botSpent + effectiveFinalCost)),
           slots: nextBotSlots,
         }));
         draftedCardIdsRef.current.add(currentLot.id);
@@ -720,8 +711,6 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           setFlashingSlotId(nextBotSlots[targetIdx].id);
         }
         soundFX.playCardFlip();
-      } else if (currentLot) {
-        discardedCardIdsRef.current.add(currentLot.id);
       }
 
       // Step 4: At +2.0s (0.4s pause after lock-in), drop next lot or transition to showdown
@@ -1449,9 +1438,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
-            leaveParty();
-          }
+          leaveParty();
           handleCleanExit();
         }}
       />

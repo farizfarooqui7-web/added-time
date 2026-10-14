@@ -415,6 +415,12 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       case 'player_forfeit': {
         setPlayerForfeitEvent(msg.payload);
         soundFX.playVoltBuzz();
+        try {
+          localStorage.removeItem('topbins_party_state');
+          sessionStorage.removeItem('topbins_party_state');
+        } catch {
+          // ignore
+        }
         break;
       }
 

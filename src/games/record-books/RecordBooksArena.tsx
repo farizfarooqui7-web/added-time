@@ -1230,9 +1230,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
-            leaveParty();
-          }
+          leaveParty();
           handleCleanExit();
         }}
       />

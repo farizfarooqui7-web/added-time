@@ -986,7 +986,7 @@ export class TopBinsServer extends Server {
       }
 
       case 'game_leave': {
-        const isMatchRoom = this.name.startsWith('match_');
+        const isMatchRoom = this.name.startsWith('match_') || this.partyRoom?.visibility === 'public';
         const playerId = this.connToPlayerId.get(sender.id) || sender.id;
         const member = this.partyRoom?.members.find((m) => m.id === playerId);
 
@@ -1021,7 +1021,7 @@ export class TopBinsServer extends Server {
   }
 
   private handleSquadPlayerDisconnect(conn: Connection) {
-    const isMatchRoom = this.name.startsWith('match_');
+    const isMatchRoom = this.name.startsWith('match_') || this.partyRoom?.visibility === 'public';
     const playerId = this.connToPlayerId.get(conn.id) || conn.id;
     const member = this.partyRoom?.members.find((m) => m.id === playerId);
     this.connToPlayerId.delete(conn.id);

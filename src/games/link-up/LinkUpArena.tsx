@@ -1188,9 +1188,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
-            leaveParty();
-          }
+          leaveParty();
           handleCleanExit();
         }}
       />

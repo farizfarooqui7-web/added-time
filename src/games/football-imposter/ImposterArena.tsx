@@ -2257,9 +2257,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
-            leaveParty();
-          }
+          leaveParty();
           handleCleanExit();
         }}
       />
