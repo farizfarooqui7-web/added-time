@@ -91,21 +91,23 @@ export const Outro: React.FC<OutroProps> = ({
         </div>
       </div>
 
-      {/* Brand Title: ADDED TIME [90+] */}
+      {/* Brand Title: ADDED TIME [90+] matching site */}
       <div
         style={{ opacity: textOpacity }}
         className="text-center mt-6 flex flex-col items-center"
       >
-        <div className="flex items-center gap-4">
-          <span className="text-6xl font-black tracking-tight text-white uppercase font-sans">
+        <div className="flex items-center gap-3">
+          <span className="font-athletic font-black text-6xl tracking-tight text-white uppercase whitespace-nowrap">
             ADDED TIME
           </span>
-          <span className="px-3.5 py-1 rounded-xl bg-orange-500 text-black font-black text-3xl font-mono shadow-[0_0_25px_rgba(255,107,0,0.8)]">
-            [90+]
-          </span>
+          <div className="flex items-center px-3 py-1 rounded-lg bg-[#0a0d14] border-2 border-[#ff6b00] shadow-[0_0_25px_rgba(255,107,0,0.8)]">
+            <span className="font-mono text-2xl font-black tracking-tight text-[#ff6b00]">
+              90+
+            </span>
+          </div>
         </div>
 
-        <p className="mt-4 text-2xl font-semibold tracking-wider text-gray-400 uppercase font-sans">
+        <p className="mt-4 text-xl font-bold tracking-wider text-gray-300 uppercase font-sans">
           {headline}
         </p>
       </div>
