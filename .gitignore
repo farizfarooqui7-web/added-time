@@ -13,6 +13,8 @@ node_modules/
 # Production build outputs
 dist/
 dist-ssr/
+out/
+.remotion/
 
 # Environment files
 .env
