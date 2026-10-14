@@ -33,7 +33,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
     setIsSubmitting(true);
     soundFX.playClick(800);
 
-    const metadata = {
+    const clientMetadata = {
       timestamp: new Date().toISOString(),
       activeView: currentView || 'main-hub',
       viewport: `${window.innerWidth}x${window.innerHeight}`,
@@ -43,23 +43,35 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
       language: navigator.language,
     };
 
-    const webhookUrl = (import.meta as any).env?.VITE_FEEDBACK_WEBHOOK_URL;
+    const webhookUrl =
+      import.meta.env.VITE_FEEDBACK_WEBHOOK_URL ||
+      (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ? 'https://api.web3forms.com/submit' : undefined);
+    const category = feedbackType;
 
     if (webhookUrl) {
       try {
-        await fetch(webhookUrl, {
+        const res = await fetch(webhookUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
           body: JSON.stringify({
-            content: `**[Added Time Feedback]** ${feedbackType.toUpperCase()}\n**Description:** ${description}\n**Email:** ${email || 'Anonymous'}\n**View:** ${metadata.activeView}\n**Viewport:** ${metadata.viewport}\n**Device:** ${metadata.userAgent}`,
-            feedbackType,
-            description,
-            email,
-            metadata,
+            access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
+            subject: 'Added Time — Bug Report / Feedback',
+            category: category,
+            message: description,
+            email: email || 'Anonymous Baller',
+            metadata: clientMetadata,
           }),
         });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => null);
+          console.error('[FeedbackWidget] Web3Forms submission failed:', res.status, errData);
+        }
       } catch (err) {
-        console.warn('[FeedbackWidget] Webhook dispatch failed, falling back to local acknowledgment:', err);
+        console.error('[FeedbackWidget] Webhook dispatch failed, falling back to local acknowledgment:', err);
       }
     }
 
