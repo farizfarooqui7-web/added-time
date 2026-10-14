@@ -38,6 +38,7 @@ import {
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
+import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import { soundFX } from '../../utils/audio';
 
 interface ImposterArenaProps {
@@ -190,6 +191,13 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   const [imposterFinalGuessText, setImposterFinalGuessText] = useState<string>('');
   const [imposterStolenWin, setImposterStolenWin] = useState<boolean>(false);
   const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
+
+  const { handleCleanExit } = useArenaBackGuard({
+    isMatchOver: stage === 'game-over',
+    onTriggerForfeit: () => setShowForfeitModal(true),
+    onExitArena,
+    arenaKey: 'football-imposter',
+  });
 
   const usedCluesSetRef = useRef<Set<string>>(new Set());
   const clueInputRef = useRef<HTMLInputElement>(null);
@@ -893,7 +901,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#07090e] text-white flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden select-none">
+    <div className="min-h-screen min-h-[100dvh] w-full bg-[#07090e] text-white flex flex-col justify-between p-3 sm:p-6 relative overflow-y-auto md:overflow-hidden select-none">
       {/* Ambient Crimson / Tactical Glow */}
       <div
         className="pointer-events-none fixed inset-0 opacity-30"
@@ -2183,7 +2191,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                 type="button"
                 onClick={() => {
                   if (isMultiplayer) sendGameLeave();
-                  onExitArena();
+                  handleCleanExit();
                 }}
                 className="flex-1 py-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 text-xs font-display font-extrabold uppercase tracking-widest text-neutral-300 transition-all cursor-pointer"
               >
@@ -2207,7 +2215,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          onExitArena();
+          handleCleanExit();
         }}
       />
 
@@ -2218,7 +2226,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
           setShowForfeitModal(false);
-          onExitArena();
+          handleCleanExit();
         }}
       />
 

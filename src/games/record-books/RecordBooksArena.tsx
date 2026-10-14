@@ -30,6 +30,7 @@ import {
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
+import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import { soundFX } from '../../utils/audio';
 
 interface RecordBooksArenaProps {
@@ -104,6 +105,13 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   const [roundHistory, setRoundHistory] = useState<RecordBooksRoundResult[]>([]);
   const [isMatchOver, setIsMatchOver] = useState(false);
   const [showForfeitModal, setShowForfeitModal] = useState(false);
+
+  const { handleCleanExit } = useArenaBackGuard({
+    isMatchOver,
+    onTriggerForfeit: () => setShowForfeitModal(true),
+    onExitArena,
+    arenaKey: 'record-books',
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -613,7 +621,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
               type="button"
               onClick={() => {
                 if (isMultiplayer) sendGameLeave();
-                onExitArena();
+                handleCleanExit();
               }}
               className="flex-1 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-display font-extrabold uppercase tracking-widest text-neutral-300 transition-all cursor-pointer"
             >
@@ -668,7 +676,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   const showOpponentScore = stage === 'tally-opponent' || stage === 'round-done';
 
   return (
-    <div className="min-h-screen w-full bg-[#07090e] text-white flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden select-none">
+    <div className="min-h-screen min-h-[100dvh] w-full bg-[#07090e] text-white flex flex-col justify-between p-3 sm:p-6 relative overflow-y-auto md:overflow-hidden select-none">
       {/* Ambient Backdrop Glow */}
       <div
         className="pointer-events-none fixed inset-0 opacity-30"
@@ -1031,7 +1039,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 
                     {/* Instant Fuzzy Autocomplete Dropdown */}
                     {showDropdown && suggestions.length > 0 && (
-                      <div className="absolute left-0 right-0 bottom-full mb-2 rounded-xl bg-[#121722] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden z-40">
+                      <div className="absolute left-0 right-0 bottom-full mb-2 rounded-xl bg-[#121722] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-y-auto max-h-48 sm:max-h-60 z-40 divide-y divide-white/5">
                         {suggestions.map((name, idx) => {
                           const isSelected = idx === selectedIndex;
                           const isTakenByOpponent =
@@ -1152,7 +1160,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          onExitArena();
+          handleCleanExit();
         }}
       />
 
@@ -1163,7 +1171,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
           setShowForfeitModal(false);
-          onExitArena();
+          handleCleanExit();
         }}
       />
 

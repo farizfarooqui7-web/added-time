@@ -21,6 +21,7 @@ import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
+import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import {
   Bot,
   Building2,
@@ -125,6 +126,13 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   const [isMasked, setIsMasked] = useState<boolean>(config.isRoomCodeMasked);
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
   const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
+
+  const { handleCleanExit } = useArenaBackGuard({
+    isMatchOver: phase === 'match-over',
+    onTriggerForfeit: () => setShowForfeitModal(true),
+    onExitArena: onExitArena,
+    arenaKey: 'link-up',
+  });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const opponentLabel = isMultiplayer && opponent?.name ? opponent.name : (config.lobbyMode === 'solo' ? 'AI SCOUT' : 'OPPONENT');
@@ -719,7 +727,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               onClick={() => {
                 soundFX.playClick(500);
                 if (isMultiplayer) sendGameLeave();
-                onExitArena();
+                handleCleanExit();
               }}
               className="px-7 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-sans font-bold text-xs md:text-sm uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
             >
@@ -762,7 +770,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   }
 
   return (
-    <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col justify-between p-3 md:p-5 overflow-hidden select-none relative font-sans">
+    <div className="min-h-screen min-h-[100dvh] w-full bg-[#080a0f] text-neutral-100 flex flex-col justify-between p-3 md:p-5 overflow-y-auto md:overflow-hidden select-none relative font-sans">
       {/* ================= 0. PULSING 3-2-1 OPENING COUNTDOWN OVERLAY ================= */}
       {phase === 'opening-countdown' && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
@@ -992,7 +1000,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
             {/* Autocomplete Floating Dropdown (Renders cleanly above the input bar) */}
             <div className="relative w-full">
               {suggestions.length > 0 && (
-                <div className="absolute bottom-full mb-2 inset-x-0 bg-[#121622] border border-white/15 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden z-40 divide-y divide-white/5">
+                <div className="absolute bottom-full mb-2 inset-x-0 bg-[#121622] border border-white/15 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-y-auto max-h-48 sm:max-h-60 z-40 divide-y divide-white/5">
                   {suggestions.map((player, sIdx) => {
                     const isHighlighted = sIdx === highlightedIndex;
                     const isTaken = isPlayerLockedByOpponent(player);
@@ -1193,7 +1201,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          onExitArena();
+          handleCleanExit();
         }}
       />
 
@@ -1204,7 +1212,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
           setShowForfeitModal(false);
-          onExitArena();
+          handleCleanExit();
         }}
       />
     </div>

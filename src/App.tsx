@@ -137,35 +137,63 @@ export function App() {
     toggleJoinCode();
   };
 
+  // Listen for browser back / popstate to smoothly close open setup modals
+  useEffect(() => {
+    const handlePopState = () => {
+      setIsAuctionSetupOpen(false);
+      setIsLinkUpSetupOpen(false);
+      setIsRecordBooksSetupOpen(false);
+      setIsImposterSetupOpen(false);
+      setIsSideNettingSetupOpen(false);
+      setIsGenericModalOpen(false);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const openSetupModal = (setter: (open: boolean) => void, setupKey: string) => {
+    window.history.pushState({ modal: setupKey }, '', `?setup=${setupKey}`);
+    setter(true);
+  };
+
+  const closeSetupModal = (setter: (open: boolean) => void) => {
+    setter(false);
+    if (window.location.search.includes('setup=')) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  };
+
   const handleLaunchMode = (mode: GameModeInfo, tab: 'solo' | 'quickmatch' | 'party' = 'solo') => {
     if (mode.id === 'auction-draft') {
       const mappedMode = tab === 'party' ? 'host' : tab === 'quickmatch' ? 'host' : 'solo';
       setAuctionInitialMode(mappedMode);
-      setIsAuctionSetupOpen(true);
+      openSetupModal(setIsAuctionSetupOpen, 'auction-draft');
     } else if (mode.id === 'criteria-rush') {
       const mappedMode: LinkUpLobbyMode = tab === 'party' ? 'host' : 'solo';
       setLinkUpInitialMode(mappedMode);
-      setIsLinkUpSetupOpen(true);
+      openSetupModal(setIsLinkUpSetupOpen, 'link-up');
     } else if (mode.id === 'tally-race') {
       const mappedMode: RecordBooksLobbyMode = tab === 'party' ? 'host' : 'solo';
       setRecordBooksInitialMode(mappedMode);
-      setIsRecordBooksSetupOpen(true);
+      openSetupModal(setIsRecordBooksSetupOpen, 'record-books');
     } else if (mode.id === 'football-imposter') {
       const mappedMode: ImposterLobbyMode = tab === 'party' ? 'host' : 'sandbox';
       setImposterInitialMode(mappedMode);
-      setIsImposterSetupOpen(true);
+      openSetupModal(setIsImposterSetupOpen, 'football-imposter');
     } else if (mode.id === 'side_netting') {
-      setIsSideNettingSetupOpen(true);
+      openSetupModal(setIsSideNettingSetupOpen, 'side-netting');
     } else {
       setSelectedMode(mode);
       setModalInitialTab(tab);
-      setIsGenericModalOpen(true);
+      openSetupModal(setIsGenericModalOpen, 'generic');
     }
   };
 
   const handleEnterAuctionArena = (config: MatchConfig) => {
     setActiveMatchConfig(config);
     setIsAuctionSetupOpen(false);
+    window.history.replaceState({ game: 'auction-draft' }, '', '?game=auction-draft');
     setViewMode('auction-arena');
     if (party.isActive && party.isCurrentUserHost) {
       launchMatch('auction-draft', config);
@@ -175,11 +203,13 @@ export function App() {
   const handleExitAuctionArena = () => {
     setViewMode('hub');
     setActiveMatchConfig(null);
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterLinkUpArena = (config: LinkUpMatchConfig) => {
     setActiveLinkUpConfig(config);
     setIsLinkUpSetupOpen(false);
+    window.history.replaceState({ game: 'link-up' }, '', '?game=link-up');
     setViewMode('link-up-arena');
     if (party.isActive && party.isCurrentUserHost) {
       launchMatch('criteria-rush', config);
@@ -189,11 +219,13 @@ export function App() {
   const handleExitLinkUpArena = () => {
     setViewMode('hub');
     setActiveLinkUpConfig(null);
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterRecordBooksArena = (config: RecordBooksMatchConfig) => {
     setActiveRecordBooksConfig(config);
     setIsRecordBooksSetupOpen(false);
+    window.history.replaceState({ game: 'record-books' }, '', '?game=record-books');
     setViewMode('record-books-arena');
     if (party.isActive && party.isCurrentUserHost) {
       launchMatch('tally-race', config);
@@ -203,11 +235,13 @@ export function App() {
   const handleExitRecordBooksArena = () => {
     setViewMode('hub');
     setActiveRecordBooksConfig(null);
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterImposterArena = (config: ImposterMatchConfig) => {
     setActiveImposterConfig(config);
     setIsImposterSetupOpen(false);
+    window.history.replaceState({ game: 'football-imposter' }, '', '?game=football-imposter');
     setViewMode('imposter-arena');
     if (party.isActive && party.isCurrentUserHost) {
       launchMatch('football-imposter', config);
@@ -217,11 +251,13 @@ export function App() {
   const handleExitImposterArena = () => {
     setViewMode('hub');
     setActiveImposterConfig(null);
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleEnterSideNettingArena = (config: SideNettingMatchConfig) => {
     setActiveSideNettingConfig(config);
     setIsSideNettingSetupOpen(false);
+    window.history.replaceState({ game: 'side-netting' }, '', '?game=side-netting');
     setViewMode('side-netting-arena');
     if (party.isActive && party.isCurrentUserHost) {
       launchMatch('side_netting', config);
@@ -231,20 +267,21 @@ export function App() {
   const handleExitSideNettingArena = () => {
     setViewMode('hub');
     setActiveSideNettingConfig(null);
+    window.history.replaceState(null, '', window.location.pathname);
   };
 
   const handleCancelMatchmaking = (cancelledModeId: string | null) => {
     if (!cancelledModeId) return;
     if (cancelledModeId === 'auction-draft') {
-      setIsAuctionSetupOpen(true);
+      openSetupModal(setIsAuctionSetupOpen, 'auction-draft');
     } else if (cancelledModeId === 'criteria-rush' || cancelledModeId === 'link-up') {
-      setIsLinkUpSetupOpen(true);
+      openSetupModal(setIsLinkUpSetupOpen, 'link-up');
     } else if (cancelledModeId === 'tally-race' || cancelledModeId === 'record-books') {
-      setIsRecordBooksSetupOpen(true);
+      openSetupModal(setIsRecordBooksSetupOpen, 'record-books');
     } else if (cancelledModeId === 'football-imposter') {
-      setIsImposterSetupOpen(true);
+      openSetupModal(setIsImposterSetupOpen, 'football-imposter');
     } else if (cancelledModeId === 'side_netting') {
-      setIsSideNettingSetupOpen(true);
+      openSetupModal(setIsSideNettingSetupOpen, 'side-netting');
     }
   };
 
@@ -333,7 +370,7 @@ export function App() {
         {/* 3. $20 Auction Draft Launchpad Modal */}
         <AuctionSetupModal
           isOpen={isAuctionSetupOpen}
-          onClose={() => setIsAuctionSetupOpen(false)}
+          onClose={() => closeSetupModal(setIsAuctionSetupOpen)}
           onEnterArena={handleEnterAuctionArena}
           initialMode={auctionInitialMode}
         />
@@ -341,7 +378,7 @@ export function App() {
         {/* 4. THE LINK-UP Setup Modal */}
         <LinkUpSetupModal
           isOpen={isLinkUpSetupOpen}
-          onClose={() => setIsLinkUpSetupOpen(false)}
+          onClose={() => closeSetupModal(setIsLinkUpSetupOpen)}
           onLaunchArena={handleEnterLinkUpArena}
           initialMode={linkUpInitialMode}
         />
@@ -349,7 +386,7 @@ export function App() {
         {/* 5. THE RECORD BOOKS Setup Modal */}
         <RecordBooksSetupModal
           isOpen={isRecordBooksSetupOpen}
-          onClose={() => setIsRecordBooksSetupOpen(false)}
+          onClose={() => closeSetupModal(setIsRecordBooksSetupOpen)}
           onLaunchArena={handleEnterRecordBooksArena}
           initialMode={recordBooksInitialMode}
         />
@@ -357,7 +394,7 @@ export function App() {
         {/* 6. FOOTBALL IMPOSTER Setup Modal */}
         <ImposterSetupModal
           isOpen={isImposterSetupOpen}
-          onClose={() => setIsImposterSetupOpen(false)}
+          onClose={() => closeSetupModal(setIsImposterSetupOpen)}
           onLaunchArena={handleEnterImposterArena}
           initialMode={imposterInitialMode}
         />
@@ -365,7 +402,7 @@ export function App() {
         {/* 7. SIDE NETTING Setup Modal */}
         <SideNettingSetupModal
           isOpen={isSideNettingSetupOpen}
-          onClose={() => setIsSideNettingSetupOpen(false)}
+          onClose={() => closeSetupModal(setIsSideNettingSetupOpen)}
           onLaunchArena={handleEnterSideNettingArena}
         />
 
@@ -373,7 +410,7 @@ export function App() {
         <GameModeModal
           mode={selectedMode}
           isOpen={isGenericModalOpen}
-          onClose={() => setIsGenericModalOpen(false)}
+          onClose={() => closeSetupModal(setIsGenericModalOpen)}
           initialTab={modalInitialTab}
         />
       </div>

@@ -17,6 +17,7 @@ import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
+import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import {
   Eye,
   EyeOff,
@@ -191,6 +192,13 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   const [phase, setPhase] = useState<AuctionPhase>('bidding');
   const [showForfeitModal, setShowForfeitModal] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const { handleCleanExit } = useArenaBackGuard({
+    isMatchOver: phase === 'showdown',
+    onTriggerForfeit: () => setShowForfeitModal(true),
+    onExitArena: onExitMatch,
+    arenaKey: 'auction-draft',
+  });
 
   // Absolute Bidding Swipe Belt Selection
   const [selectedBidAmount, setSelectedBidAmount] = useState<number | null>(null);
@@ -742,7 +750,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   }
 
   return (
-    <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col justify-between p-3 md:p-4 overflow-hidden select-none relative font-sans">
+    <div className="min-h-screen min-h-[100dvh] w-full bg-[#080a0f] text-neutral-100 flex flex-col justify-between p-3 md:p-4 overflow-y-auto md:overflow-hidden select-none relative font-sans">
       {/* ================= 3-2-1 DRAFT INTRO COUNTDOWN OVERLAY ================= */}
       {matchIntroCount !== null && (
         <div className="absolute inset-0 z-50 bg-[#080a0f]/90 backdrop-blur-md flex flex-col items-center justify-center animate-in fade-in duration-200">
@@ -758,10 +766,10 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       )}
 
       {/* ================= 1. TOP STATUS BAR ================= */}
-      <header className="w-full flex items-center justify-between gap-3 pb-2.5 border-b border-white/10 shrink-0">
+      <header className="w-full flex items-center justify-between gap-2 sm:gap-3 pb-2.5 border-b border-white/10 shrink-0">
         {/* Left: Round & Formation Counter */}
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-2 bg-[#12151e] border border-white/10 px-3 py-1.5 rounded-full shadow-inner">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-[#12151e] border border-white/10 px-2.5 sm:px-3 py-1.5 rounded-full shadow-inner">
             <span className="w-2 h-2 rounded-full bg-[#ccff00] animate-pulse" />
             <span className="font-mono text-xs font-bold text-white tracking-wider">
               LOT {String(lotNumber).padStart(2, '0')}
@@ -773,6 +781,13 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
             <span className="font-bold text-white">{formation.badge}</span>
             <span className="text-slate-400">({formation.formula})</span>
           </div>
+        </div>
+
+        {/* Compact Mobile Live Bankroll Bar */}
+        <div className="flex sm:hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#12151e] border border-white/10 text-[10px] font-mono">
+          <span className="text-[#ccff00] font-bold">${userRemainingCash.toFixed(1)}</span>
+          <span className="text-neutral-500">•</span>
+          <span className="text-slate-400">${botRemainingCash.toFixed(1)}</span>
         </div>
 
         {/* Center: Streamer-Safe Room Code or Matchroom Badge */}
@@ -831,9 +846,9 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       </header>
 
       {/* ================= 2. REBALANCED GRID (30% / 40% / 30%) ================= */}
-      <main className="flex-1 w-full grid grid-cols-1 md:grid-cols-10 gap-3 md:gap-4 my-2 overflow-hidden items-stretch">
+      <main className="flex-1 w-full grid grid-cols-1 md:grid-cols-10 gap-3 md:gap-4 my-2 overflow-visible md:overflow-hidden items-stretch">
         {/* ================= LEFT DUGOUT: 30% WIDTH (3/10 COLS) ================= */}
-        <div className="md:col-span-3 bg-[#10131a] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between shadow-[0_12px_30px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
+        <div className="order-2 md:order-1 md:col-span-3 bg-[#10131a] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between shadow-[0_12px_30px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
           {/* Header & Bankroll HUD (Strict Escrow Release Formula) */}
           <div className="pb-2 border-b border-white/5 flex items-center justify-between">
             <div>
@@ -892,7 +907,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         </div>
 
         {/* ================= CENTER AUCTION BLOCK: 40% WIDTH (4/10 COLS) ================= */}
-        <div className="md:col-span-4 bg-[#0c0e14] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between items-center shadow-2xl relative overflow-hidden">
+        <div className="order-1 md:order-2 md:col-span-4 bg-[#0c0e14] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between items-center shadow-2xl relative overflow-hidden">
           {/* Symmetrical Centered Stage Spotlight & Collector Aura (Zero crooked flares) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
             {/* Subtle Architectural Grid Backdrop */}
@@ -980,16 +995,16 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           </div>
 
           {/* Center Stage: Levitating Era Card + Architectural Collector Stage Plinth */}
-          <div className="my-auto py-1 flex flex-col items-center justify-center w-full relative z-10 min-h-[380px]">
+          <div className="my-auto py-1 flex flex-col items-center justify-center w-full relative z-10 min-h-[280px] sm:min-h-[380px]">
             {!currentLot ? (
-              <div className="flex flex-col items-center justify-center h-[380px] text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">
+              <div className="flex flex-col items-center justify-center h-[280px] sm:h-[380px] text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">
                 Dealing Next Lot...
               </div>
             ) : (
               <>
                 {/* Spotlighted Era Card (Levitates cleanly above the stage without touching it) */}
                 <div
-                  className={`relative z-20 w-[285px] md:w-[300px] lg:w-[314px] max-h-[48vh] transition-all duration-400 ease-out transform ${
+                  className={`relative z-20 w-[235px] sm:w-[285px] md:w-[300px] lg:w-[314px] max-h-[36vh] sm:max-h-[48vh] transition-all duration-400 ease-out transform ${
                     flyDirection === 'left'
                       ? '-translate-x-[120%] scale-50 opacity-0'
                       : flyDirection === 'right'
@@ -1179,7 +1194,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         </div>
 
         {/* ================= RIGHT DUGOUT: 30% WIDTH (3/10 COLS) ================= */}
-        <div className="md:col-span-3 bg-[#10131a] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between shadow-[0_12px_30px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
+        <div className="order-3 md:order-3 md:col-span-3 bg-[#10131a] border border-white/10 rounded-3xl p-3 md:p-3.5 flex flex-col justify-between shadow-[0_12px_30px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden">
           {/* Header & Bankroll HUD */}
           <div className="pb-2 border-b border-white/5 flex items-center justify-between">
             <div>
@@ -1245,7 +1260,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
           setShowForfeitModal(false);
-          onExitMatch();
+          handleCleanExit();
         }}
       />
 
@@ -1263,7 +1278,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           onRematch={handleRematch}
           onReturnToHub={() => {
             if (isMultiplayer) sendGameLeave();
-            onExitMatch();
+            handleCleanExit();
           }}
         />
       )}
@@ -1273,7 +1288,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          onExitMatch();
+          handleCleanExit();
         }}
       />
     </div>

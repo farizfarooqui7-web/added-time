@@ -29,6 +29,7 @@ import { soundFX } from '../../utils/audio';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
+import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 
 interface SideNettingArenaProps {
   config: SideNettingMatchConfig;
@@ -96,6 +97,13 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [maxDepthReached, setMaxDepthReached] = useState<number>(0);
   const [roundResults, setRoundResults] = useState<SideNettingRoundResult[]>([]);
   const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
+
+  const { handleCleanExit } = useArenaBackGuard({
+    isMatchOver: diveState === 'game-over',
+    onTriggerForfeit: () => setShowForfeitModal(true),
+    onExitArena,
+    arenaKey: 'side-netting',
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const currentPrompt = prompts[currentRoundIdx] || prompts[0];
@@ -397,7 +405,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
   return (
     <div
-      className={`min-h-screen w-full bg-[#080d14] text-white flex flex-col justify-between relative overflow-hidden select-none font-sans transition-colors duration-300 ${
+      className={`min-h-screen min-h-[100dvh] w-full bg-[#080d14] text-white flex flex-col justify-between relative overflow-y-auto md:overflow-hidden select-none font-sans transition-colors duration-300 ${
         isWrongAnswerShake ? 'ring-8 ring-inset ring-rose-500/50' : ''
       }`}
     >
@@ -727,6 +735,23 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           </div>
         )}
 
+        {/* Compact Mobile Depth Readout */}
+        <div className="flex sm:hidden items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/60 border border-white/10 font-mono text-[10px]">
+          <span className="text-emerald-300 font-bold">{displayDepth}m</span>
+          <span className="text-neutral-500">•</span>
+          <span className="text-neutral-300 uppercase">
+            {displayDepth >= 3600
+              ? "BALLON D'OR"
+              : displayDepth >= 2600
+              ? 'STREETS'
+              : displayDepth >= 1500
+              ? 'CULT'
+              : displayDepth >= 500
+              ? 'STARTER'
+              : 'TAP-IN'}
+          </span>
+        </div>
+
         {/* 5 KNOWLEDGE TIERS MINI HUD BAR */}
         <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 font-mono text-[10px]">
           <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/30">
@@ -905,7 +930,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
             </div>
 
             {/* FAR-RIGHT CORNER: TALLER, WIDER, ANCHORED STRIKE RANGE METER */}
-            <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 w-36 sm:w-48 h-[320px] sm:h-[380px] flex items-center justify-end">
+            <div className="hidden md:flex absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 w-36 sm:w-48 h-[320px] sm:h-[380px] items-center justify-end">
               <div className="w-full h-full py-5 rounded-3xl bg-black/80 border border-white/20 backdrop-blur-md p-4 flex flex-col justify-between items-center shadow-[0_16px_50px_rgba(0,0,0,0.85)]">
                 {/* Top readout */}
                 <div className="text-center">
@@ -1157,7 +1182,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                 type="button"
                 onClick={() => {
                   if (isMultiplayer) sendGameLeave();
-                  onExitArena();
+                  handleCleanExit();
                 }}
                 className="flex-1 py-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 text-xs font-display font-extrabold uppercase tracking-widest text-neutral-300 transition-all cursor-pointer"
               >
@@ -1181,7 +1206,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          onExitArena();
+          handleCleanExit();
         }}
       />
 
@@ -1192,7 +1217,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
           setShowForfeitModal(false);
-          onExitArena();
+          handleCleanExit();
         }}
       />
 

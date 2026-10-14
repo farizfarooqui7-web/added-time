@@ -58,7 +58,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
           },
           body: JSON.stringify({
             access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
-            subject: 'Added Time — Bug Report / Feedback',
+            subject: 'Added Time - Bug Report / Feedback',
             category: category,
             message: description,
             email: email || 'Anonymous Baller',

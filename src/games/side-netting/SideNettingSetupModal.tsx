@@ -79,7 +79,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none">
-      <div className="relative w-full max-w-lg rounded-[32px] bg-[#0c121d] border border-cyan-500/35 shadow-[0_32px_100px_rgba(0,240,255,0.2)] p-6 sm:p-8 overflow-hidden flex flex-col justify-between">
+      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto rounded-[32px] bg-[#0c121d] border border-cyan-500/35 shadow-[0_32px_100px_rgba(0,240,255,0.2)] p-5 sm:p-8 flex flex-col justify-between">
         {/* Ambient Stadium Floodlight Glow */}
         <div
           className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full blur-3xl opacity-20"
