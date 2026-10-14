@@ -250,63 +250,79 @@ export const PartyDrawer: React.FC = () => {
           {party.isActive ? (
             /* ================= STATE A: ACTIVE LOBBY VIEW ================= */
             <>
-              {/* BIG ROOM CODE CARD WITH 1-CLICK COPY & MASK */}
-              <div className="relative rounded-2xl bg-gradient-to-br from-[#121724] to-[#0c101a] border border-white/15 p-4 shadow-xl overflow-hidden">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">
-                      SQUAD ROOM CODE
-                    </span>
-                    <span className="px-1.5 py-0.2 rounded text-[8px] font-mono font-bold uppercase bg-white/10 text-neutral-300">
-                      {party.visibility === 'public' ? 'PUBLIC' : 'PRIVATE'}
+              {/* BIG ROOM CODE CARD (HOST ONLY) OR SQUAD CONNECTION STATUS (GUEST ONLY) */}
+              {party.isCurrentUserHost ? (
+                <div className="relative rounded-2xl bg-gradient-to-br from-[#121724] to-[#0c101a] border border-white/15 p-4 shadow-xl overflow-hidden">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">
+                        SQUAD ROOM CODE
+                      </span>
+                      <span className="px-1.5 py-0.2 rounded text-[8px] font-mono font-bold uppercase bg-white/10 text-neutral-300">
+                        {party.visibility === 'public' ? 'PUBLIC' : 'PRIVATE'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={toggleCodeMask}
+                        className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                        title={party.isCodeMasked ? 'Reveal Room Code' : 'Hide Code (Streamer Safe)'}
+                      >
+                        {party.isCodeMasked ? (
+                          <EyeOff className="w-3.5 h-3.5 text-[#ff6b00]" />
+                        ) : (
+                          <Eye className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCopyCode}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
+                        title="Copy Room Code"
+                      >
+                        {copiedCode ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span className="text-emerald-400">COPIED</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 text-neutral-400" />
+                            <span>COPY</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center py-2">
+                    <span className="font-display text-4xl font-black tracking-widest text-[#ccff00] drop-shadow-[0_0_20px_rgba(204,255,0,0.35)] select-all">
+                      {party.isCodeMasked ? '••••••' : party.roomCode}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={toggleCodeMask}
-                      className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                      title={party.isCodeMasked ? 'Reveal Room Code' : 'Hide Code (Streamer Safe)'}
-                    >
-                      {party.isCodeMasked ? (
-                        <EyeOff className="w-3.5 h-3.5 text-[#ff6b00]" />
-                      ) : (
-                        <Eye className="w-3.5 h-3.5" />
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCopyCode}
-                      className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
-                      title="Copy Room Code"
-                    >
-                      {copiedCode ? (
-                        <>
-                          <Check className="w-3 h-3 text-emerald-400" />
-                          <span className="text-emerald-400">COPIED</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3 h-3 text-neutral-400" />
-                          <span>COPY</span>
-                        </>
-                      )}
-                    </button>
+
+                  <p className="text-[10px] font-mono text-center text-neutral-400">
+                    {party.isCodeMasked
+                      ? 'Code is masked for streamer safety. Click eye icon to reveal.'
+                      : `Share with up to ${Math.max(0, party.maxSlots - party.members.length)} friends to join the party.`}
+                  </p>
+                </div>
+              ) : (
+                <div className="relative rounded-2xl bg-[#0e1320] border border-emerald-500/30 p-4 shadow-xl overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                      <span className="font-mono text-xs font-black uppercase tracking-wider text-emerald-400">
+                        🟢 IN SQUAD ({party.members.length}/{party.maxSlots}) : Host: {party.members.find((m) => m.isHost)?.name || 'Host'}
+                      </span>
+                    </div>
                   </div>
+                  <p className="text-[10px] font-mono text-neutral-400 mt-2">
+                    Room code is protected by your host. Connected and ready for match launch.
+                  </p>
                 </div>
-
-                <div className="flex items-center justify-center py-2">
-                  <span className="font-display text-4xl font-black tracking-widest text-[#ccff00] drop-shadow-[0_0_20px_rgba(204,255,0,0.35)] select-all">
-                    {party.isCodeMasked ? '••••••' : party.roomCode}
-                  </span>
-                </div>
-
-                <p className="text-[10px] font-mono text-center text-neutral-400">
-                  {party.isCodeMasked
-                    ? 'Code is masked for streamer safety. Click eye icon to reveal.'
-                    : `Share with up to ${Math.max(0, party.maxSlots - party.members.length)} friends to join the party.`}
-                </p>
-              </div>
+              )}
 
               {/* SQUAD MEMBER ROSTER & SLOTS */}
               <div className="space-y-2.5">

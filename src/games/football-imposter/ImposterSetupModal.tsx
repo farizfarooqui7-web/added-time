@@ -64,15 +64,23 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
   const [category, setCategory] = useState<ImposterCategory>('All Players');
   const [imposterClueEnabled, setImposterClueEnabled] = useState<boolean>(true);
 
-  const { party, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const isGuestInParty = party.isActive && !party.isCurrentUserHost;
   const isSquadReady = party.isActive && party.members.length >= 3 && party.members.length <= 8;
 
   if (!isOpen) return null;
 
   const handleFindPublicGame = () => {
     soundFX.playClick(850);
-    onClose();
-    joinQueue('football-imposter', 'ffa');
+    const start = () => {
+      onClose();
+      joinQueue('football-imposter', 'ffa');
+    };
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(start, 'matchmaking');
+      return;
+    }
+    start();
   };
 
   const handleSquadAction = () => {
@@ -149,6 +157,14 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
           </button>
         </div>
 
+        {/* Guest Read-Only Advisory Banner */}
+        {isGuestInParty && (
+          <div className="relative z-10 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center justify-between shrink-0">
+            <span>Host is configuring match...</span>
+            <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
+          </div>
+        )}
+
         {/* 1. Category Presets */}
         <div className="relative z-10 space-y-2 shrink-0">
           <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
@@ -162,16 +178,21 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
                 <button
                   key={cat.id}
                   type="button"
+                  disabled={isGuestInParty}
                   onClick={() => {
                     soundFX.playClick(620);
                     setCategory(cat.id);
                   }}
-                  className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                  className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all ${
                     isFullSpan ? 'sm:col-span-2' : ''
                   } ${
-                    active
-                      ? 'bg-[#ff2a5f]/15 border-[#ff2a5f] text-white shadow-[0_0_20px_rgba(255,42,95,0.16)]'
-                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06] hover:text-neutral-200'
+                    isGuestInParty
+                      ? active
+                        ? 'bg-[#ff2a5f]/15 border-[#ff2a5f]/60 opacity-80 cursor-not-allowed'
+                        : 'bg-white/[0.02] border-white/5 opacity-50 cursor-not-allowed'
+                      : active
+                      ? 'bg-[#ff2a5f]/15 border-[#ff2a5f] text-white shadow-[0_0_20px_rgba(255,42,95,0.16)] cursor-pointer'
+                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06] hover:text-neutral-200 cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center gap-1.5 w-full">
@@ -204,14 +225,19 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
                 <button
                   key={String(opt.val)}
                   type="button"
+                  disabled={isGuestInParty}
                   onClick={() => {
                     soundFX.playClick(650);
                     setImposterClueEnabled(opt.val);
                   }}
-                  className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                    active
-                      ? 'bg-[#ff2a5f]/15 border-[#ff2a5f] text-white shadow-[0_0_15px_rgba(255,42,95,0.2)]'
-                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06] hover:text-neutral-200'
+                  className={`p-2.5 rounded-xl border text-left transition-all ${
+                    isGuestInParty
+                      ? active
+                        ? 'bg-[#ff2a5f]/15 border-[#ff2a5f]/60 opacity-80 cursor-not-allowed'
+                        : 'bg-white/[0.02] border-white/5 opacity-50 cursor-not-allowed'
+                      : active
+                      ? 'bg-[#ff2a5f]/15 border-[#ff2a5f] text-white shadow-[0_0_15px_rgba(255,42,95,0.2)] cursor-pointer'
+                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06] hover:text-neutral-200 cursor-pointer'
                   }`}
                 >
                   <div className="font-sans font-black text-xs uppercase text-white">
@@ -255,33 +281,56 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
               </p>
             </button>
 
-            {/* Pathway 2: Play with Squad */}
-            <button
-              type="button"
-              onClick={handleSquadAction}
-              className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
-                isSquadReady
-                  ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
-                  : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
-              }`}
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-cyan-400" />
-                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
-                    {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+            {/* Pathway 2: Play with Squad / Guest Lock */}
+            {isGuestInParty ? (
+              <button
+                type="button"
+                disabled
+                className="py-3 px-4 rounded-xl border border-white/10 bg-white/[0.02] text-left flex flex-col justify-between gap-1.5 cursor-not-allowed opacity-70"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-neutral-500" />
+                    <span className="font-sans font-black text-xs text-neutral-400 uppercase tracking-wide">
+                      WAITING FOR HOST TO LAUNCH...
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/5 text-neutral-500">
+                    HOST ONLY
                   </span>
                 </div>
-                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
-                  {isSquadReady ? `${party.members.length}/8 SQUAD` : '3-8 PLAYERS'}
-                </span>
-              </div>
-              <p className="text-[11px] font-mono text-slate-400 leading-snug">
-                {isSquadReady
-                  ? `Your squad has ${party.members.length} ballers. Click to launch Imposter room!`
-                  : 'Requires 3-8 players. Open the Party Dock to invite squad teammates.'}
-              </p>
-            </button>
+                <p className="text-[11px] font-mono text-neutral-500 leading-snug">
+                  Only the squad host can configure and launch Imposter matches.
+                </p>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSquadAction}
+                className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
+                  isSquadReady
+                    ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
+                    : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-cyan-400" />
+                    <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
+                      {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                    {isSquadReady ? `${party.members.length}/8 SQUAD` : '3-8 PLAYERS'}
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-slate-400 leading-snug">
+                  {isSquadReady
+                    ? `Your squad has ${party.members.length} ballers. Click to launch Imposter room!`
+                    : 'Requires 3-8 players. Open the Party Dock to invite squad teammates.'}
+                </p>
+              </button>
+            )}
           </div>
         </div>
       </div>

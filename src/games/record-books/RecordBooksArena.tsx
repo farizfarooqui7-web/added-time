@@ -12,6 +12,7 @@ import {
   SkipForward,
   Target,
   Trophy,
+  Radio,
 } from 'lucide-react';
 import type {
   RecordBooksClubRecord,
@@ -52,6 +53,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 }) => {
   const {
     isMultiplayer,
+    isHost,
     opponent,
     myPlayerId,
     gameInitData,
@@ -68,6 +70,14 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     }
     return generateClubSequence(config.difficulty, config.totalRounds);
   });
+
+  // Sync authoritative clubSequence from server gameInitData
+  useEffect(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.clubSequence && gameInitData.sharedData.clubSequence.length > 0) {
+      setClubSequence(gameInitData.sharedData.clubSequence);
+    }
+  }, [isMultiplayer, gameInitData]);
+
   const [roundIdx, setRoundIdx] = useState(0);
   const [stage, setStage] = useState<RoundStage>('club-intro');
 
@@ -345,6 +355,9 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   };
 
   const handleNextRound = (targetRoundIdx?: number) => {
+    if (isMultiplayer && targetRoundIdx === undefined && !isHost) {
+      return; // Guests cannot advance round unilaterally
+    }
     const nextIdx = targetRoundIdx !== undefined ? targetRoundIdx : roundIdx + 1;
     if (nextIdx >= config.totalRounds) {
       soundFX.playVictoryFanfare();
@@ -374,6 +387,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
+        if (isMultiplayer && !isHost) return;
         e.preventDefault();
         handleNextRound();
       }
@@ -381,7 +395,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [stage, roundIdx, config.totalRounds]);
+  }, [stage, roundIdx, config.totalRounds, isMultiplayer, isHost]);
 
   const handleRematch = () => {
     setClubSequence(generateClubSequence(config.difficulty, config.totalRounds));
@@ -613,6 +627,35 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
               <RotateCcw className="w-4 h-4" />
               PLAY AGAIN
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // High-tech Loading Skeleton while waiting for server authoritative gameInitData
+  if (isMultiplayer && !gameInitData) {
+    return (
+      <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col items-center justify-center p-6 select-none font-sans relative overflow-hidden">
+        <div className="absolute inset-0 pitch-grid-bg opacity-30" />
+        <div
+          className="pointer-events-none absolute w-96 h-96 rounded-full blur-3xl opacity-25"
+          style={{ background: 'radial-gradient(circle, #ff9f1c 0%, transparent 70%)' }}
+        />
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md space-y-5">
+          <div className="w-16 h-16 rounded-3xl bg-[#ff9f1c]/10 border border-[#ff9f1c]/40 flex items-center justify-center text-[#ff9f1c] shadow-[0_0_30px_rgba(255,159,28,0.3)] animate-pulse">
+            <Radio className="w-8 h-8 animate-spin" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-black uppercase tracking-wider text-white">
+              SYNCHRONIZING ARENA
+            </h2>
+            <p className="text-xs font-mono text-neutral-400 mt-1 uppercase tracking-widest">
+              Connecting to authoritative match server...
+            </p>
+          </div>
+          <div className="w-48 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-[#ff9f1c] rounded-full animate-pulse" />
           </div>
         </div>
       </div>
@@ -1077,16 +1120,27 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                   </span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => handleNextRound()}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#ff9f1c] hover:bg-[#ffad3b] text-black font-display text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(255,159,28,0.3)] cursor-pointer shrink-0"
-                >
-                  <span>{roundIdx + 1 >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT CLUB'}</span>
-                  <span className="px-1.5 py-0.5 rounded bg-black/20 text-[10px] font-mono font-bold tracking-tight">
-                    ENTER
-                  </span>
-                </button>
+                {isMultiplayer && !isHost ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 text-neutral-400 font-display text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 cursor-not-allowed opacity-75 border border-white/10 shrink-0"
+                  >
+                    <Clock className="w-3.5 h-3.5 text-neutral-400 animate-spin" />
+                    <span>WAITING FOR HOST...</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleNextRound()}
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#ff9f1c] hover:bg-[#ffad3b] text-black font-display text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(255,159,28,0.3)] cursor-pointer shrink-0"
+                  >
+                    <span>{roundIdx + 1 >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT CLUB'}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-black/20 text-[10px] font-mono font-bold tracking-tight">
+                      ENTER
+                    </span>
+                  </button>
+                )}
               </div>
             ) : null}
           </>

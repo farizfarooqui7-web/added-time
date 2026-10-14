@@ -40,7 +40,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
     };
 
     if (isGuestInParty) {
-      triggerSoloEscapeHatch(startSolo);
+      triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
     startSolo();
@@ -48,8 +48,16 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
 
   const handleQuickMatch = () => {
     soundFX.playClick(850);
-    onClose();
-    joinQueue('side_netting', 'duel');
+    const startQuickMatch = () => {
+      onClose();
+      joinQueue('side_netting', 'duel');
+    };
+
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(startQuickMatch, 'matchmaking');
+      return;
+    }
+    startQuickMatch();
   };
 
   const handleSquadAction = () => {
@@ -79,22 +87,22 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
         />
 
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-5 shrink-0">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(0,240,255,0.3)]">
+        <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-5 shrink-0 gap-3">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="w-12 h-12 aspect-square flex-shrink-0 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(0,240,255,0.3)]">
               <Target className="w-6 h-6 text-cyan-400" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="font-display text-2xl font-black uppercase tracking-tight text-white">
+                <h2 className="font-display text-2xl font-black uppercase tracking-tight text-white truncate">
                   SIDE NETTING
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shrink-0">
                   OBSCURITY DUEL
                 </span>
               </div>
-              <p className="text-xs font-mono text-neutral-400 mt-0.5">
-                Hit the tightest angle. The more obscure your answer, the deeper it bends into the side netting.
+              <p className="text-xs font-mono text-neutral-400 mt-0.5 truncate">
+                Hit the tightest angle. The more obscure your answer, the deeper it bends.
               </p>
             </div>
           </div>
@@ -102,11 +110,19 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer"
+            className="w-10 h-10 aspect-square flex-shrink-0 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Guest Read-Only Advisory Banner */}
+        {isGuestInParty && (
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs mb-4 flex items-center justify-between">
+            <span>Host is configuring match...</span>
+            <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
+          </div>
+        )}
 
         {/* Concept Explainer Card */}
         <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/40 to-blue-950/40 border border-cyan-500/25 mb-5">
@@ -151,14 +167,17 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
                 <button
                   key={t.val}
                   type="button"
+                  disabled={isGuestInParty}
                   onClick={() => {
                     soundFX.playClick(650);
                     setTimerSeconds(t.val as 30 | 45 | 60 | 0);
                   }}
-                  className={`py-2.5 rounded-xl border font-mono text-xs font-black transition-all cursor-pointer ${
-                    timerSeconds === t.val
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,240,255,0.25)]'
-                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06]'
+                  className={`py-2.5 rounded-xl border font-mono text-xs font-black transition-all ${
+                    isGuestInParty
+                      ? 'opacity-60 cursor-not-allowed bg-white/[0.02] border-white/10 text-neutral-400'
+                      : timerSeconds === t.val
+                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,240,255,0.25)] cursor-pointer'
+                      : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:bg-white/[0.06] cursor-pointer'
                   }`}
                 >
                   {t.label}
@@ -200,28 +219,42 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
             </span>
           </button>
 
-          {/* 3. Play with Squad */}
-          <button
-            type="button"
-            onClick={handleSquadAction}
-            className={`w-full py-3 px-4 rounded-2xl border font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
-              isSquadReady
-                ? 'bg-amber-500/20 border-amber-400/60 text-amber-300 hover:bg-amber-500/30'
-                : 'bg-white/[0.02] border-white/10 text-neutral-400 hover:text-white hover:bg-white/[0.05]'
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Users className="w-4 h-4" />
-              <span>
-                {isSquadReady
-                  ? `LAUNCH WITH SQUAD (${party.members.length}/4)`
-                  : 'PLAY WITH SQUAD'}
+          {/* 3. Play with Squad / Waiting for Host */}
+          {isGuestInParty ? (
+            <button
+              type="button"
+              disabled
+              className="w-full py-3 px-4 rounded-2xl border font-display text-xs font-black uppercase tracking-wider flex items-center justify-between bg-white/[0.02] border-white/10 text-neutral-500 cursor-not-allowed opacity-75"
+            >
+              <div className="flex items-center gap-2.5">
+                <Users className="w-4 h-4 text-neutral-500" />
+                <span>WAITING FOR HOST TO LAUNCH...</span>
+              </div>
+              <span className="text-[10px] font-mono text-neutral-500">HOST CONTROLS</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSquadAction}
+              className={`w-full py-3 px-4 rounded-2xl border font-display text-xs font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${
+                isSquadReady
+                  ? 'bg-amber-500/20 border-amber-400/60 text-amber-300 hover:bg-amber-500/30'
+                  : 'bg-white/[0.02] border-white/10 text-neutral-400 hover:text-white hover:bg-white/[0.05]'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Users className="w-4 h-4" />
+                <span>
+                  {isSquadReady
+                    ? `LAUNCH WITH SQUAD (${party.members.length}/4)`
+                    : 'PLAY WITH SQUAD'}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-neutral-400">
+                {isSquadReady ? 'READY' : 'OPEN PARTY DOCK'}
               </span>
-            </div>
-            <span className="text-[10px] font-mono text-neutral-400">
-              {isSquadReady ? 'READY' : 'OPEN PARTY DOCK'}
-            </span>
-          </button>
+            </button>
+          )}
         </div>
       </div>
     </div>

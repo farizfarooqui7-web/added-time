@@ -77,7 +77,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
     };
 
     if (isGuestInParty) {
-      triggerSoloEscapeHatch(startSolo);
+      triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
     startSolo();
@@ -85,8 +85,15 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
 
   const handleQuickMatch = () => {
     soundFX.playClick(850);
-    onClose();
-    joinQueue('auction-draft', 'duel');
+    const start = () => {
+      onClose();
+      joinQueue('auction-draft', 'duel');
+    };
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(start, 'matchmaking');
+      return;
+    }
+    start();
   };
 
   const handleSquadAction = () => {
@@ -149,6 +156,14 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
           </button>
         </div>
 
+        {/* Guest Read-Only Advisory Banner */}
+        {isGuestInParty && (
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center justify-between shrink-0">
+            <span>Host is configuring match...</span>
+            <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
+          </div>
+        )}
+
         {/* 1. FORMATION PRESET */}
         <div className="flex flex-col gap-2 shrink-0">
           <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
@@ -161,13 +176,18 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
                 <div
                   key={formation.id}
                   onClick={() => {
+                    if (isGuestInParty) return;
                     soundFX.playClick(700);
                     setSelectedFormation(formation.id);
                   }}
-                  className={`p-3 rounded-xl cursor-pointer transition-all duration-200 border flex flex-col justify-between gap-1 ${
-                    isSelected
-                      ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.2)]'
-                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924]'
+                  className={`p-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
+                    isGuestInParty
+                      ? isSelected
+                        ? 'bg-[#181e2b] border-[#ccff00]/60 opacity-80 cursor-not-allowed'
+                        : 'bg-[#12151e] border-white/5 opacity-50 cursor-not-allowed'
+                      : isSelected
+                      ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.2)] cursor-pointer'
+                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -199,13 +219,18 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
                 <div
                   key={deck.id}
                   onClick={() => {
+                    if (isGuestInParty) return;
                     soundFX.playClick(650);
                     setSelectedDeck(deck.id);
                   }}
-                  className={`p-2.5 rounded-xl cursor-pointer transition-all duration-200 border flex flex-col justify-between gap-1 ${
-                    isSelected
-                      ? 'bg-[#181e2b] border-[#00f0ff] ring-1 ring-[#00f0ff] shadow-[0_0_16px_rgba(0,240,255,0.2)]'
-                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924]'
+                  className={`p-2.5 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
+                    isGuestInParty
+                      ? isSelected
+                        ? 'bg-[#181e2b] border-[#00f0ff]/60 opacity-80 cursor-not-allowed'
+                        : 'bg-[#12151e] border-white/5 opacity-50 cursor-not-allowed'
+                      : isSelected
+                      ? 'bg-[#181e2b] border-[#00f0ff] ring-1 ring-[#00f0ff] shadow-[0_0_16px_rgba(0,240,255,0.2)] cursor-pointer'
+                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -274,33 +299,56 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
               </p>
             </button>
 
-            {/* Pathway 3: Play with Squad */}
-            <button
-              type="button"
-              onClick={handleSquadAction}
-              className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
-                isSquadReady
-                  ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
-                  : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
-              }`}
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-cyan-400" />
-                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
-                    {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+            {/* Pathway 3: Play with Squad / Guest Lock */}
+            {isGuestInParty ? (
+              <button
+                type="button"
+                disabled
+                className="py-3 px-4 rounded-xl border border-white/10 bg-white/[0.02] text-left flex flex-col justify-between gap-1.5 cursor-not-allowed opacity-70"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-neutral-500" />
+                    <span className="font-sans font-black text-xs text-neutral-400 uppercase tracking-wide">
+                      WAITING FOR HOST TO LAUNCH...
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/5 text-neutral-500">
+                    HOST ONLY
                   </span>
                 </div>
-                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
-                  {isSquadReady ? '2/2 SQUAD' : 'PARTY DOCK'}
-                </span>
-              </div>
-              <p className="text-[11px] font-mono text-slate-400 leading-snug">
-                {isSquadReady
-                  ? 'Squad is ready. Click to launch both players into the live auction.'
-                  : 'Open the right slide-over Party Dock to invite or duel a friend.'}
-              </p>
-            </button>
+                <p className="text-[11px] font-mono text-neutral-500 leading-snug">
+                  Only the squad host can configure and launch Auction Draft matches.
+                </p>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSquadAction}
+                className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
+                  isSquadReady
+                    ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
+                    : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-cyan-400" />
+                    <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
+                      {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                    {isSquadReady ? '2/2 SQUAD' : 'PARTY DOCK'}
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-slate-400 leading-snug">
+                  {isSquadReady
+                    ? 'Squad is ready. Click to launch both players into the live auction.'
+                    : 'Open the right slide-over Party Dock to invite or duel a friend.'}
+                </p>
+              </button>
+            )}
           </div>
         </div>
       </div>

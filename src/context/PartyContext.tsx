@@ -116,8 +116,9 @@ interface PartyContextType {
   clearForfeit: () => void;
   // Solo Escape Hatch state & modal helpers
   isSoloEscapeModalOpen: boolean;
+  escapeHatchIntent: 'solo' | 'matchmaking';
   pendingLaunchCallback: (() => void) | null;
-  triggerSoloEscapeHatch: (onLaunchSolo: () => void) => void;
+  triggerSoloEscapeHatch: (onLaunchSolo: () => void, intent?: 'solo' | 'matchmaking') => void;
   dismissSoloEscapeHatch: () => void;
   confirmSoloEscapeHatch: () => void;
   wsConnected: boolean;
@@ -159,10 +160,18 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [playerName, setPlayerNameState] = useState<string>(getStoredPlayerName);
   const [party, setParty] = useState<PartyState>(() => {
     try {
+      if (sessionStorage.getItem('topbins_explicit_exit') === 'true') {
+        localStorage.removeItem('topbins_party_state');
+        sessionStorage.removeItem('topbins_party_state');
+        return DEFAULT_PARTY;
+      }
       const saved = localStorage.getItem('topbins_party_state');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.isActive && parsed.roomCode) return parsed;
+        if (parsed.isActive && parsed.roomCode && !parsed.roomCode.startsWith('match_')) {
+          return parsed;
+        }
+        localStorage.removeItem('topbins_party_state');
       }
     } catch {
       // ignore
@@ -209,6 +218,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Solo Escape Hatch modal state
   const [isSoloEscapeModalOpen, setIsSoloEscapeModalOpen] = useState(false);
+  const [escapeHatchIntent, setEscapeHatchIntent] = useState<'solo' | 'matchmaking'>('solo');
   const [pendingLaunchCallback, setPendingLaunchCallback] = useState<(() => void) | null>(null);
 
   const lobbySocketRef = useRef<PartySocket | null>(null);
@@ -244,9 +254,11 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       socket.addEventListener('open', () => {
         setWsConnected(true);
-        if (initialMessage) {
-          socket.send(JSON.stringify(initialMessage));
-        }
+        const joinMsg = initialMessage || {
+          type: 'join_party',
+          payload: { roomId: cleanRoom, playerName: getStoredPlayerName() || 'BALLER' },
+        };
+        socket.send(JSON.stringify(joinMsg));
       });
 
       socket.addEventListener('message', (event) => {
@@ -552,10 +564,14 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
-  // Sync to localStorage
+  // Sync to localStorage (Only persist non-ephemeral custom squad rooms)
   useEffect(() => {
     try {
-      localStorage.setItem('topbins_party_state', JSON.stringify(party));
+      if (party.isActive && party.roomCode && !party.roomCode.startsWith('match_')) {
+        localStorage.setItem('topbins_party_state', JSON.stringify(party));
+      } else {
+        localStorage.removeItem('topbins_party_state');
+      }
     } catch {
       // ignore
     }
@@ -645,6 +661,11 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const hostNewParty = (customName?: string, visibility: 'private' | 'public' = 'private') => {
     soundFX.playLobbyReady();
+    try {
+      sessionStorage.removeItem('topbins_explicit_exit');
+    } catch {
+      // ignore
+    }
     const chosenName = (customName && customName.trim())
       ? customName.trim().toUpperCase()
       : (playerName && playerName.trim() ? playerName.trim().toUpperCase() : 'HOST');
@@ -685,6 +706,12 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const joinPartyWithCode = (code: string, nickname?: string): boolean => {
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode || cleanCode.length < 3) return false;
+
+    try {
+      sessionStorage.removeItem('topbins_explicit_exit');
+    } catch {
+      // ignore
+    }
 
     const chosenName = (nickname && nickname.trim()) ? nickname.trim().toUpperCase() : (playerName || 'GUEST');
     if (chosenName !== playerName) {
@@ -732,6 +759,13 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const leaveParty = () => {
     soundFX.playClick(500);
+    try {
+      localStorage.removeItem('topbins_party_state');
+      sessionStorage.removeItem('topbins_party_state');
+      sessionStorage.setItem('topbins_explicit_exit', 'true');
+    } catch {
+      // ignore
+    }
     if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
       roomSocketRef.current.send(
         JSON.stringify({
@@ -748,6 +782,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       roomSocketRef.current = null;
     }
     setParty(DEFAULT_PARTY);
+    setGameInitData(null);
+    setLastGameEvent(null);
     setIsDrawerOpen(false);
   };
 
@@ -832,8 +868,9 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLastRemoteMatch(null);
   };
 
-  const triggerSoloEscapeHatch = (onLaunchSolo: () => void) => {
+  const triggerSoloEscapeHatch = (onLaunchSolo: () => void, intent: 'solo' | 'matchmaking' = 'solo') => {
     soundFX.playVoltBuzz();
+    setEscapeHatchIntent(intent);
     setPendingLaunchCallback(() => onLaunchSolo);
     setIsSoloEscapeModalOpen(true);
   };
@@ -887,6 +924,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         sendGameLeave,
         clearForfeit,
         isSoloEscapeModalOpen,
+        escapeHatchIntent,
         pendingLaunchCallback,
         triggerSoloEscapeHatch,
         dismissSoloEscapeHatch,

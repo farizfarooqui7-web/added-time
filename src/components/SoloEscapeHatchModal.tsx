@@ -5,11 +5,14 @@ import { ShieldAlert, LogOut, X } from 'lucide-react';
 export const SoloEscapeHatchModal: React.FC = () => {
   const {
     isSoloEscapeModalOpen,
+    escapeHatchIntent,
     dismissSoloEscapeHatch,
     confirmSoloEscapeHatch,
   } = useParty();
 
   if (!isSoloEscapeModalOpen) return null;
+
+  const isMatchmaking = escapeHatchIntent === 'matchmaking';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
@@ -28,10 +31,10 @@ export const SoloEscapeHatchModal: React.FC = () => {
             </div>
             <div>
               <h3 className="font-display text-lg font-black uppercase text-white leading-tight">
-                GUEST PERMISSION LOCKED
+                LEAVE SQUAD?
               </h3>
               <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">
-                PARTY HOST EXCLUSIVE ACTION
+                {isMatchmaking ? 'MATCHMAKING CONFLICT' : 'PARTY HOST EXCLUSIVE ACTION'}
               </span>
             </div>
           </div>
@@ -48,10 +51,14 @@ export const SoloEscapeHatchModal: React.FC = () => {
         {/* Modal Message */}
         <div className="rounded-2xl bg-black/40 border border-white/10 p-4 mb-6">
           <p className="text-sm text-neutral-200 leading-relaxed font-sans">
-            Only the party host can launch matches. Would you like to leave the party to play solo?
+            {isMatchmaking
+              ? 'Leave Squad? You are currently in a squad. Would you like to leave the squad to join matchmaking solo?'
+              : 'Leave Squad? You are currently in a squad. Would you like to leave the squad to play solo?'}
           </p>
           <p className="text-[11px] font-mono text-neutral-400 mt-2">
-            Leaving will disconnect you from this party room code and immediately start your solo practice session.
+            {isMatchmaking
+              ? 'Leaving will disconnect you from this squad room and enter the matchmaking queue.'
+              : 'Leaving will disconnect you from this squad room and start your solo practice session.'}
           </p>
         </div>
 
@@ -60,18 +67,18 @@ export const SoloEscapeHatchModal: React.FC = () => {
           <button
             type="button"
             onClick={dismissSoloEscapeHatch}
-            className="py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 font-sans font-bold text-xs uppercase tracking-wider transition-all cursor-pointer hover:text-white"
+            className="py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 font-sans font-bold text-xs uppercase tracking-wider transition-all cursor-pointer hover:text-white text-center"
           >
-            STAY IN PARTY
+            STAY IN SQUAD
           </button>
 
           <button
             type="button"
             onClick={confirmSoloEscapeHatch}
-            className="py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-95"
+            className="py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-95 text-center"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>LEAVE & PLAY SOLO</span>
+            <span>{isMatchmaking ? 'LEAVE & MATCHMAKE' : 'LEAVE & PLAY SOLO'}</span>
           </button>
         </div>
       </div>

@@ -43,6 +43,7 @@ import {
   Users,
   XCircle,
   Zap,
+  Radio,
 } from 'lucide-react';
 
 interface LinkUpArenaProps {
@@ -53,6 +54,7 @@ interface LinkUpArenaProps {
 export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena }) => {
   const {
     isMultiplayer,
+    isHost,
     opponent,
     myPlayerId,
     gameInitData,
@@ -85,6 +87,16 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     usedSeedIdsRef.current.add(p.seedPlayer.id);
     return p;
   });
+
+  // Synchronize authoritative puzzle sequence from server gameInitData
+  useEffect(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.puzzles && gameInitData.sharedData.puzzles.length > 0) {
+      const p = gameInitData.sharedData.puzzles[roundNumber - 1];
+      if (p) {
+        setCurrentPuzzle(p);
+      }
+    }
+  }, [isMultiplayer, gameInitData, roundNumber]);
 
   // Match & Round State
   const [phase, setPhase] = useState<'opening-countdown' | 'playing' | 'round-result' | 'match-over'>('opening-countdown');
@@ -449,6 +461,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   };
 
   const handleNextRound = (targetRound?: number) => {
+    if (isMultiplayer && !targetRound && !isHost) {
+      return; // Guests cannot advance round unilaterally
+    }
     const nextRoundNum = targetRound || roundNumber + 1;
     if (nextRoundNum > config.totalRounds) {
       soundFX.playVictoryFanfare();
@@ -497,6 +512,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
     const handleWindowKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
+        if (isMultiplayer && !isHost) return;
         // Enforce 2-step Enter flow: ignore Enter if the round-result phase was just entered (< 450ms ago)
         if (Date.now() - roundResultEnteredAtRef.current < 450) {
           return;
@@ -508,7 +524,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
     window.addEventListener('keydown', handleWindowKeyDown);
     return () => window.removeEventListener('keydown', handleWindowKeyDown);
-  }, [phase, roundNumber, config.totalRounds, autoRandomizeSlots, activeSlots, activeDifficulty, isMultiplayer]);
+  }, [phase, roundNumber, config.totalRounds, autoRandomizeSlots, activeSlots, activeDifficulty, isMultiplayer, isHost]);
 
   const handleInstantRegenerate = (
     overrideDiff?: LinkUpDifficulty,
@@ -710,6 +726,35 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               <Home className="w-4 h-4 text-slate-400" />
               <span>RETURN TO HUB</span>
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // High-tech Loading Skeleton while waiting for server authoritative gameInitData
+  if (isMultiplayer && !gameInitData) {
+    return (
+      <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col items-center justify-center p-6 select-none font-sans relative overflow-hidden">
+        <div className="absolute inset-0 pitch-grid-bg opacity-30" />
+        <div
+          className="pointer-events-none absolute w-96 h-96 rounded-full blur-3xl opacity-25"
+          style={{ background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)' }}
+        />
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md space-y-5">
+          <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.3)] animate-pulse">
+            <Radio className="w-8 h-8 animate-spin" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-black uppercase tracking-wider text-white">
+              SYNCHRONIZING ARENA
+            </h2>
+            <p className="text-xs font-mono text-neutral-400 mt-1 uppercase tracking-widest">
+              Connecting to authoritative match server...
+            </p>
+          </div>
+          <div className="w-48 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-purple-500 rounded-full animate-pulse" />
           </div>
         </div>
       </div>
@@ -1115,18 +1160,29 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               </div>
 
               {/* Next Round Action */}
-              <button
-                type="button"
-                onClick={() => handleNextRound()}
-                className="px-6 py-3.5 rounded-xl bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(204,255,0,0.3)] flex items-center justify-center gap-2 shrink-0 cursor-pointer transition-all hover:scale-[1.02]"
-              >
-                <span>
-                  {roundNumber >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT ROUND'}
-                </span>
-                <span className="px-1.5 py-0.5 rounded bg-black/20 text-[10px] font-mono font-bold tracking-tight">
-                  ENTER
-                </span>
-              </button>
+              {isMultiplayer && !isHost ? (
+                <button
+                  type="button"
+                  disabled
+                  className="px-6 py-3.5 rounded-xl bg-white/10 text-neutral-400 font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 cursor-not-allowed opacity-75 border border-white/10"
+                >
+                  <Clock className="w-3.5 h-3.5 text-neutral-400 animate-spin" />
+                  <span>WAITING FOR HOST...</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleNextRound()}
+                  className="px-6 py-3.5 rounded-xl bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(204,255,0,0.3)] flex items-center justify-center gap-2 shrink-0 cursor-pointer transition-all hover:scale-[1.02]"
+                >
+                  <span>
+                    {roundNumber >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT ROUND'}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded bg-black/20 text-[10px] font-mono font-bold tracking-tight">
+                    ENTER
+                  </span>
+                </button>
+              )}
             </div>
           )
         )}

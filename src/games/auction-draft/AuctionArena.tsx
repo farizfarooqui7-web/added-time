@@ -28,6 +28,7 @@ import {
   Shield,
   Bot,
   User,
+  Radio,
 } from 'lucide-react';
 
 interface ErrorBoundaryProps {
@@ -109,6 +110,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
 
   const {
     isMultiplayer,
+    isHost,
     opponent,
     myPlayerId,
     myPlayerName,
@@ -122,6 +124,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
 
   // Match start 3-2-1 countdown overlay state
   const [matchIntroCount, setMatchIntroCount] = useState<number | null>(3);
+  const lastTickRef = useRef<number>(-1);
 
   // Manager Dugout States
   const [userState, setUserState] = useState<ManagerState>(() => ({
@@ -171,6 +174,16 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       config.deckId
     );
   });
+
+  // Sync currentLot when authoritative server gameInitData arrives
+  useEffect(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.cards && gameInitData.sharedData.cards.length > 0) {
+      const idx = lotNumber - 1;
+      if (gameInitData.sharedData.cards[idx]) {
+        setCurrentLot(gameInitData.sharedData.cards[idx]);
+      }
+    }
+  }, [isMultiplayer, gameInitData, lotNumber]);
 
   const [currentBid, setCurrentBid] = useState(0);
   const [highBidderId, setHighBidderId] = useState<string | null>(null);
@@ -306,14 +319,17 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   // Main High-Precision Auction Timer (100ms ticks)
   useEffect(() => {
     if (phase !== 'bidding' || matchIntroCount !== null || isTransitioning || !currentLot) return;
+    lastTickRef.current = -1;
 
     const interval = setInterval(() => {
       setRoundTimer((prev) => {
         if (prev <= 0.1) {
           return 0;
         }
-        // Audio tick when timer is under 3 seconds
-        if (prev <= 3.0 && Math.floor(prev * 10) % 10 === 0) {
+        // Audio tick strictly once per integer second under 3 seconds
+        const intSec = Math.ceil(prev - 0.1);
+        if (intSec <= 3 && intSec > 0 && lastTickRef.current !== intSec) {
+          lastTickRef.current = intSec;
           soundFX.playCountdownTick();
         }
         return Math.max(0, parseFloat((prev - 0.1).toFixed(1)));
@@ -321,7 +337,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     }, 100);
 
     return () => clearInterval(interval);
-  }, [phase, matchIntroCount, isTransitioning, currentLot, currentBid, highBidderId]);
+  }, [phase, matchIntroCount, isTransitioning, currentLot]);
 
   // Clean Hammer Drop Trigger when Round Timer hits 0
   useEffect(() => {
@@ -400,8 +416,14 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       if (highBidderId === 'user' && roundTimer > 2.0) {
         setRoundTimer(2.0);
       }
+    } else if (lastGameEvent.event === 'auction_hammer_outcome') {
+      const { winnerPlayerId, finalCost: authCost, isBankruptFreeClaim: authFree, lotNumber: authLot } = lastGameEvent.data || {};
+      if (!isHost && authLot === lotNumber && phase === 'bidding' && !isTransitioning) {
+        const resolvedWinnerId = winnerPlayerId === myPlayerId ? 'user' : (winnerPlayerId ? 'gaffer' : null);
+        handleHammerDrop(resolvedWinnerId, typeof authCost === 'number' ? authCost : 0, Boolean(authFree));
+      }
     }
-  }, [isMultiplayer, lastGameEvent, myPlayerId, highBidderId, roundTimer]);
+  }, [isMultiplayer, isHost, lastGameEvent, myPlayerId, highBidderId, roundTimer, lotNumber, phase, isTransitioning]);
 
   // Execute a Provisional Bid
   const executeBid = (managerId: 'user' | 'gaffer', amount: number) => {
@@ -456,7 +478,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   };
 
   // Gavel Slam & Transfer Sweep Animation sequence
-  const handleHammerDrop = () => {
+  const handleHammerDrop = (forcedWinnerId?: string | null, forcedCost?: number, forcedFreeClaim?: boolean) => {
     if (isTransitioning || phase !== 'bidding') return;
     console.log(`[AuctionArena] Hammer dropping for Lot ${lotNumber}:`, currentLot?.displayName || currentLot?.name);
     setIsTransitioning(true);
@@ -475,29 +497,41 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     const canUserTake = currentLot && !isUserFull ? canManagerAcceptCard(userState.slots, currentLot) : false;
     const canBotTake = currentLot && !isBotFull ? canManagerAcceptCard(botState.slots, currentLot) : false;
 
-    let winnerId: string | null = highBidderId;
-    let finalCost = currentBid;
-    let isBankruptFreeClaim = false;
+    let winnerId: string | null = forcedWinnerId !== undefined ? forcedWinnerId : highBidderId;
+    let finalCost = forcedCost !== undefined ? forcedCost : currentBid;
+    let isBankruptFreeClaim = forcedFreeClaim !== undefined ? forcedFreeClaim : false;
 
-    // Forced Slot Acquisition: If one squad is full, the unfull squad must win the needed lot
-    if (isBotFull && !isUserFull && canUserTake) {
-      winnerId = 'user';
-      finalCost = Math.max(currentBid, userRemainingCash > 0 ? 1 : 0);
-      isBankruptFreeClaim = userRemainingCash <= 0;
-    } else if (isUserFull && !isBotFull && canBotTake) {
-      winnerId = 'gaffer';
-      finalCost = Math.max(currentBid, botRemainingCash > 0 ? 1 : 0);
-      isBankruptFreeClaim = botRemainingCash <= 0;
-    } else if (!winnerId || currentBid === 0) {
-      // Bankrupt or AFK $0 free drop check if nobody bid > 0
-      if (canUserTake && (botState.hasFolded || !canBotTake || botRemainingCash <= 0)) {
+    if (forcedWinnerId === undefined) {
+      // Forced Slot Acquisition: If one squad is full, the unfull squad must win the needed lot
+      if (isBotFull && !isUserFull && canUserTake) {
         winnerId = 'user';
-        finalCost = 0;
-        isBankruptFreeClaim = true;
-      } else if (canBotTake && (userState.hasFolded || !canUserTake || userRemainingCash <= 0)) {
+        finalCost = Math.max(currentBid, userRemainingCash > 0 ? 1 : 0);
+        isBankruptFreeClaim = userRemainingCash <= 0;
+      } else if (isUserFull && !isBotFull && canBotTake) {
         winnerId = 'gaffer';
-        finalCost = 0;
-        isBankruptFreeClaim = true;
+        finalCost = Math.max(currentBid, botRemainingCash > 0 ? 1 : 0);
+        isBankruptFreeClaim = botRemainingCash <= 0;
+      } else if (!winnerId || currentBid === 0) {
+        // Bankrupt or AFK $0 free drop check if nobody bid > 0
+        if (canUserTake && (botState.hasFolded || !canBotTake || botRemainingCash <= 0)) {
+          winnerId = 'user';
+          finalCost = 0;
+          isBankruptFreeClaim = true;
+        } else if (canBotTake && (userState.hasFolded || !canUserTake || userRemainingCash <= 0)) {
+          winnerId = 'gaffer';
+          finalCost = 0;
+          isBankruptFreeClaim = true;
+        }
+      }
+
+      if (isMultiplayer && isHost) {
+        const winnerPlayerId = winnerId === 'user' ? myPlayerId : (opponent?.id || 'opponent');
+        sendAction('auction_hammer_outcome', {
+          lotNumber,
+          winnerPlayerId: winnerId ? winnerPlayerId : null,
+          finalCost,
+          isBankruptFreeClaim,
+        });
       }
     }
 
@@ -677,6 +711,35 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
       setTimeout(() => setCodeCopied(false), 2000);
     }
   };
+
+  // High-tech Loading Skeleton while waiting for server authoritative gameInitData
+  if (isMultiplayer && !gameInitData) {
+    return (
+      <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col items-center justify-center p-6 select-none font-sans relative overflow-hidden">
+        <div className="absolute inset-0 pitch-grid-bg opacity-30" />
+        <div
+          className="pointer-events-none absolute w-96 h-96 rounded-full blur-3xl opacity-25"
+          style={{ background: 'radial-gradient(circle, #ccff00 0%, transparent 70%)' }}
+        />
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md space-y-5">
+          <div className="w-16 h-16 rounded-3xl bg-[#ccff00]/10 border border-[#ccff00]/40 flex items-center justify-center text-[#ccff00] shadow-[0_0_30px_rgba(204,255,0,0.3)] animate-pulse">
+            <Radio className="w-8 h-8 animate-spin" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-black uppercase tracking-wider text-white">
+              SYNCHRONIZING ARENA
+            </h2>
+            <p className="text-xs font-mono text-neutral-400 mt-1 uppercase tracking-widest">
+              Connecting to authoritative match server...
+            </p>
+          </div>
+          <div className="w-48 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-[#ccff00] rounded-full animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col justify-between p-3 md:p-4 overflow-hidden select-none relative font-sans">

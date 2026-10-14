@@ -63,20 +63,20 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
     if (normMode === 'criteria-rush') {
       const puzzles = [];
       const usedSeeds = new Set<string>();
-      for (let r = 1; r <= 5; r++) {
+      for (let r = 1; r <= 10; r++) {
         const p = generateLinkUpPuzzle(r, 'Medium', ['Club', 'Nation', 'Position'], usedSeeds);
         usedSeeds.add(p.seedPlayer.id);
         puzzles.push(p);
       }
-      sharedData = { puzzles, totalRounds: 5 };
+      sharedData = { puzzles, totalRounds: 10 };
     } else if (normMode === 'tally-race') {
-      const clubSequence = generateClubSequence('Medium', 5);
-      sharedData = { clubSequence, totalRounds: 5 };
+      const clubSequence = generateClubSequence('Medium', 10);
+      sharedData = { clubSequence, totalRounds: 10 };
     } else if (normMode === 'football-imposter') {
       const secret = pickSecretPlayer('Global Icons');
       const memberIds = members.map((m) => m.id);
       const imposterIdx = Math.floor(Math.random() * memberIds.length);
-      const imposterId = memberIds[imposterIdx];
+      const imposterId = memberIds[imposterIdx] || memberIds[0] || 'imposter';
 
       sharedData = {
         secretPlayerCategory: secret.category,
@@ -108,8 +108,8 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       const promptResult = drawMatchPrompts(10, []);
       sharedData = { prompts: promptResult.prompts, totalRounds: 10 };
     } else if (normMode === 'auction-draft') {
-      const shuffled = [...PREMIER_LEAGUE_DECK].sort(() => Math.random() - 0.5).slice(0, 15);
-      sharedData = { cards: shuffled, totalRounds: 5 };
+      const shuffled = [...PREMIER_LEAGUE_DECK].sort(() => Math.random() - 0.5);
+      sharedData = { cards: shuffled, totalRounds: 10 };
     }
   } catch (err) {
     console.error('[Added Time Match Engine] Failed to generate shared match data:', err);
@@ -140,6 +140,12 @@ export class TopBinsServer extends Server {
   // Squad / Game Room State (used when this.name !== 'global-lobby')
   private partyRoom: PartyRoom | null = null;
   private connToPlayerId = new Map<string, string>(); // conn.id -> playerId
+  private sharedMatchData: {
+    sharedData: any;
+    assignedRoles: Record<string, any>;
+    modeId: string;
+    config?: any;
+  } | null = null;
 
   // HTTP Endpoint (health checks & platform pings)
   override async onRequest(req: Request): Promise<Response> {
@@ -181,6 +187,42 @@ export class TopBinsServer extends Server {
         payload: { presence: this.computeGlobalPresence() },
       });
       return;
+    }
+
+    // Ephemeral Match Room (match_<modeId>_<random>)
+    if (this.name.startsWith('match_')) {
+      const parts = this.name.split('_');
+      const modeId = parts[1] || 'auction-draft';
+      if (!this.sharedMatchData) {
+        this.sharedMatchData = {
+          ...generateAuthoritativeMatchData(modeId, this.partyRoom ? this.partyRoom.members : []),
+          modeId,
+          config: { isMultiplayer: true },
+        };
+      }
+
+      if (!this.partyRoom) {
+        this.partyRoom = {
+          roomId: this.name,
+          hostId: conn.id,
+          maxSlots: modeId === 'football-imposter' ? 8 : 2,
+          visibility: 'public',
+          members: [],
+          currentGame: { modeId, status: 'in-game' },
+        };
+      }
+
+      // Immediately send game_init with authoritative data
+      this.sendToConn(conn, {
+        type: 'game_init',
+        payload: {
+          modeId: this.sharedMatchData.modeId,
+          config: this.sharedMatchData.config,
+          sharedData: this.sharedMatchData.sharedData,
+          assignedRole: this.sharedMatchData.assignedRoles[conn.id],
+          myPlayerId: conn.id,
+        },
+      });
     }
 
     // Squad / Game Room: if party exists, send state
@@ -257,7 +299,7 @@ export class TopBinsServer extends Server {
           if (list.length >= 3) {
             const matchedClients = [...list];
             this.duelQueues.set('football-imposter', []);
-            const ephemeralRoomId = `match_${generateRandomRoomId()}`;
+            const ephemeralRoomId = `match_${normMode}_${generateRandomRoomId()}`;
 
             for (let i = 0; i < matchedClients.length; i++) {
               const c = matchedClients[i];
@@ -338,7 +380,7 @@ export class TopBinsServer extends Server {
           if (waiting.timeoutTimer) clearTimeout(waiting.timeoutTimer);
           this.duelQueues.set(normMode, qList);
 
-          const ephemeralRoomId = `match_${generateRandomRoomId()}`;
+          const ephemeralRoomId = `match_${normMode}_${generateRandomRoomId()}`;
           const waitingConn = this.getConnection(waiting.connectionId);
 
           const member1: PartyMember = {
@@ -492,7 +534,7 @@ export class TopBinsServer extends Server {
 
     const botName = BOT_USERNAMES[Math.floor(Math.random() * BOT_USERNAMES.length)];
     const botId = `bot_${Math.random().toString(36).substring(2, 8)}`;
-    const ephemeralRoomId = `match_${generateRandomRoomId()}`;
+    const ephemeralRoomId = `match_${normMode}_${generateRandomRoomId()}`;
 
     const member1: PartyMember = {
       id: playerId,
@@ -708,6 +750,19 @@ export class TopBinsServer extends Server {
           payload: { room: this.partyRoom, myPlayerId: playerId },
         });
 
+        if (this.sharedMatchData) {
+          this.sendToConn(sender, {
+            type: 'game_init',
+            payload: {
+              modeId: this.sharedMatchData.modeId,
+              config: this.sharedMatchData.config || { isMultiplayer: true },
+              sharedData: this.sharedMatchData.sharedData,
+              assignedRole: this.sharedMatchData.assignedRoles[playerId] || this.sharedMatchData.assignedRoles[sender.id],
+              myPlayerId: playerId,
+            },
+          });
+        }
+
         this.broadcastToRoom({
           type: 'party_updated',
           payload: { room: this.partyRoom },
@@ -853,24 +908,28 @@ export class TopBinsServer extends Server {
       }
 
       case 'game_leave': {
-        if (!this.partyRoom) return;
+        const isMatchRoom = this.name.startsWith('match_');
         const playerId = this.connToPlayerId.get(sender.id) || sender.id;
-        const member = this.partyRoom.members.find((m) => m.id === playerId);
+        const member = this.partyRoom?.members.find((m) => m.id === playerId);
 
-        if (this.partyRoom.currentGame?.status === 'in-game') {
-          this.partyRoom.currentGame.status = 'lobby';
-          for (const conn of this.getConnections()) {
-            if (conn.id !== sender.id) {
-              this.sendToConn(conn, {
-                type: 'player_forfeit',
-                payload: {
-                  playerId,
-                  playerName: member?.name || 'Player',
-                  reason: `${member?.name || 'Player'} forfeited the match.`,
-                },
-              });
-            }
+        for (const conn of this.getConnections()) {
+          if (conn.id !== sender.id) {
+            this.sendToConn(conn, {
+              type: 'player_forfeit',
+              payload: {
+                playerId,
+                playerName: member?.name || 'Opponent',
+                reason: `${member?.name || 'Opponent'} forfeited the match.`,
+              },
+            });
           }
+        }
+        if (this.partyRoom?.currentGame) {
+          this.partyRoom.currentGame.status = 'lobby';
+        }
+        if (isMatchRoom) {
+          this.sharedMatchData = null;
+          this.partyRoom = null;
         }
         break;
       }
@@ -878,38 +937,46 @@ export class TopBinsServer extends Server {
   }
 
   private handleSquadPlayerDisconnect(conn: Connection) {
-    if (!this.partyRoom) return;
+    const isMatchRoom = this.name.startsWith('match_');
     const playerId = this.connToPlayerId.get(conn.id) || conn.id;
-    const member = this.partyRoom.members.find((m) => m.id === playerId);
+    const member = this.partyRoom?.members.find((m) => m.id === playerId);
     this.connToPlayerId.delete(conn.id);
 
     // If game was active, inform others
-    if (this.partyRoom.currentGame?.status === 'in-game') {
-      this.partyRoom.currentGame.status = 'lobby';
+    const isInGame = this.partyRoom?.currentGame?.status === 'in-game' || isMatchRoom;
+    if (isInGame) {
+      if (this.partyRoom?.currentGame) {
+        this.partyRoom.currentGame.status = 'lobby';
+      }
       for (const otherConn of this.getConnections()) {
         if (otherConn.id !== conn.id) {
           this.sendToConn(otherConn, {
             type: 'player_forfeit',
             payload: {
               playerId,
-              playerName: member?.name || 'Player',
-              reason: `${member?.name || 'Player'} disconnected from the match.`,
+              playerName: member?.name || 'Opponent',
+              reason: `${member?.name || 'Opponent'} disconnected from the match.`,
             },
           });
         }
       }
     }
 
+    if (!this.partyRoom) return;
+
     const wasHost = this.partyRoom.hostId === playerId;
     this.partyRoom.members = this.partyRoom.members.filter((m) => m.id !== playerId);
 
-    if (this.partyRoom.members.length === 0 || wasHost) {
+    if (this.partyRoom.members.length === 0 || wasHost || isMatchRoom) {
       this.partyRoom = null;
-      this.broadcastToRoom({
-        type: 'party_disbanded',
-        payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
-      });
-      console.log(`[TopBinsServer Room ${this.name}] Squad disbanded.`);
+      this.sharedMatchData = null;
+      if (!isMatchRoom) {
+        this.broadcastToRoom({
+          type: 'party_disbanded',
+          payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
+        });
+      }
+      console.log(`[TopBinsServer Room ${this.name}] Squad ended.`);
     } else {
       this.broadcastToRoom({
         type: 'party_updated',

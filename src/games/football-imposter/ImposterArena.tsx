@@ -16,6 +16,7 @@ import {
   Sparkles,
   UserCheck,
   UserX,
+  Radio,
 } from 'lucide-react';
 import type {
   FloatingReaction,
@@ -117,6 +118,42 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
     }
     return generateSquadParticipants(config.botCount, config.rolePreference);
   });
+
+  // Synchronize role and secret player from authoritative server gameInitData
+  useEffect(() => {
+    if (!isMultiplayer || !gameInitData) return;
+
+    if (gameInitData.assignedRole?.secretPlayer) {
+      setSecretPlayer(gameInitData.assignedRole.secretPlayer);
+    }
+
+    if (partyMembers && partyMembers.length > 1) {
+      const colors = [
+        { bg: 'bg-[#ccff00]', text: 'text-black', avatarText: 'text-[#ccff00]', badge: 'border-[#ccff00] text-[#ccff00] bg-[#ccff00]/20' },
+        { bg: 'bg-[#00f0ff]', text: 'text-black', avatarText: 'text-[#00f0ff]', badge: 'border-[#00f0ff] text-[#00f0ff] bg-[#00f0ff]/20' },
+        { bg: 'bg-[#ff0055]', text: 'text-white', avatarText: 'text-[#ff0055]', badge: 'border-[#ff0055] text-[#ff0055] bg-[#ff0055]/20' },
+        { bg: 'bg-[#a855f7]', text: 'text-white', avatarText: 'text-[#a855f7]', badge: 'border-[#a855f7] text-[#a855f7] bg-[#a855f7]/20' },
+      ];
+      setParticipants(
+        partyMembers.map((m, idx) => {
+          const color = colors[idx % colors.length];
+          const isUser = m.id === myPlayerId;
+          const isImposter = isUser ? Boolean(gameInitData?.assignedRole?.isImposter) : false;
+          return {
+            id: m.id,
+            name: m.name,
+            initials: m.name.slice(0, 2).toUpperCase(),
+            avatarBg: color.bg,
+            avatarText: color.avatarText,
+            reactionBadgeClass: color.badge,
+            isUser,
+            isImposter,
+            title: isUser ? 'Squad Captain' : 'Squad Scout',
+          };
+        })
+      );
+    }
+  }, [isMultiplayer, gameInitData, partyMembers, myPlayerId]);
 
   const [stage, setStage] = useState<ImposterStage>('opening-countdown');
   const [openingCountdown, setOpeningCountdown] = useState<number>(3);
@@ -825,6 +862,35 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   };
 
   const crewWonMatch = imposterCaught && !imposterStolenWin;
+
+  // High-tech Loading Skeleton while waiting for server authoritative gameInitData
+  if (isMultiplayer && !gameInitData) {
+    return (
+      <div className="h-screen w-full bg-[#07090e] text-neutral-100 flex flex-col items-center justify-center p-6 select-none font-sans relative overflow-hidden">
+        <div className="absolute inset-0 pitch-grid-bg opacity-30" />
+        <div
+          className="pointer-events-none absolute w-96 h-96 rounded-full blur-3xl opacity-25"
+          style={{ background: 'radial-gradient(circle, #ff2a5f 0%, transparent 70%)' }}
+        />
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md space-y-5">
+          <div className="w-16 h-16 rounded-3xl bg-[#ff2a5f]/10 border border-[#ff2a5f]/40 flex items-center justify-center text-[#ff2a5f] shadow-[0_0_30px_rgba(255,42,95,0.3)] animate-pulse">
+            <Radio className="w-8 h-8 animate-spin" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-black uppercase tracking-wider text-white">
+              SYNCHRONIZING ARENA
+            </h2>
+            <p className="text-xs font-mono text-neutral-400 mt-1 uppercase tracking-widest">
+              Connecting to authoritative match server...
+            </p>
+          </div>
+          <div className="w-48 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-[#ff2a5f] rounded-full animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-[#07090e] text-white flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden select-none">

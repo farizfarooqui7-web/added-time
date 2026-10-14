@@ -8,6 +8,7 @@ import {
   AlertCircle,
   Sparkles,
   SkipForward,
+  Radio,
 } from 'lucide-react';
 import type {
   SideNettingMatchConfig,
@@ -42,6 +43,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 }) => {
   const {
     isMultiplayer,
+    isHost,
     opponent,
     myPlayerId,
     gameInitData,
@@ -59,6 +61,13 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     }
     return initialData.prompts;
   });
+
+  // Sync authoritative prompts from server gameInitData
+  useEffect(() => {
+    if (isMultiplayer && gameInitData?.sharedData?.prompts && gameInitData.sharedData.prompts.length > 0) {
+      setPrompts(gameInitData.sharedData.prompts);
+    }
+  }, [isMultiplayer, gameInitData]);
   const [usedPromptIds, setUsedPromptIds] = useState<string[]>(initialData.updatedExcludedIds);
   const [currentRoundIdx, setCurrentRoundIdx] = useState<number>(0);
   const [secondsLeft, setSecondsLeft] = useState<number>(config.timerSeconds);
@@ -122,6 +131,18 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         setOpponentSubmission(submission);
         setOpponentTotalScore((prev) => prev + (submission.score || 0));
       }
+    } else if (lastGameEvent.event === 'sidenetting_next_round') {
+      const { nextRoundIdx } = lastGameEvent.data || {};
+      if (typeof nextRoundIdx === 'number') {
+        setDiveState('ascending');
+        soundFX.playClick(750);
+        window.setTimeout(() => {
+          setCurrentRoundIdx(nextRoundIdx);
+        }, 1200);
+      }
+    } else if (lastGameEvent.event === 'sidenetting_game_over') {
+      setDiveState('game-over');
+      soundFX.playVictoryFanfare();
     }
   }, [isMultiplayer, lastGameEvent, myPlayerId, currentRoundIdx]);
 
@@ -215,16 +236,34 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
           // Step D: Hold at depth for 2.2s, then ascend back to top or finish
           window.setTimeout(() => {
-            if (currentRoundIdx + 1 < prompts.length) {
-              setDiveState('ascending');
-              soundFX.playClick(750);
-              // Ascend takes 1.2s, then loads next question
-              window.setTimeout(() => {
-                setCurrentRoundIdx((prev) => prev + 1);
-              }, 1200);
+            if (isMultiplayer) {
+              if (isHost) {
+                if (currentRoundIdx + 1 < prompts.length) {
+                  sendAction('sidenetting_next_round', { nextRoundIdx: currentRoundIdx + 1 });
+                  setDiveState('ascending');
+                  soundFX.playClick(750);
+                  window.setTimeout(() => {
+                    setCurrentRoundIdx((prev) => prev + 1);
+                  }, 1200);
+                } else {
+                  sendAction('sidenetting_game_over', {});
+                  setDiveState('game-over');
+                  soundFX.playVictoryFanfare();
+                }
+              }
+              // In multiplayer, guest holds until host broadcasts sidenetting_next_round or sidenetting_game_over
             } else {
-              setDiveState('game-over');
-              soundFX.playVictoryFanfare();
+              if (currentRoundIdx + 1 < prompts.length) {
+                setDiveState('ascending');
+                soundFX.playClick(750);
+                // Ascend takes 1.2s, then loads next question
+                window.setTimeout(() => {
+                  setCurrentRoundIdx((prev) => prev + 1);
+                }, 1200);
+              } else {
+                setDiveState('game-over');
+                soundFX.playVictoryFanfare();
+              }
             }
           }, 2200);
         }
@@ -326,6 +365,35 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     diveState === 'diving'
       ? Math.sin(drillProgress * Math.PI * 6) * 48
       : 0;
+
+  // High-tech Loading Skeleton while waiting for server authoritative gameInitData
+  if (isMultiplayer && !gameInitData) {
+    return (
+      <div className="h-screen w-full bg-[#080d14] text-neutral-100 flex flex-col items-center justify-center p-6 select-none font-sans relative overflow-hidden">
+        <div className="absolute inset-0 pitch-grid-bg opacity-30" />
+        <div
+          className="pointer-events-none absolute w-96 h-96 rounded-full blur-3xl opacity-25"
+          style={{ background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)' }}
+        />
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md space-y-5">
+          <div className="w-16 h-16 rounded-3xl bg-cyan-500/10 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-[0_0_30px_rgba(6,182,212,0.3)] animate-pulse">
+            <Radio className="w-8 h-8 animate-spin" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-black uppercase tracking-wider text-white">
+              SYNCHRONIZING ARENA
+            </h2>
+            <p className="text-xs font-mono text-neutral-400 mt-1 uppercase tracking-widest">
+              Connecting to authoritative match server...
+            </p>
+          </div>
+          <div className="w-48 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-cyan-500 rounded-full animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

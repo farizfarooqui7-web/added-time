@@ -115,7 +115,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
     };
 
     if (isGuestInParty) {
-      triggerSoloEscapeHatch(startSolo);
+      triggerSoloEscapeHatch(startSolo, 'solo');
       return;
     }
     startSolo();
@@ -123,14 +123,28 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
 
   const handleQuickMatch = () => {
     soundFX.playClick(850);
-    onClose();
-    joinQueue('criteria-rush', 'duel');
+    const start = () => {
+      onClose();
+      joinQueue('criteria-rush', 'duel');
+    };
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(start, 'matchmaking');
+      return;
+    }
+    start();
   };
 
   const handlePublicParty = () => {
     soundFX.playClick(850);
-    onClose();
-    joinQueue('criteria-rush', 'ffa');
+    const start = () => {
+      onClose();
+      joinQueue('criteria-rush', 'ffa');
+    };
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(start, 'matchmaking');
+      return;
+    }
+    start();
   };
 
   const handleSquadAction = () => {
@@ -216,6 +230,14 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
           </button>
         </div>
 
+        {/* Guest Read-Only Advisory Banner */}
+        {isGuestInParty && (
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center justify-between shrink-0">
+            <span>Host is configuring match...</span>
+            <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
+          </div>
+        )}
+
         {/* ================= 1. 3-SLOT LINK CONFIGURATION ================= */}
         <div className="flex flex-col gap-2 shrink-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -226,8 +248,13 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 type="button"
+                disabled={isGuestInParty}
                 onClick={handleShuffleSlots}
-                className="min-h-[44px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                className={`min-h-[44px] px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                  isGuestInParty
+                    ? 'opacity-50 cursor-not-allowed bg-white/5 border-white/10 text-slate-500'
+                    : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200 cursor-pointer active:scale-95'
+                }`}
               >
                 <Shuffle className="w-3 h-3 text-[#ccff00]" />
                 <span>SHUFFLE SLOTS</span>
@@ -235,14 +262,17 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
 
               <button
                 type="button"
+                disabled={isGuestInParty}
                 onClick={() => {
                   soundFX.playClick(720);
                   setRandomizeEachRound(!randomizeEachRound);
                 }}
-                className={`min-h-[44px] px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
-                  randomizeEachRound
-                    ? 'bg-[#ccff00]/15 border-[#ccff00] text-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.2)]'
-                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-slate-200'
+                className={`min-h-[44px] px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                  isGuestInParty
+                    ? 'opacity-50 cursor-not-allowed bg-white/5 border-white/10 text-slate-500'
+                    : randomizeEachRound
+                    ? 'bg-[#ccff00]/15 border-[#ccff00] text-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.2)] cursor-pointer'
+                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-slate-200 cursor-pointer'
                 }`}
               >
                 <Sparkles className="w-3 h-3" />
@@ -287,16 +317,20 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                         <button
                           key={opt.type}
                           type="button"
-                          disabled={isPositionDisabled}
+                          disabled={isGuestInParty || isPositionDisabled}
                           onClick={() => handleSlotChange(slotIdx, opt.type)}
                           title={
-                            isPositionDisabled ? 'Only 1 Position slot allowed per puzzle' : opt.label
+                            isGuestInParty
+                              ? 'Host is configuring match'
+                              : isPositionDisabled
+                              ? 'Only 1 Position slot allowed per puzzle'
+                              : opt.label
                           }
                           className={`min-h-[44px] py-2 px-2 rounded-lg text-center font-mono text-[11px] font-bold uppercase transition-all flex items-center justify-center ${
                             isActive
                               ? activeStyle
-                              : isPositionDisabled
-                              ? 'bg-white/5 text-slate-400 opacity-30 cursor-not-allowed border border-dashed border-white/5'
+                              : isGuestInParty || isPositionDisabled
+                              ? 'bg-white/5 text-slate-500 opacity-40 cursor-not-allowed border border-dashed border-white/5'
                               : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 cursor-pointer'
                           }`}
                         >
@@ -329,13 +363,18 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                 <div
                   key={preset.id}
                   onClick={() => {
+                    if (isGuestInParty) return;
                     soundFX.playClick(640);
                     setDifficulty(preset.id);
                   }}
-                  className={`px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 border flex flex-col justify-between gap-1.5 ${
-                    isSelected
-                      ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.18)]'
-                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924]'
+                  className={`px-4 py-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1.5 ${
+                    isGuestInParty
+                      ? isSelected
+                        ? 'bg-[#181e2b] border-[#ccff00]/60 opacity-80 cursor-not-allowed'
+                        : 'bg-[#12151e] border-white/5 opacity-50 cursor-not-allowed'
+                      : isSelected
+                      ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.18)] cursor-pointer'
+                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -428,33 +467,56 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
               </p>
             </button>
 
-            {/* Pathway 4: Play with Squad */}
-            <button
-              type="button"
-              onClick={handleSquadAction}
-              className={`py-3 px-3.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
-                isSquadReady
-                  ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
-                  : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
-              }`}
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-amber-400" />
-                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
-                    {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+            {/* Pathway 4: Play with Squad / Guest Lock */}
+            {isGuestInParty ? (
+              <button
+                type="button"
+                disabled
+                className="py-3 px-3.5 rounded-xl border border-white/10 bg-white/[0.02] text-left flex flex-col justify-between gap-1.5 cursor-not-allowed opacity-70"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-neutral-500" />
+                    <span className="font-sans font-black text-xs text-neutral-400 uppercase tracking-wide">
+                      WAITING FOR HOST TO LAUNCH...
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/5 text-neutral-500">
+                    HOST ONLY
                   </span>
                 </div>
-                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
-                  {isSquadReady ? `${party.members.length}/8 SQUAD` : 'PARTY DOCK'}
-                </span>
-              </div>
-              <p className="text-[11px] font-mono text-slate-400 leading-snug">
-                {isSquadReady
-                  ? `Launch 10-round match with your ${party.members.length} squad members.`
-                  : 'Open right slide-over Party Dock to invite friends (up to 8).'}
-              </p>
-            </button>
+                <p className="text-[11px] font-mono text-neutral-500 leading-snug">
+                  Only the squad host can configure and launch Link-Up matches.
+                </p>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSquadAction}
+                className={`py-3 px-3.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
+                  isSquadReady
+                    ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
+                    : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-amber-400" />
+                    <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
+                      {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                    {isSquadReady ? `${party.members.length}/8 SQUAD` : 'PARTY DOCK'}
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-slate-400 leading-snug">
+                  {isSquadReady
+                    ? `Launch 10-round match with your ${party.members.length} squad members.`
+                    : 'Open right slide-over Party Dock to invite friends (up to 8).'}
+                </p>
+              </button>
+            )}
           </div>
         </div>
       </div>
