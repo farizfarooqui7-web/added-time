@@ -1,0 +1,344 @@
+import React, { useState } from 'react';
+import type {
+  RecordBooksDifficulty,
+  RecordBooksMatchConfig,
+  RecordBooksMetric,
+  RecordBooksLobbyMode,
+} from './types';
+import { soundFX } from '../../utils/audio';
+import {
+  Bot,
+  Goal,
+  Trophy,
+  Users,
+  X,
+  Zap,
+  Play,
+} from 'lucide-react';
+import { useParty } from '../../context/PartyContext';
+
+interface RecordBooksSetupModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onLaunchArena: (config: RecordBooksMatchConfig) => void;
+  initialMode?: RecordBooksLobbyMode;
+}
+
+const DIFFICULTY_PRESETS: Array<{
+  id: RecordBooksDifficulty;
+  title: string;
+  description: string;
+}> = [
+  {
+    id: 'Easy',
+    title: 'EASY',
+    description: 'Real Madrid, Barcelona, Liverpool.',
+  },
+  {
+    id: 'Medium',
+    title: 'MEDIUM',
+    description: 'Roma, Napoli, Ajax.',
+  },
+  {
+    id: 'Hard',
+    title: 'HARD',
+    description: 'Leeds, Valencia, Newcastle.',
+  },
+];
+
+export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
+  isOpen,
+  onClose,
+  onLaunchArena,
+}) => {
+  const [metric, setMetric] = useState<RecordBooksMetric>('Goals');
+  const [totalRounds, setTotalRounds] = useState<5 | 10>(5);
+  const [difficulty, setDifficulty] = useState<RecordBooksDifficulty>('Medium');
+
+  const { party, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const isGuestInParty = party.isActive && !party.isCurrentUserHost;
+  const isSquadReady = party.isActive && party.members.length === 2;
+
+  if (!isOpen) return null;
+
+  const handleLaunchSolo = () => {
+    soundFX.playClick(1000);
+    const startSolo = () => {
+      onLaunchArena({
+        lobbyMode: 'solo',
+        roomCode: 'SOLO_AI',
+        isRoomCodeMasked: true,
+        metric,
+        difficulty,
+        totalRounds,
+      });
+    };
+
+    if (isGuestInParty) {
+      triggerSoloEscapeHatch(startSolo);
+      return;
+    }
+    startSolo();
+  };
+
+  const handleQuickMatch = () => {
+    soundFX.playClick(850);
+    onClose();
+    joinQueue('tally-race', 'duel');
+  };
+
+  const handleSquadAction = () => {
+    if (isSquadReady) {
+      soundFX.playHammer();
+      const config: RecordBooksMatchConfig = {
+        lobbyMode: 'host',
+        roomCode: party.roomCode,
+        isRoomCodeMasked: party.isCodeMasked,
+        metric,
+        difficulty,
+        totalRounds,
+        isMultiplayer: true,
+      };
+      launchMatch('tally-race', config);
+      onLaunchArena(config);
+    } else {
+      soundFX.playClick(750);
+      onClose();
+      openDrawer();
+    }
+  };
+
+  return (
+    <div
+      onClick={() => {
+        soundFX.playClick(500);
+        onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden select-none"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-4xl bg-[#0e111a] border border-white/10 rounded-2xl px-5 py-4 md:px-7 md:py-5 shadow-[0_30px_90px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col justify-between gap-4 overflow-hidden"
+      >
+        {/* Header Bar */}
+        <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ff9f1c] animate-pulse shadow-[0_0_10px_rgba(255,159,28,0.8)]" />
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h2 className="font-sans font-black text-xl md:text-2xl text-white uppercase tracking-tight leading-none">
+                  THE RECORD BOOKS
+                </h2>
+                <span className="px-2 py-0.5 rounded-full bg-[#ff9f1c]/15 border border-[#ff9f1c]/40 text-[#ff9f1c] font-mono text-[10px] font-bold tracking-wider uppercase">
+                  1v1 TALLY DUEL
+                </span>
+              </div>
+              <p className="text-xs font-mono text-slate-400 mt-1">
+                Name the club&apos;s all-time stat leader to race the ticker to 50 points.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* 1. METRIC SELECTION */}
+        <div className="flex flex-col gap-2 shrink-0">
+          <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[#ff9f1c]">01.</span> TARGET STATISTIC METRIC
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {
+                id: 'Goals',
+                title: 'TOP GOALSCORERS',
+                desc: 'All-time top competitive goals scored for the club.',
+                icon: Goal,
+              },
+              {
+                id: 'Appearances',
+                title: 'MOST APPEARANCES',
+                desc: 'All-time official first-team appearances across all comps.',
+                icon: Trophy,
+              },
+            ].map((m) => {
+              const isSelected = metric === m.id;
+              const Icon = m.icon;
+              return (
+                <div
+                  key={m.id}
+                  onClick={() => {
+                    soundFX.playClick(700);
+                    setMetric(m.id as RecordBooksMetric);
+                  }}
+                  className={`p-3 rounded-xl cursor-pointer transition-all duration-200 border flex flex-col justify-between gap-1.5 ${
+                    isSelected
+                      ? 'bg-[#181e2b] border-[#ff9f1c] ring-1 ring-[#ff9f1c] shadow-[0_0_16px_rgba(255,159,28,0.2)]'
+                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Icon className={`w-4 h-4 ${isSelected ? 'text-[#ff9f1c]' : 'text-slate-400'}`} />
+                      <span className="font-sans font-black text-xs text-white uppercase tracking-tight">
+                        {m.title}
+                      </span>
+                    </div>
+                    {isSelected && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff9f1c] shadow-[0_0_6px_#ff9f1c]" />
+                    )}
+                  </div>
+                  <p className="text-[11px] font-mono text-slate-400 leading-snug">{m.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. CLUB POOL & ROUNDS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0">
+          {/* Difficulty */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-[#00f0ff]">02.</span> CLUB POOL TIER
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {DIFFICULTY_PRESETS.map((d) => {
+                const isSelected = difficulty === d.id;
+                return (
+                  <button
+                    key={d.id}
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick(650);
+                      setDifficulty(d.id);
+                    }}
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-[#181e2b] border-[#00f0ff] text-white shadow-[0_0_12px_rgba(0,240,255,0.2)]'
+                        : 'bg-[#12151e] border-white/10 text-slate-400 hover:bg-[#151924]'
+                    }`}
+                  >
+                    <span className="font-sans font-black text-xs uppercase">{d.title}</span>
+                    <span className="text-[9px] font-mono text-slate-500 truncate">{d.description}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Rounds */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-[#ccff00]">03.</span> MATCH LENGTH
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {[5, 10].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => {
+                    soundFX.playClick(650);
+                    setTotalRounds(r as 5 | 10);
+                  }}
+                  className={`py-2.5 px-3 rounded-xl border font-mono text-xs font-black uppercase transition-all cursor-pointer ${
+                    totalRounds === r
+                      ? 'bg-[#181e2b] border-[#ccff00] text-[#ccff00] shadow-[0_0_12px_rgba(204,255,0,0.2)]'
+                      : 'bg-[#12151e] border-white/10 text-slate-400 hover:bg-[#151924]'
+                  }`}
+                >
+                  {r} CLUBS ({r} ROUNDS)
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 3. GAME PATHWAYS */}
+        <div className="space-y-2.5 pt-3 border-t border-white/10 shrink-0">
+          <label className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider block">
+            CHOOSE MATCH PATHWAY
+          </label>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Pathway 1: Solo vs AI */}
+            <button
+              type="button"
+              onClick={handleLaunchSolo}
+              className="py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/15 hover:border-[#ff9f1c]/40 text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-[#ff9f1c]" />
+                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide group-hover:text-[#ff9f1c]">
+                    SOLO VS AI SCOUT
+                  </span>
+                </div>
+                <Play className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#ff9f1c]" />
+              </div>
+              <p className="text-[11px] font-mono text-slate-400 leading-snug">
+                Test your knowledge against an automated AI bot with realistic lookup time.
+              </p>
+            </button>
+
+            {/* Pathway 2: 1v1 Quick Match */}
+            <button
+              type="button"
+              onClick={handleQuickMatch}
+              className="py-3 px-4 rounded-xl bg-[#ff9f1c]/10 hover:bg-[#ff9f1c]/20 border border-[#ff9f1c]/40 hover:border-[#ff9f1c] text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#ff9f1c] fill-current" />
+                  <span className="font-sans font-black text-xs text-[#ff9f1c] uppercase tracking-wide">
+                    1v1 QUICK MATCH
+                  </span>
+                </div>
+                <span className="text-[9px] font-mono font-bold bg-[#ff9f1c]/20 px-1.5 py-0.5 rounded text-[#ff9f1c]">
+                  &lt;10s
+                </span>
+              </div>
+              <p className="text-[11px] font-mono text-slate-300 leading-snug">
+                Drop-in duel queue. Pairs with online ballers or automated bot at 10s.
+              </p>
+            </button>
+
+            {/* Pathway 3: Play with Squad */}
+            <button
+              type="button"
+              onClick={handleSquadAction}
+              className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
+                isSquadReady
+                  ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
+                  : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
+              }`}
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-cyan-400" />
+                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
+                    {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
+                  </span>
+                </div>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                  {isSquadReady ? '2/2 SQUAD' : 'PARTY DOCK'}
+                </span>
+              </div>
+              <p className="text-[11px] font-mono text-slate-400 leading-snug">
+                {isSquadReady
+                  ? 'Squad is ready. Click to duel your party partner.'
+                  : 'Open the right slide-over Party Dock to invite or duel a friend.'}
+              </p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

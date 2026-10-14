@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-carbon: #080a0f;
+    --card-slate: #11141c;
+    --volt: #ccff00;
+  }
+
+  body {
+    background-color: #080a0f;
+    color: #e5e7eb;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Zero AI blur, strict solid borders */
+  * {
+    border-color: #262d3d;
+  }
+}
+
+/* Tactical Stadium Pitch Lines Pattern (Zero blur, crisp vector lines) */
+.pitch-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.subtle-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Industrial Chamfered Notches & Ticket Punch effects */
+.chamfer-tr {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+.chamfer-corners {
+  clip-path: polygon(
+    10px 0%, calc(100% - 10px) 0%, 
+    100% 10px, 100% calc(100% - 10px), 
+    calc(100% - 10px) 100%, 10px 100%, 
+    0% calc(100% - 10px), 0% 10px
+  );
+}
+
+.ticket-notch-l {
+  mask-image: radial-gradient(circle at 0% 50%, transparent 8px, black 8.5px);
+}
+
+.ticket-notch-both {
+  mask-image: 
+    radial-gradient(circle at 0% 50%, transparent 7px, black 7.5px),
+    radial-gradient(circle at 100% 50%, transparent 7px, black 7.5px);
+  mask-composite: intersect;
+}
+
+/* Physical Card Foil Sheen - Subtle Neutral Specular Glass Highlight */
+.card-metallic-sheen {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(251, 191, 36, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 100%
+  );
+}
+
+/* Crisp Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #262d3d;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ccff00;
+}
+
+@keyframes stampSlam {
+  0% {
+    transform: rotate(-13deg) scale(1.32);
+    opacity: 0;
+  }
+  70% {
+    transform: rotate(-13deg) scale(0.97);
+    opacity: 0.92;
+  }
+  100% {
+    transform: rotate(-13deg) scale(1);
+    opacity: 0.9;
+  }
+}
