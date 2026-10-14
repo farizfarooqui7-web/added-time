@@ -1,53 +1,62 @@
 # Top Bins - Production Deployment Guide
 
-This guide details how to deploy Top Bins to production with our standard real-time WebSocket backend (`partyServer.ts`) and an optimized static frontend (Vercel, Cloudflare Pages, or Netlify).
+This guide details how to deploy Top Bins to production using Cloudflare's official PartyServer architecture deployed via Wrangler, and an optimized static frontend (Vercel, Cloudflare Pages, or Netlify).
 
 ---
 
-## 1. Deploying the WebSocket Backend (`partyServer.ts`)
+## 1. Deploying the PartyServer Backend (Cloudflare Workers + Durable Objects)
 
-The backend runs an HTTP + WebSocket server with an integrated health check endpoint (`GET /health`) and dynamic port binding (`process.env.PORT || 8000` on host `0.0.0.0`).
+Top Bins uses Cloudflare's official `partyserver` package (`party/main.ts`) for zero-cold-start, serverless real-time WebSockets with room-level multiplayer synchronization and authoritative match state machines.
 
-### Option A: Railway (Recommended)
-1. Go to [railway.app](https://railway.app) and create a **New Project**.
-2. Select **Deploy from GitHub repo** and choose your repository.
-3. Under **Settings**:
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm run server:start`
-   - **Healthcheck Path**: `/health`
-4. Under **Networking**:
-   - Click **Generate Domain** (e.g., `top-bins-production.up.railway.app`).
-   - Copy this URL. Your WebSocket URL will be:
-     `wss://top-bins-production.up.railway.app`
+### Deployment Steps:
+1. Ensure dependencies are installed:
+   ```bash
+   npm install
+   ```
+2. Log in to Cloudflare with Wrangler (first time only):
+   ```bash
+   npx wrangler login
+   ```
+3. Deploy the backend to Cloudflare:
+   ```bash
+   npm run deploy:server
+   ```
+4. Wrangler will output your live worker domain:
+   ```
+   Uploaded top-bins-server
+   Deployed to: https://top-bins-server.<your-subdomain>.workers.dev
+   ```
+5. Copy this host: `top-bins-server.<your-subdomain>.workers.dev`.
 
-### Option B: Render
-1. Go to [render.com](https://render.com) and create a **New Web Service**.
-2. Connect your repository.
-3. Set configuration:
-   - **Runtime**: `Node`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm run server:start`
-   - **Health Check Path**: `/health`
-4. Render automatically supplies `process.env.PORT`. Copy your service URL:
-   `wss://your-service-name.onrender.com`
+### Health Check Verification:
+- Send a `GET` request to `https://top-bins-server.<your-subdomain>.workers.dev/health`
+- Returns `200 OK`:
+  ```json
+  {
+    "status": "ok",
+    "edge": true,
+    "service": "top-bins-partyserver",
+    "timestamp": "2026-10-14T12:00:00.000Z"
+  }
+  ```
 
 ---
 
 ## 2. Deploying the Frontend (Vercel / Cloudflare Pages)
 
-The frontend is a Vite + React SPA that dynamically connects to the secure WebSocket (`wss://`) in production.
+The frontend is a Vite + React SPA that automatically connects to PartyServer in production.
 
 ### Option A: Vercel
 1. Go to [vercel.com](https://vercel.com) and click **Add New Project**.
-2. Import your repository (`top-bins`).
+2. Import your GitHub repository (`top-bins`).
 3. Project Settings:
    - **Framework Preset**: `Vite`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 4. **Environment Variables**:
    - Add:
-     `VITE_WS_URL` = `wss://your-backend.up.railway.app`
-     *(Replace with your actual Railway/Render backend domain)*
+     `VITE_PARTYKIT_HOST` = `top-bins-server.<your-subdomain>.workers.dev`
+     *(Replace with your actual Cloudflare Workers domain)*
 5. Click **Deploy**.
 
 ### Option B: Cloudflare Pages
@@ -58,41 +67,34 @@ The frontend is a Vite + React SPA that dynamically connects to the secure WebSo
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
    - **Environment variables**:
-     `VITE_WS_URL` = `wss://your-backend.up.railway.app`
+     `VITE_PARTYKIT_HOST` = `top-bins-server.<your-subdomain>.workers.dev`
 4. Click **Save and Deploy**.
 
 ---
 
-## 3. Architecture & Health Check Verification
+## 3. Alternative: Monolithic Node.js WebSocket Backend (Railway / Render)
 
-- **HTTP Health Check**:
-  - Send a `GET` request to `https://your-backend.up.railway.app/health`
-  - Returns `200 OK`:
-    ```json
-    {
-      "status": "ok",
-      "service": "top-bins-ws",
-      "uptime": 120,
-      "activeRooms": 2,
-      "activeClients": 4,
-      "timestamp": "2026-10-14T12:00:00.000Z"
-    }
-    ```
-
-- **Client WebSocket URL Fallback Matrix**:
-  - If `VITE_WS_URL` is set: uses explicit remote domain (`wss://...`).
-  - If loaded in production or over `https://`: defaults to `wss://${window.location.host}`.
-  - If running locally on development (`localhost`): defaults to `ws://localhost:3001`.
+If you prefer running the traditional monolithic Node.js server (`partyServer.ts`):
+1. **Start Command**: `npm run server:start`
+2. **Health Check Path**: `/health`
+3. Set Frontend Env: `VITE_WS_URL=wss://your-backend.up.railway.app`
 
 ---
 
 ## 4. Local Development
 
-- Run backend server:
+To run the full stack locally:
+- Run PartyServer via Wrangler:
   ```bash
-  npm run server:start
+  npm run server:dev
   ```
+  *(Starts on `http://localhost:8787`)*
 - Run Vite frontend:
   ```bash
   npm run dev
+  ```
+  *(Starts on `http://localhost:5173`)*
+- Or run both concurrently:
+  ```bash
+  npm run dev:all
   ```

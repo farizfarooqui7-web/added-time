@@ -1,4 +1,5 @@
-import type * as Party from 'partykit/server';
+import { Server, routePartykitRequest } from 'partyserver';
+import type { Connection, ConnectionContext, WSMessage } from 'partyserver';
 import type {
   ClientToServerMessage,
   ServerToClientMessage,
@@ -111,7 +112,7 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       sharedData = { cards: shuffled, totalRounds: 5 };
     }
   } catch (err) {
-    console.error('[PartyKit Top Bins] Failed to generate shared match data:', err);
+    console.error('[Top Bins Match Engine] Failed to generate shared match data:', err);
   }
 
   return { sharedData, assignedRoles };
@@ -129,29 +130,27 @@ interface QueuedClient {
   timeoutTimer?: ReturnType<typeof setTimeout>;
 }
 
-// ================= MAIN PARTYSOCKET SERVER =================
+// ================= MAIN CLOUDFLARE PARTYSERVER =================
 
-export default class TopBinsServer implements Party.Server {
-  // Global Matchmaker State (used when room.id === 'global-lobby')
+export class TopBinsServer extends Server {
+  // Global Matchmaker State (used when this.name === 'global-lobby')
   private duelQueues = new Map<string, QueuedClient[]>();
   private searchingPresence = new Map<string, number>();
 
-  // Squad / Game Room State (used when room.id !== 'global-lobby')
+  // Squad / Game Room State (used when this.name !== 'global-lobby')
   private partyRoom: PartyRoom | null = null;
   private connToPlayerId = new Map<string, string>(); // conn.id -> playerId
 
-  constructor(readonly room: Party.Room) {}
-
   // HTTP Endpoint (health checks & platform pings)
-  async onRequest(req: Party.Request): Promise<Response> {
+  override async onRequest(req: Request): Promise<Response> {
     const url = new URL(req.url);
     if (url.pathname === '/health' || url.pathname === '/' || url.pathname.endsWith('/health')) {
       return new Response(
         JSON.stringify({
           status: 'ok',
           edge: true,
-          room: this.room.id,
-          connections: [...this.room.getConnections()].length,
+          room: this.name,
+          connections: [...this.getConnections()].length,
           timestamp: new Date().toISOString(),
         }),
         {
@@ -172,8 +171,8 @@ export default class TopBinsServer implements Party.Server {
 
   // ================= WEBSOCKET LIFECYCLE =================
 
-  async onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    const isGlobalLobby = this.room.id === 'global-lobby';
+  override async onConnect(conn: Connection, ctx: ConnectionContext) {
+    const isGlobalLobby = this.name === 'global-lobby';
 
     if (isGlobalLobby) {
       // Send immediate presence snapshot to newly connected client
@@ -193,12 +192,12 @@ export default class TopBinsServer implements Party.Server {
     }
   }
 
-  async onMessage(message: string | ArrayBuffer | ArrayBufferView, sender: Party.Connection) {
+  override async onMessage(sender: Connection, message: WSMessage) {
     if (typeof message !== 'string') return;
 
     try {
       const msg = JSON.parse(message) as ClientToServerMessage;
-      const isGlobalLobby = this.room.id === 'global-lobby';
+      const isGlobalLobby = this.name === 'global-lobby';
 
       if (isGlobalLobby) {
         this.handleGlobalLobbyMessage(sender, msg);
@@ -206,7 +205,7 @@ export default class TopBinsServer implements Party.Server {
         this.handleSquadRoomMessage(sender, msg);
       }
     } catch (err) {
-      console.error('[PartyKit WS] Error handling message:', err);
+      console.error('[PartyServer WS] Error handling message:', err);
       this.sendToConn(sender, {
         type: 'error',
         payload: { message: 'Invalid packet received' },
@@ -214,8 +213,8 @@ export default class TopBinsServer implements Party.Server {
     }
   }
 
-  async onClose(conn: Party.Connection) {
-    const isGlobalLobby = this.room.id === 'global-lobby';
+  override async onClose(conn: Connection) {
+    const isGlobalLobby = this.name === 'global-lobby';
 
     if (isGlobalLobby) {
       this.removeClientFromQueues(conn.id);
@@ -229,7 +228,7 @@ export default class TopBinsServer implements Party.Server {
 
   // ================= GLOBAL LOBBY & MATCHMAKER =================
 
-  private handleGlobalLobbyMessage(sender: Party.Connection, msg: ClientToServerMessage) {
+  private handleGlobalLobbyMessage(sender: Connection, msg: ClientToServerMessage) {
     switch (msg.type) {
       case 'join_queue': {
         const rawMode = msg.payload?.modeId || 'auction-draft';
@@ -262,7 +261,7 @@ export default class TopBinsServer implements Party.Server {
 
             for (let i = 0; i < matchedClients.length; i++) {
               const c = matchedClients[i];
-              const conn = this.room.getConnection(c.connectionId);
+              const conn = this.getConnection(c.connectionId);
               if (conn) {
                 this.sendToConn(conn, {
                   type: 'queue_status',
@@ -304,14 +303,14 @@ export default class TopBinsServer implements Party.Server {
               }
             }
 
-            console.log(`[PartyKit Matchmaker] Imposter match formed for ${matchedClients.length} players -> Room ${ephemeralRoomId}`);
+            console.log(`[PartyServer Matchmaker] Imposter match formed for ${matchedClients.length} players -> Room ${ephemeralRoomId}`);
             this.broadcastGlobalPresence();
             return;
           }
 
           // Under 3 players: broadcast staging counter
           for (const q of list) {
-            const conn = this.room.getConnection(q.connectionId);
+            const conn = this.getConnection(q.connectionId);
             if (conn) {
               this.sendToConn(conn, {
                 type: 'queue_status',
@@ -340,7 +339,7 @@ export default class TopBinsServer implements Party.Server {
           this.duelQueues.set(normMode, qList);
 
           const ephemeralRoomId = `match_${generateRandomRoomId()}`;
-          const waitingConn = this.room.getConnection(waiting.connectionId);
+          const waitingConn = this.getConnection(waiting.connectionId);
 
           const member1: PartyMember = {
             id: waiting.playerId,
@@ -426,7 +425,7 @@ export default class TopBinsServer implements Party.Server {
             },
           });
 
-          console.log(`[PartyKit Matchmaker] Paired 1v1 ${waiting.name} vs ${name} in ${normMode} -> Room ${ephemeralRoomId}`);
+          console.log(`[PartyServer Matchmaker] Paired 1v1 ${waiting.name} vs ${name} in ${normMode} -> Room ${ephemeralRoomId}`);
           this.broadcastGlobalPresence();
           return;
         }
@@ -453,7 +452,7 @@ export default class TopBinsServer implements Party.Server {
           payload: { modeId: normMode, status: 'queued', elapsedSeconds: 0, queueType },
         });
 
-        console.log(`[PartyKit Matchmaker] ${name} entered queue for ${normMode} (${queueType})`);
+        console.log(`[PartyServer Matchmaker] ${name} entered queue for ${normMode} (${queueType})`);
         this.broadcastGlobalPresence();
         break;
       }
@@ -488,7 +487,7 @@ export default class TopBinsServer implements Party.Server {
       qList.filter((q) => q.connectionId !== connectionId)
     );
 
-    const conn = this.room.getConnection(connectionId);
+    const conn = this.getConnection(connectionId);
     if (!conn) return;
 
     const botName = BOT_USERNAMES[Math.floor(Math.random() * BOT_USERNAMES.length)];
@@ -522,7 +521,7 @@ export default class TopBinsServer implements Party.Server {
       currentGame: { modeId: normMode, status: 'in-game' },
     };
 
-    console.log(`[PartyKit Matchmaker] 10s fallback for ${name} -> Pairing with bot ${botName}`);
+    console.log(`[PartyServer Matchmaker] 10s fallback for ${name} -> Pairing with bot ${botName}`);
 
     this.sendToConn(conn, {
       type: 'queue_status',
@@ -574,7 +573,7 @@ export default class TopBinsServer implements Party.Server {
     if (wasInImposter) {
       const imposterList = this.duelQueues.get('football-imposter') || [];
       for (const q of imposterList) {
-        const conn = this.room.getConnection(q.connectionId);
+        const conn = this.getConnection(q.connectionId);
         if (conn) {
           this.sendToConn(conn, {
             type: 'queue_status',
@@ -609,13 +608,13 @@ export default class TopBinsServer implements Party.Server {
       type: 'presence_update',
       payload: { presence: this.computeGlobalPresence() },
     };
-    this.room.broadcast(JSON.stringify(msg));
+    this.broadcast(JSON.stringify(msg));
   }
 
   // ================= SQUAD / GAME ROOMS =================
 
-  private handleSquadRoomMessage(sender: Party.Connection, msg: ClientToServerMessage) {
-    const roomId = this.room.id;
+  private handleSquadRoomMessage(sender: Connection, msg: ClientToServerMessage) {
+    const roomId = this.name;
 
     switch (msg.type) {
       case 'create_party': {
@@ -640,7 +639,7 @@ export default class TopBinsServer implements Party.Server {
           members: [hostMember],
         };
 
-        console.log(`[PartyKit Room ${roomId}] Party created by ${hostName}`);
+        console.log(`[TopBinsServer Room ${roomId}] Party created by ${hostName}`);
 
         this.sendToConn(sender, {
           type: 'party_created',
@@ -702,7 +701,7 @@ export default class TopBinsServer implements Party.Server {
           this.partyRoom.members.push(newMember);
         }
 
-        console.log(`[PartyKit Room ${roomId}] ${playerName} joined party`);
+        console.log(`[TopBinsServer Room ${roomId}] ${playerName} joined party`);
 
         this.sendToConn(sender, {
           type: 'party_joined',
@@ -774,7 +773,7 @@ export default class TopBinsServer implements Party.Server {
         // Find connection for kicked target
         for (const [connId, pId] of this.connToPlayerId.entries()) {
           if (pId === kickTargetId) {
-            const targetConn = this.room.getConnection(connId);
+            const targetConn = this.getConnection(connId);
             if (targetConn) {
               this.sendToConn(targetConn, {
                 type: 'party_kicked',
@@ -810,7 +809,7 @@ export default class TopBinsServer implements Party.Server {
           status: 'in-game',
         };
 
-        console.log(`[PartyKit Room ${roomId}] Host launched match "${normMode}"`);
+        console.log(`[TopBinsServer Room ${roomId}] Host launched match "${normMode}"`);
 
         this.broadcastToRoom({
           type: 'match_launched',
@@ -819,7 +818,7 @@ export default class TopBinsServer implements Party.Server {
 
         const { sharedData, assignedRoles } = generateAuthoritativeMatchData(normMode, this.partyRoom.members);
 
-        for (const conn of this.room.getConnections()) {
+        for (const conn of this.getConnections()) {
           const pId = this.connToPlayerId.get(conn.id) || conn.id;
           this.sendToConn(conn, {
             type: 'game_init',
@@ -860,7 +859,7 @@ export default class TopBinsServer implements Party.Server {
 
         if (this.partyRoom.currentGame?.status === 'in-game') {
           this.partyRoom.currentGame.status = 'lobby';
-          for (const conn of this.room.getConnections()) {
+          for (const conn of this.getConnections()) {
             if (conn.id !== sender.id) {
               this.sendToConn(conn, {
                 type: 'player_forfeit',
@@ -878,7 +877,7 @@ export default class TopBinsServer implements Party.Server {
     }
   }
 
-  private handleSquadPlayerDisconnect(conn: Party.Connection) {
+  private handleSquadPlayerDisconnect(conn: Connection) {
     if (!this.partyRoom) return;
     const playerId = this.connToPlayerId.get(conn.id) || conn.id;
     const member = this.partyRoom.members.find((m) => m.id === playerId);
@@ -887,7 +886,7 @@ export default class TopBinsServer implements Party.Server {
     // If game was active, inform others
     if (this.partyRoom.currentGame?.status === 'in-game') {
       this.partyRoom.currentGame.status = 'lobby';
-      for (const otherConn of this.room.getConnections()) {
+      for (const otherConn of this.getConnections()) {
         if (otherConn.id !== conn.id) {
           this.sendToConn(otherConn, {
             type: 'player_forfeit',
@@ -910,7 +909,7 @@ export default class TopBinsServer implements Party.Server {
         type: 'party_disbanded',
         payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
       });
-      console.log(`[PartyKit Room ${this.room.id}] Squad disbanded.`);
+      console.log(`[TopBinsServer Room ${this.name}] Squad disbanded.`);
     } else {
       this.broadcastToRoom({
         type: 'party_updated',
@@ -920,12 +919,42 @@ export default class TopBinsServer implements Party.Server {
   }
 
   // Helper to send typed message to specific connection
-  private sendToConn(conn: Party.Connection, message: ServerToClientMessage) {
+  private sendToConn(conn: Connection, message: ServerToClientMessage) {
     conn.send(JSON.stringify(message));
   }
 
   // Helper to broadcast typed message to all connections in room
   private broadcastToRoom(message: ServerToClientMessage) {
-    this.room.broadcast(JSON.stringify(message));
+    this.broadcast(JSON.stringify(message));
   }
 }
+
+// ================= DEFAULT EXPORT FETCH HANDLER =================
+
+export default {
+  async fetch(request: Request, env: any) {
+    const url = new URL(request.url);
+    if (url.pathname === '/health' || url.pathname === '/') {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          edge: true,
+          service: 'top-bins-partyserver',
+          timestamp: new Date().toISOString(),
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+    }
+
+    return (
+      (await routePartykitRequest(request, env)) ||
+      new Response('Not Found', { status: 404 })
+    );
+  },
+};
