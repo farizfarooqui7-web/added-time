@@ -45,7 +45,7 @@ export default {
         },
       },
       fontFamily: {
-        brand: ['"Syne"', 'Inter', 'sans-serif'],
+        brand: ['"Outfit"', '"Syne"', 'Inter', 'sans-serif'],
         athletic: ['"Barlow Condensed"', 'Impact', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
         sans: ['Inter', 'system-ui', 'sans-serif'],

@@ -44,9 +44,9 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
   };
 
   return (
-    <header className="w-full shrink-0 flex items-center justify-between py-2 mb-2 gap-2">
+    <header className="relative w-full shrink-0 flex items-center justify-between py-2 mb-2 min-h-[44px]">
       {/* Left: Neutral Dark Slate with SFX Toggle & Social Icons */}
-      <div className="flex items-center justify-start shrink-0 gap-1.5 sm:gap-2">
+      <div className="flex items-center justify-start shrink-0 gap-1.5 sm:gap-2 z-10">
         <button
           type="button"
           onClick={handleToggleSfx}
@@ -79,7 +79,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
           <svg className="w-3.5 h-3.5 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
-          <span className="hidden lg:inline text-[10px] uppercase font-bold tracking-wider">@AddedTime90</span>
+          <span className="hidden xl:inline text-[10px] uppercase font-bold tracking-wider">@AddedTime90</span>
         </a>
 
         {/* TikTok */}
@@ -94,18 +94,18 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
           <svg className="w-3.5 h-3.5 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z" />
           </svg>
-          <span className="hidden lg:inline text-[10px] uppercase font-bold tracking-wider">TikTok</span>
+          <span className="hidden xl:inline text-[10px] uppercase font-bold tracking-wider">TikTok</span>
         </a>
       </div>
 
-      {/* Center: Premium Centered "ADDED TIME" Logo with 90+ Stoppage Board Accent */}
-      <div className="flex-1 flex items-center justify-center min-w-0">
-        <div className="flex items-center gap-1.5 sm:gap-2 select-none group truncate">
-          <span className="font-brand font-extrabold text-lg sm:text-2xl md:text-3xl tracking-tight text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.08)] truncate">
+      {/* Center: Absolute Pixel-Perfect Center "ADDED TIME" */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+        <div className="flex items-center gap-1.5 sm:gap-2 select-none group pointer-events-auto">
+          <span className="font-brand font-bold text-base sm:text-xl md:text-2xl tracking-[0.06em] text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.1)] whitespace-nowrap">
             ADDED TIME
           </span>
           <div className="flex items-center px-1 sm:px-1.5 py-0.5 rounded bg-[#0a0d14] border border-[#ff6b00]/60 shadow-[0_0_10px_rgba(255,107,0,0.3)] shrink-0">
-            <span className="font-mono text-[10px] sm:text-xs font-black tracking-tight text-[#ff6b00]">
+            <span className="font-mono text-[9px] sm:text-[11px] font-black tracking-tight text-[#ff6b00]">
               90+
             </span>
           </div>
@@ -113,7 +113,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
       </div>
 
       {/* Right: Flush Action Triggers [HOST] & [JOIN CODE] or Glowing Active Party Pill */}
-      <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 shrink-0">
+      <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 shrink-0 z-10">
         {party.isActive && !party.roomCode?.startsWith('match_') && party.visibility !== 'public' ? (
           /* Glowing Active Party Pill: SQUAD (2/4) • [CODE] */
           <button
