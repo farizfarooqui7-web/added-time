@@ -1,22 +1,23 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { PartySocket } from 'partysocket';
 import { soundFX } from '../utils/audio';
-import type { GlobalPresence, ClientToServerMessage } from '../types/wsProtocol';
+import type { GlobalPresence } from '../types/wsProtocol';
 
-export const getPartyKitHost = (): string => {
-  const envHost = (import.meta.env.VITE_PARTYKIT_HOST as string | undefined) ||
-                  (import.meta.env.VITE_WS_URL as string | undefined);
-  if (envHost && typeof envHost === 'string' && envHost.trim()) {
-    return envHost.trim().replace(/^https?:\/\//, '').replace(/^wss?:\/\//, '').replace(/\/.*$/, '');
+export const getWsUrl = (): string => {
+  const envUrl = import.meta.env.VITE_WS_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim()) {
+    return envUrl.trim();
   }
   if (typeof window !== 'undefined' && window.location) {
+    if (window.location.protocol === 'https:' || import.meta.env.PROD) {
+      return `wss://${window.location.host}`;
+    }
     const hostname = window.location.hostname || 'localhost';
     if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      return window.location.host;
+      return `wss://${window.location.host}`;
     }
-    return `${hostname}:1999`;
+    return 'ws://localhost:3001';
   }
-  return 'localhost:1999';
+  return 'ws://localhost:3001';
 };
 
 export interface PartyMember {
@@ -211,65 +212,153 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isSoloEscapeModalOpen, setIsSoloEscapeModalOpen] = useState(false);
   const [pendingLaunchCallback, setPendingLaunchCallback] = useState<(() => void) | null>(null);
 
-  const lobbySocketRef = useRef<PartySocket | null>(null);
-  const roomSocketRef = useRef<PartySocket | null>(null);
-  const handleWsMessageRef = useRef<((msg: { type: string; payload?: any }) => void) | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const connectToRoomSocket = useCallback((roomId: string, initialMessage?: ClientToServerMessage) => {
-    const cleanRoom = roomId.trim().toUpperCase();
-    if (!cleanRoom) return null;
-
-    if (roomSocketRef.current && roomSocketRef.current.room === cleanRoom) {
-      if (initialMessage && roomSocketRef.current.readyState === WebSocket.OPEN) {
-        roomSocketRef.current.send(JSON.stringify(initialMessage));
-      }
-      return roomSocketRef.current;
+  const joinQueue = (modeId: string, queueType: 'duel' | 'ffa' = 'duel') => {
+    soundFX.playClick(800);
+    setQueueState({
+      isQueued: true,
+      modeId,
+      queueType,
+      elapsedSeconds: 0,
+      status: 'queued',
+    });
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'join_queue',
+          payload: { modeId, queueType, playerName },
+        })
+      );
     }
+  };
 
-    if (roomSocketRef.current) {
-      try {
-        roomSocketRef.current.close();
-      } catch {
-        // ignore
-      }
-      roomSocketRef.current = null;
+  const leaveQueue = () => {
+    soundFX.playClick(600);
+    setQueueState({
+      isQueued: false,
+      modeId: null,
+      queueType: undefined,
+      elapsedSeconds: 0,
+      status: 'idle',
+    });
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'leave_queue',
+        })
+      );
     }
+  };
 
+  // Update Player Name
+  const updatePlayerName = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setPlayerNameState(trimmed);
     try {
-      const socket = new PartySocket({
-        host: getPartyKitHost(),
-        room: cleanRoom,
-      });
-      roomSocketRef.current = socket;
-
-      socket.addEventListener('open', () => {
-        setWsConnected(true);
-        if (initialMessage) {
-          socket.send(JSON.stringify(initialMessage));
-        }
-      });
-
-      socket.addEventListener('message', (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          handleWsMessageRef.current?.(data);
-        } catch (err) {
-          console.error('[Party Room WS] Failed to parse message:', err);
-        }
-      });
-
-      socket.addEventListener('error', () => {
-        // Handle error silently
-      });
-
-      return socket;
-    } catch (err) {
-      console.error('[PartyKit Room WS] Failed to initialize socket:', err);
-      return null;
+      localStorage.setItem('topbins_player_name', trimmed);
+    } catch {
+      // ignore
     }
+
+    // If connected to WS, notify server
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'update_name',
+          payload: { name: trimmed },
+        })
+      );
+    }
+
+    // Also update locally in state
+    setParty((prev) => {
+      if (!prev.isActive) return prev;
+      return {
+        ...prev,
+        members: prev.members.map((m) =>
+          m.id === prev.currentUserId ? { ...m, name: trimmed } : m
+        ),
+      };
+    });
+  };
+
+  // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('topbins_party_state', JSON.stringify(party));
+    } catch {
+      // ignore
+    }
+  }, [party]);
+
+  // Real-Time WebSocket connection
+  useEffect(() => {
+    let isMounted = true;
+
+    const connectWs = () => {
+      const wsUrl = getWsUrl();
+      try {
+        const socket = new WebSocket(wsUrl);
+        wsRef.current = socket;
+
+        socket.onopen = () => {
+          if (!isMounted) return;
+          setWsConnected(true);
+          // If we had an active room in state, try to re-join it on reconnect
+          if (party.isActive && party.roomCode) {
+            socket.send(
+              JSON.stringify({
+                type: 'join_party',
+                payload: { roomId: party.roomCode, playerName },
+              })
+            );
+          }
+        };
+
+        socket.onmessage = (event) => {
+          if (!isMounted) return;
+          try {
+            const data = JSON.parse(event.data);
+            handleWsMessage(data);
+          } catch (err) {
+            console.error('[Party WS] Failed to parse message:', err);
+          }
+        };
+
+        socket.onerror = () => {
+          // Handled quietly without breaking UI
+          if (isMounted) setWsConnected(false);
+        };
+
+        socket.onclose = () => {
+          if (!isMounted) return;
+          setWsConnected(false);
+          // Attempt reconnect after 3 seconds
+          reconnectTimeoutRef.current = setTimeout(connectWs, 3000);
+        };
+      } catch {
+        if (isMounted) {
+          setWsConnected(false);
+          reconnectTimeoutRef.current = setTimeout(connectWs, 3000);
+        }
+      }
+    };
+
+    connectWs();
+
+    return () => {
+      isMounted = false;
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
   }, []);
 
-  const handleWsMessage = useCallback((msg: { type: string; payload?: any }) => {
+  const handleWsMessage = (msg: { type: string; payload?: any }) => {
     switch (msg.type) {
       case 'party_created': {
         const { room, myPlayerId } = msg.payload;
@@ -284,9 +373,6 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           currentUserId: myPlayerId,
         });
         soundFX.playLobbyReady();
-        if (room?.roomId && (!roomSocketRef.current || roomSocketRef.current.room !== room.roomId)) {
-          connectToRoomSocket(room.roomId);
-        }
         break;
       }
 
@@ -304,9 +390,6 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           currentUserId: myPlayerId,
         });
         soundFX.playLobbyReady();
-        if (room?.roomId && (!roomSocketRef.current || roomSocketRef.current.room !== room.roomId)) {
-          connectToRoomSocket(room.roomId);
-        }
         break;
       }
 
@@ -387,14 +470,6 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       case 'party_disbanded': {
         soundFX.playClick(450);
-        if (roomSocketRef.current) {
-          try {
-            roomSocketRef.current.close();
-          } catch {
-            // ignore
-          }
-          roomSocketRef.current = null;
-        }
         setParty(DEFAULT_PARTY);
         setGameInitData(null);
         setLastGameEvent(null);
@@ -403,14 +478,6 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       case 'party_kicked': {
         soundFX.playVoltBuzz();
-        if (roomSocketRef.current) {
-          try {
-            roomSocketRef.current.close();
-          } catch {
-            // ignore
-          }
-          roomSocketRef.current = null;
-        }
         setParty(DEFAULT_PARTY);
         setGameInitData(null);
         setLastGameEvent(null);
@@ -422,163 +489,26 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         break;
       }
     }
-  }, [connectToRoomSocket]);
-
-  handleWsMessageRef.current = handleWsMessage;
-
-  // Global Lobby PartySocket connection
-  useEffect(() => {
-    let isMounted = true;
-    const host = getPartyKitHost();
-
-    try {
-      const lobbySocket = new PartySocket({
-        host,
-        room: 'global-lobby',
-      });
-      lobbySocketRef.current = lobbySocket;
-
-      lobbySocket.addEventListener('open', () => {
-        if (!isMounted) return;
-        setWsConnected(true);
-      });
-
-      lobbySocket.addEventListener('message', (event) => {
-        if (!isMounted) return;
-        try {
-          const data = JSON.parse(event.data);
-          handleWsMessageRef.current?.(data);
-        } catch (err) {
-          console.error('[Party Lobby WS] Failed to parse message:', err);
-        }
-      });
-
-      lobbySocket.addEventListener('error', () => {
-        if (isMounted) setWsConnected(false);
-      });
-
-      lobbySocket.addEventListener('close', () => {
-        if (isMounted) setWsConnected(false);
-      });
-    } catch (err) {
-      console.error('[PartyKit] Failed to initialize lobby socket:', err);
-    }
-
-    if (party.isActive && party.roomCode) {
-      connectToRoomSocket(party.roomCode, {
-        type: 'join_party',
-        payload: { roomId: party.roomCode, playerName },
-      });
-    }
-
-    return () => {
-      isMounted = false;
-      if (lobbySocketRef.current) {
-        lobbySocketRef.current.close();
-        lobbySocketRef.current = null;
-      }
-      if (roomSocketRef.current) {
-        roomSocketRef.current.close();
-        roomSocketRef.current = null;
-      }
-    };
-  }, []);
-
-  const joinQueue = (modeId: string, queueType: 'duel' | 'ffa' = 'duel') => {
-    soundFX.playClick(800);
-    setQueueState({
-      isQueued: true,
-      modeId,
-      queueType,
-      elapsedSeconds: 0,
-      status: 'queued',
-    });
-    if (lobbySocketRef.current && lobbySocketRef.current.readyState === WebSocket.OPEN) {
-      lobbySocketRef.current.send(
-        JSON.stringify({
-          type: 'join_queue',
-          payload: { modeId, queueType, playerName },
-        })
-      );
-    }
   };
-
-  const leaveQueue = () => {
-    soundFX.playClick(600);
-    setQueueState({
-      isQueued: false,
-      modeId: null,
-      queueType: undefined,
-      elapsedSeconds: 0,
-      status: 'idle',
-    });
-    if (lobbySocketRef.current && lobbySocketRef.current.readyState === WebSocket.OPEN) {
-      lobbySocketRef.current.send(
-        JSON.stringify({
-          type: 'leave_queue',
-        })
-      );
-    }
-  };
-
-  // Update Player Name
-  const updatePlayerName = (name: string) => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    setPlayerNameState(trimmed);
-    try {
-      localStorage.setItem('topbins_player_name', trimmed);
-    } catch {
-      // ignore
-    }
-
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
-        JSON.stringify({
-          type: 'update_name',
-          payload: { name: trimmed },
-        })
-      );
-    }
-
-    setParty((prev) => {
-      if (!prev.isActive) return prev;
-      return {
-        ...prev,
-        members: prev.members.map((m) =>
-          m.id === prev.currentUserId ? { ...m, name: trimmed } : m
-        ),
-      };
-    });
-  };
-
-  // Sync to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('topbins_party_state', JSON.stringify(party));
-    } catch {
-      // ignore
-    }
-  }, [party]);
 
   const sendGameAction = (modeId: string, action: string, data?: any) => {
-    const msg = {
-      type: 'game_action',
-      payload: { modeId, action, data },
-    };
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(JSON.stringify(msg));
-    } else if (lobbySocketRef.current && lobbySocketRef.current.readyState === WebSocket.OPEN) {
-      lobbySocketRef.current.send(JSON.stringify(msg));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'game_action',
+          payload: { modeId, action, data },
+        })
+      );
     }
   };
 
   const sendGameLeave = () => {
-    const msg = { type: 'game_leave' };
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(JSON.stringify(msg));
-    } else if (lobbySocketRef.current && lobbySocketRef.current.readyState === WebSocket.OPEN) {
-      lobbySocketRef.current.send(JSON.stringify(msg));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'game_leave',
+        })
+      );
     }
     setGameInitData(null);
     setLastGameEvent(null);
@@ -653,31 +583,36 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       updatePlayerName(chosenName);
     }
 
-    const newCode = generateRoomCode();
-    const hostUser: PartyMember = {
-      id: 'user-local',
-      name: chosenName,
-      isHost: true,
-      isReady: true,
-      avatarSeed: 'host-1',
-      joinedAt: Date.now(),
-    };
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'create_party',
+          payload: { hostName: chosenName, maxSlots: 4, visibility },
+        })
+      );
+    } else {
+      // Local fallback mode
+      const newCode = generateRoomCode();
+      const hostUser: PartyMember = {
+        id: 'user-local',
+        name: chosenName,
+        isHost: true,
+        isReady: true,
+        avatarSeed: 'host-1',
+        joinedAt: Date.now(),
+      };
 
-    setParty({
-      isActive: true,
-      roomCode: newCode,
-      isCodeMasked: true,
-      maxSlots: 4,
-      visibility,
-      members: [hostUser],
-      isCurrentUserHost: true,
-      currentUserId: 'user-local',
-    });
-
-    connectToRoomSocket(newCode, {
-      type: 'create_party',
-      payload: { hostName: chosenName, maxSlots: 4, visibility },
-    });
+      setParty({
+        isActive: true,
+        roomCode: newCode,
+        isCodeMasked: true,
+        maxSlots: 4,
+        visibility,
+        members: [hostUser],
+        isCurrentUserHost: true,
+        currentUserId: 'user-local',
+      });
+    }
 
     setIsDrawerOpen(true);
   };
@@ -691,40 +626,45 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       updatePlayerName(chosenName);
     }
 
-    soundFX.playHammer();
-    const hostUser: PartyMember = {
-      id: 'member-host',
-      name: 'SQUAD HOST',
-      isHost: true,
-      isReady: true,
-      avatarSeed: 'host-1',
-      joinedAt: Date.now() - 30000,
-    };
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'join_party',
+          payload: { roomId: cleanCode, playerName: chosenName },
+        })
+      );
+    } else {
+      // Local fallback mode
+      soundFX.playHammer();
+      const hostUser: PartyMember = {
+        id: 'member-host',
+        name: 'SQUAD HOST',
+        isHost: true,
+        isReady: true,
+        avatarSeed: 'host-1',
+        joinedAt: Date.now() - 30000,
+      };
 
-    const meGuest: PartyMember = {
-      id: 'user-local',
-      name: chosenName,
-      isHost: false,
-      isReady: false,
-      avatarSeed: 'guest-me',
-      joinedAt: Date.now(),
-    };
+      const meGuest: PartyMember = {
+        id: 'user-local',
+        name: chosenName,
+        isHost: false,
+        isReady: false,
+        avatarSeed: 'guest-me',
+        joinedAt: Date.now(),
+      };
 
-    setParty({
-      isActive: true,
-      roomCode: cleanCode,
-      isCodeMasked: true,
-      maxSlots: 4,
-      visibility: 'private',
-      members: [hostUser, meGuest],
-      isCurrentUserHost: false,
-      currentUserId: 'user-local',
-    });
-
-    connectToRoomSocket(cleanCode, {
-      type: 'join_party',
-      payload: { roomId: cleanCode, playerName: chosenName },
-    });
+      setParty({
+        isActive: true,
+        roomCode: cleanCode,
+        isCodeMasked: true,
+        maxSlots: 4,
+        visibility: 'private',
+        members: [hostUser, meGuest],
+        isCurrentUserHost: false,
+        currentUserId: 'user-local',
+      });
+    }
 
     setIsDrawerOpen(true);
     return true;
@@ -732,20 +672,12 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const leaveParty = () => {
     soundFX.playClick(500);
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
         JSON.stringify({
           type: 'leave_party',
         })
       );
-    }
-    if (roomSocketRef.current) {
-      try {
-        roomSocketRef.current.close();
-      } catch {
-        // ignore
-      }
-      roomSocketRef.current = null;
     }
     setParty(DEFAULT_PARTY);
     setIsDrawerOpen(false);
@@ -753,8 +685,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const toggleReady = () => {
     soundFX.playLobbyReady();
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
         JSON.stringify({
           type: 'toggle_ready',
         })
@@ -782,8 +714,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const kickMember = (memberId: string) => {
     if (!party.isCurrentUserHost || memberId === party.currentUserId) return;
     soundFX.playClick(450);
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
         JSON.stringify({
           type: 'kick_member',
           payload: { memberId },
@@ -802,8 +734,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (targetMax <= party.maxSlots || targetMax > 8) return;
 
     soundFX.playCardFlip();
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
         JSON.stringify({
           type: 'expand_slots',
           payload: { newMax: targetMax },
@@ -818,8 +750,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const launchMatch = (modeId: string, config?: unknown) => {
     if (!party.isCurrentUserHost) return;
-    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
-      roomSocketRef.current.send(
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
         JSON.stringify({
           type: 'launch_match',
           payload: { modeId, config },

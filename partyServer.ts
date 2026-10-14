@@ -14,7 +14,7 @@ import { generateClubSequence } from './src/games/record-books/recordBooksEngine
 import { pickSecretPlayer } from './src/games/football-imposter/imposterEngine';
 import { drawMatchPrompts } from './src/games/side-netting/sideNettingEngine';
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 const HOST = '0.0.0.0';
 
 interface ClientSession {
