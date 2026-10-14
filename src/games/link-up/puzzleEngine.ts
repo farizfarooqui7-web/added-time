@@ -236,13 +236,26 @@ function pickClubsForDifficulty(
     return [...clubs];
   }
 
+  // Easy mode: strictly prioritize Tier 1 giant clubs (Real Madrid, Barca, Man Utd, Liverpool, Bayern, etc.)
+  if (difficulty === 'Easy') {
+    const easyClubs = clubs.filter((c) => (c.tier || 'Medium') === 'Easy');
+    if (easyClubs.length >= count) {
+      const shuffled = [...easyClubs].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
+    }
+    const sorted = [...clubs].sort((a, b) => {
+      const aScore = a.tier === 'Easy' ? 100 : a.tier === 'Medium' ? 10 : 1;
+      const bScore = b.tier === 'Easy' ? 100 : b.tier === 'Medium' ? 10 : 1;
+      return bScore - aScore;
+    });
+    return sorted.slice(0, count);
+  }
+
   // Score each club by how well it matches the requested difficulty
   const scored = clubs.map((club) => {
     const cTier = club.tier || 'Medium';
     let weight = 1;
-    if (difficulty === 'Easy') {
-      weight = cTier === 'Easy' ? 10 : cTier === 'Medium' ? 3 : 1;
-    } else if (difficulty === 'Medium') {
+    if (difficulty === 'Medium') {
       weight = cTier === 'Medium' ? 10 : cTier === 'Easy' ? 4 : 3;
     } else {
       weight = cTier === 'Hard' ? 12 : cTier === 'Medium' ? 5 : 1;
@@ -300,11 +313,10 @@ export function generateLinkUpPuzzle(
 
   const tierCandidates = allEligibleByClubs.filter((p) => {
     if (difficulty === 'Easy') {
-      const hasEasyClubs =
-        p.clubs.filter((c) => c.tier === 'Easy').length >= Math.min(requiredClubs, 2) ||
-        (requiredClubs === 1 && p.clubs.some((c) => c.tier === 'Easy'));
+      const easyClubs = p.clubs.filter((c) => (c.tier || 'Medium') === 'Easy');
+      const hasEnoughEasyClubs = easyClubs.length >= requiredClubs;
       const nationTier = NATION_CODES[p.nationality]?.tier || 'Medium';
-      return p.difficulty === 'Easy' && hasEasyClubs && nationTier !== 'Hard';
+      return p.difficulty === 'Easy' && hasEnoughEasyClubs && nationTier === 'Easy';
     }
     if (difficulty === 'Medium') {
       const hasMediumClub = p.clubs.some((c) => c.tier === 'Medium');
@@ -327,37 +339,68 @@ export function generateLinkUpPuzzle(
       ? allEligibleByClubs
       : DATABASE.filter((p) => p.clubs.length >= 1);
 
-  const seedPlayer = pool[Math.floor(Math.random() * pool.length)];
-  const chosenClubs = pickClubsForDifficulty(seedPlayer.clubs, requiredClubs, difficulty);
+  let bestPuzzle: LinkUpPuzzle | null = null;
+  const attempts = difficulty === 'Easy' ? 12 : 1;
 
-  let clubCursor = 0;
-  const clues = safeSlots.map((slotType, idx) => {
-    const slotIdx = idx as 0 | 1 | 2;
-    if (slotType === 'Club') {
-      const club = chosenClubs[clubCursor % chosenClubs.length] || seedPlayer.clubs[0];
-      clubCursor++;
-      return buildClubClue(slotIdx, club);
-    }
-    if (slotType === 'Nation') {
-      return buildNationClue(slotIdx, seedPlayer.nationality);
-    }
-    return buildPositionClue(slotIdx, seedPlayer.position);
-  }) as [LinkUpClue, LinkUpClue, LinkUpClue];
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const seedPlayer = pool[Math.floor(Math.random() * pool.length)];
+    const chosenClubs = pickClubsForDifficulty(seedPlayer.clubs, requiredClubs, difficulty);
 
-  const validPlayers = findAllValidPlayers(clues);
-  // Ensure seedPlayer is always in validPlayers
-  if (!validPlayers.some((vp) => vp.id === seedPlayer.id)) {
-    validPlayers.unshift(seedPlayer);
+    let clubCursor = 0;
+    const clues = safeSlots.map((slotType, idx) => {
+      const slotIdx = idx as 0 | 1 | 2;
+      if (slotType === 'Club') {
+        const club = chosenClubs[clubCursor % chosenClubs.length] || seedPlayer.clubs[0];
+        clubCursor++;
+        return buildClubClue(slotIdx, club);
+      }
+      if (slotType === 'Nation') {
+        return buildNationClue(slotIdx, seedPlayer.nationality);
+      }
+      return buildPositionClue(slotIdx, seedPlayer.position);
+    }) as [LinkUpClue, LinkUpClue, LinkUpClue];
+
+    const validPlayers = findAllValidPlayers(clues);
+    // Ensure seedPlayer is always in validPlayers
+    if (!validPlayers.some((vp) => vp.id === seedPlayer.id)) {
+      validPlayers.unshift(seedPlayer);
+    }
+
+    const puzzle: LinkUpPuzzle = {
+      id: `linkup-${roundNumber}-${Date.now()}-${attempt}`,
+      roundNumber,
+      difficulty,
+      slotTypes: safeSlots,
+      clues,
+      seedPlayer,
+      validPlayers,
+    };
+
+    if (difficulty === 'Easy') {
+      // In easy mode, prefer puzzles that offer multiple valid intuitive answers
+      if (validPlayers.length >= 3) {
+        return puzzle;
+      }
+      if (!bestPuzzle || validPlayers.length > bestPuzzle.validPlayers.length) {
+        bestPuzzle = puzzle;
+      }
+    } else {
+      return puzzle;
+    }
   }
 
-  return {
+  return bestPuzzle || {
     id: `linkup-${roundNumber}-${Date.now()}`,
     roundNumber,
     difficulty,
     slotTypes: safeSlots,
-    clues,
-    seedPlayer,
-    validPlayers,
+    clues: [
+      buildClubClue(0, pool[0]?.clubs[0] || { name: 'Real Madrid', slug: 'real-madrid', tier: 'Easy' }),
+      buildNationClue(1, 'France'),
+      buildPositionClue(2, 'FWD'),
+    ],
+    seedPlayer: pool[0],
+    validPlayers: [pool[0]],
   };
 }
 

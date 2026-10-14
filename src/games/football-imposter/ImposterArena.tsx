@@ -2257,7 +2257,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          leaveParty();
+          if (party.roomCode?.startsWith('match_')) {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -2268,7 +2270,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+          if (party.roomCode?.startsWith('match_')) {
             leaveParty();
           }
           setShowForfeitModal(false);

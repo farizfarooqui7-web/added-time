@@ -1399,7 +1399,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+          if (party.roomCode?.startsWith('match_')) {
             leaveParty();
           }
           setShowForfeitModal(false);
@@ -1425,7 +1425,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           hasRequestedRematch={hasRequestedRematch}
           onReturnToHub={() => {
             if (isMultiplayer) sendGameLeave();
-            if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+            if (party.roomCode?.startsWith('match_')) {
               leaveParty();
             }
             handleCleanExit();
@@ -1438,7 +1438,9 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          leaveParty();
+          if (party.roomCode?.startsWith('match_')) {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />

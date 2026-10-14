@@ -129,6 +129,7 @@ import rawLinkUpPlayers from '../../data/linkUpDatabase.json';
 interface RawPlayer {
   id: string;
   name: string;
+  position?: string;
   commonName?: string;
   aliases?: string[];
 }
@@ -290,6 +291,107 @@ export function findDidYouMeanTriviaAnswer(
   }
 
   return { hasCorrection: false, suggestedName: '', answer: null };
+}
+
+/**
+ * Autocomplete search across Side Netting prompt answers and full footballers database.
+ * Requires at least 3 characters. Prioritizes matching answers from the prompt.
+ */
+export function searchSideNettingPlayers(
+  query: string,
+  prompt?: SideNettingPrompt,
+  limit = 7
+): Array<{ name: string; position?: string }> {
+  const clean = normalizeTriviaText(query);
+  if (!clean || clean.length < 3) return [];
+
+  const seen = new Set<string>();
+  const results: Array<{ name: string; position?: string; score: number }> = [];
+
+  // Position lookup map
+  const playerPosMap = new Map<string, string>();
+  for (const p of ALL_PLAYERS_DB) {
+    if (p.position) {
+      playerPosMap.set(normalizeTriviaText(p.name), p.position);
+      if (p.commonName) playerPosMap.set(normalizeTriviaText(p.commonName), p.position);
+      for (const a of p.aliases || []) {
+        playerPosMap.set(normalizeTriviaText(a), p.position);
+      }
+    }
+  }
+
+  // 1. Search prompt.answers first (if available)
+  if (prompt?.answers) {
+    for (const ans of prompt.answers) {
+      const normText = normalizeTriviaText(ans.text);
+      const aliases = (ans.aliases || []).map(normalizeTriviaText);
+      const parts = normText.split(' ');
+      const surname = parts[parts.length - 1];
+
+      let score = 0;
+      if (normText === clean || aliases.includes(clean)) {
+        score = 1100;
+      } else if (normText.startsWith(clean)) {
+        score = 950;
+      } else if (surname && surname.startsWith(clean)) {
+        score = 900;
+      } else if (aliases.some((a) => a.startsWith(clean))) {
+        score = 880;
+      } else if (normText.includes(clean) || aliases.some((a) => a.includes(clean))) {
+        score = 750;
+      } else if (clean.length >= 4) {
+        const distSur = surname && surname.length >= 3 ? levenshtein(clean, surname) : 99;
+        const distFull = levenshtein(clean, normText);
+        if (distSur <= 1 || distFull <= 1) {
+          score = 650;
+        }
+      }
+
+      if (score > 0 && !seen.has(normText)) {
+        seen.add(normText);
+        const pos = playerPosMap.get(normText);
+        results.push({ name: ans.text, position: pos, score });
+      }
+    }
+  }
+
+  // 2. Search ALL_PLAYERS_DB
+  for (const p of ALL_PLAYERS_DB) {
+    const normName = normalizeTriviaText(p.name);
+    if (seen.has(normName)) continue;
+
+    const normCommon = p.commonName ? normalizeTriviaText(p.commonName) : '';
+    const normAliases = (p.aliases || []).map(normalizeTriviaText);
+    const parts = normName.split(' ');
+    const surname = parts[parts.length - 1];
+
+    let score = 0;
+    if (normName === clean || normCommon === clean || normAliases.includes(clean)) {
+      score = 1000;
+    } else if (normName.startsWith(clean) || normCommon.startsWith(clean)) {
+      score = 850;
+    } else if (surname && surname.startsWith(clean)) {
+      score = 800;
+    } else if (normAliases.some((a) => a.startsWith(clean))) {
+      score = 780;
+    } else if (normName.includes(clean) || normAliases.some((a) => a.includes(clean))) {
+      score = 600;
+    } else if (clean.length >= 4) {
+      const distSur = surname && surname.length >= 3 ? levenshtein(clean, surname) : 99;
+      const distFull = levenshtein(clean, normName);
+      if (distSur <= 1 || distFull <= 1) {
+        score = 500;
+      }
+    }
+
+    if (score > 0) {
+      seen.add(normName);
+      results.push({ name: p.name, position: p.position, score });
+    }
+  }
+
+  results.sort((a, b) => b.score - a.score);
+  return results.slice(0, limit).map((r) => ({ name: r.name, position: r.position }));
 }
 
 /**

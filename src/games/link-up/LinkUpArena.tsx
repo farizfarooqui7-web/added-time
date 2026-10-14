@@ -312,9 +312,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     }
   }, [pressureTimeLeft, phase, opponentLockedIn, userSubmittedEval]);
 
-  // Update autocomplete suggestions as user types
+  // Update autocomplete suggestions as user types (requires at least 3 characters)
   useEffect(() => {
-    if (searchInput.trim().length >= 2 && phase === 'playing') {
+    if (searchInput.trim().length >= 3 && phase === 'playing') {
       const hits = searchPlayersAutocomplete(searchInput, 7);
       setSuggestions(hits);
       setHighlightedIndex(0);
@@ -1024,11 +1024,6 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <span
-                            className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded border shrink-0 ${posColor}`}
-                          >
-                            {player.position}
-                          </span>
-                          <span
                             className={`font-sans font-black text-sm uppercase truncate ${
                               isTaken ? 'line-through text-neutral-500' : 'text-white'
                             }`}
@@ -1044,8 +1039,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                             </span>
                           ) : (
                             <>
-                              <span className="text-[11px] font-mono text-slate-400">
-                                {player.nationality}
+                              <span
+                                className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded border shrink-0 ${posColor}`}
+                              >
+                                {player.position}
                               </span>
                               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/5 text-[#ccff00]">
                                 LOCK IN
@@ -1188,7 +1185,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          leaveParty();
+          if (party.roomCode?.startsWith('match_')) {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -1199,7 +1198,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+          if (party.roomCode?.startsWith('match_')) {
             leaveParty();
           }
           setShowForfeitModal(false);

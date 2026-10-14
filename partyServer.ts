@@ -837,7 +837,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
       const room = rooms.get(roomId);
       if (!room) return;
 
-      const isMatchRoom = roomId.startsWith('match_') || room.visibility === 'public';
+      const isMatchRoom = roomId.startsWith('match_');
 
       if (room.currentGame?.status === 'in-game' || isMatchRoom) {
         if (room.currentGame) room.currentGame.status = 'lobby';
@@ -912,7 +912,7 @@ function handleLeaveParty(session: ClientSession) {
 
   if (!room) return;
 
-  const isMatchRoom = roomId.startsWith('match_') || room.visibility === 'public';
+  const isMatchRoom = roomId.startsWith('match_');
 
   if (room.currentGame?.status === 'in-game' || isMatchRoom) {
     if (room.currentGame) room.currentGame.status = 'lobby';

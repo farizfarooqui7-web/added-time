@@ -13,6 +13,7 @@ const CLUBS_DB: RecordBooksClubRecord[] = rawRecordBooks as RecordBooksClubRecor
 
 export interface GlobalPlayerSearchItem {
   name: string;
+  position?: string;
   normName: string;
   normSurname: string;
   normAliases: string[];
@@ -20,7 +21,7 @@ export interface GlobalPlayerSearchItem {
 
 // Build a deduplicated searchable index of all players across Record Books + Link-Up DB
 const SEARCH_INDEX: GlobalPlayerSearchItem[] = (() => {
-  const map = new Map<string, { name: string; aliases: Set<string> }>();
+  const map = new Map<string, { name: string; position?: string; aliases: Set<string> }>();
 
   for (const club of CLUBS_DB) {
     for (const entry of [...club.topGoals, ...club.topAssists]) {
@@ -37,6 +38,7 @@ const SEARCH_INDEX: GlobalPlayerSearchItem[] = (() => {
 
   const linkUpList = rawLinkUpPlayers as Array<{
     name: string;
+    position?: string;
     commonName?: string;
     aliases?: string[];
   }>;
@@ -46,9 +48,10 @@ const SEARCH_INDEX: GlobalPlayerSearchItem[] = (() => {
     if (!map.has(key)) {
       const aliases = new Set<string>(p.aliases || []);
       if (p.commonName) aliases.add(p.commonName);
-      map.set(key, { name: p.name, aliases });
+      map.set(key, { name: p.name, position: p.position, aliases });
     } else {
       const existing = map.get(key)!;
+      if (p.position && !existing.position) existing.position = p.position;
       if (p.commonName) existing.aliases.add(p.commonName);
       for (const a of p.aliases || []) existing.aliases.add(a);
     }
@@ -61,6 +64,7 @@ const SEARCH_INDEX: GlobalPlayerSearchItem[] = (() => {
     const normAliases = Array.from(data.aliases).map(normalizeSearchText).filter(Boolean);
     items.push({
       name: data.name,
+      position: data.position,
       normName,
       normSurname,
       normAliases,
@@ -91,12 +95,15 @@ export function generateClubSequence(
 /**
  * Instant fuzzy autocomplete across all footballers in the database.
  */
-export function searchRecordBooksPlayers(query: string, limit = 7): string[] {
+export function searchRecordBooksPlayers(
+  query: string,
+  limit = 7
+): Array<{ name: string; position?: string }> {
   const cleanQuery = normalizeSearchText(query);
   if (!cleanQuery || cleanQuery.length < 3) return [];
 
   const tokens = cleanQuery.split(' ').filter(Boolean);
-  const scored: Array<{ name: string; score: number }> = [];
+  const scored: Array<{ item: GlobalPlayerSearchItem; score: number }> = [];
 
   for (const item of SEARCH_INDEX) {
     let score = 0;
@@ -134,12 +141,12 @@ export function searchRecordBooksPlayers(query: string, limit = 7): string[] {
     }
 
     if (score > 0) {
-      scored.push({ name: item.name, score });
+      scored.push({ item, score });
     }
   }
 
   scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, limit).map((s) => s.name);
+  return scored.slice(0, limit).map((s) => ({ name: s.item.name, position: s.item.position }));
 }
 
 /**
@@ -211,7 +218,7 @@ export function evaluateRecordBooksSubmission(
   // 3. Not in the club's top records -> return 0
   const bestGlobalHit = searchRecordBooksPlayers(rawInput, 1);
   const displayPlayerName =
-    bestGlobalHit.length > 0 ? bestGlobalHit[0] : rawInput.trim().toUpperCase();
+    bestGlobalHit.length > 0 ? bestGlobalHit[0].name : rawInput.trim().toUpperCase();
 
   return {
     skipped: false,

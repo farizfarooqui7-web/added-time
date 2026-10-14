@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ArrowLeft,
-  ArrowRight,
   Clock,
   RotateCcw,
   Send,
@@ -25,7 +24,7 @@ import {
 import {
   drawMatchPrompts,
   evaluateAnswer,
-  findDidYouMeanTriviaAnswer,
+  searchSideNettingPlayers,
   getBallKnowerRating,
 } from './sideNettingEngine';
 import { soundFX } from '../../utils/audio';
@@ -2291,8 +2290,12 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [inputVal, setInputVal] = useState<string>('');
   const [currentSubmission, setCurrentSubmission] = useState<SideNettingRoundSubmission | null>(null);
 
-  // Did-you-mean auto-correction suggestion & Wrong Answer Shake state
-  const [didYouMeanSuggestion, setDidYouMeanSuggestion] = useState<string | null>(null);
+  // Autocomplete dropdown state
+  const [suggestions, setSuggestions] = useState<Array<{ name: string; position?: string }>>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
+  // Wrong Answer Shake state
   const [lastAttemptedInvalid, setLastAttemptedInvalid] = useState<string | null>(null);
   const [isWrongAnswerShake, setIsWrongAnswerShake] = useState<boolean>(false);
   const [shakeMessage, setShakeMessage] = useState<string | null>(null);
@@ -2325,13 +2328,28 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const currentPrompt = prompts[currentRoundIdx] || prompts[0];
 
+  // Instant player autocomplete dropdown search (requires at least 3 characters)
+  useEffect(() => {
+    const trimmed = inputVal.trim();
+    if (trimmed.length < 3 || diveState !== 'idle-surface') {
+      setSuggestions([]);
+      setShowDropdown(false);
+      return;
+    }
+    const hits = searchSideNettingPlayers(trimmed, currentPrompt, 7);
+    setSuggestions(hits);
+    setSelectedIndex(0);
+    setShowDropdown(hits.length > 0);
+  }, [inputVal, currentPrompt, diveState]);
+
   // 1. ROUND START: RESET TO SURFACE & FOCUS INPUT
   useEffect(() => {
     if (diveState === 'game-over') return;
     setDiveState('idle-surface');
     setDisplayDepth(0);
     setInputVal('');
-    setDidYouMeanSuggestion(null);
+    setShowDropdown(false);
+    setSuggestions([]);
     setLastAttemptedInvalid(null);
     setIsWrongAnswerShake(false);
     setShakeMessage(null);
@@ -2452,7 +2470,8 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const triggerSubmission = (finalAnswer: string) => {
     const evaluated = evaluateAnswer(finalAnswer, currentPrompt);
     setCurrentSubmission(evaluated);
-    setDidYouMeanSuggestion(null);
+    setShowDropdown(false);
+    setSuggestions([]);
     setIsWrongAnswerShake(false);
     setShakeMessage(null);
 
@@ -2531,40 +2550,22 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     }, 750);
   };
 
-  // 3. LOCK IN ANSWER WITH TYPO GUARD & SHAKE ERROR
-  const handleLockAnswer = (e?: React.FormEvent) => {
+  // 3. LOCK IN ANSWER WITH VALIDATION & SHAKE ERROR
+  const handleLockAnswer = (e?: React.FormEvent, answerOverride?: string) => {
     if (e) e.preventDefault();
     if (diveState !== 'idle-surface') return;
 
-    const trimmed = inputVal.trim();
-    if (!trimmed) return;
+    const answerToTest = (answerOverride || inputVal).trim();
+    if (!answerToTest) return;
 
-    // A. Check if user typed a nickname, alias, or typo that needs confirmation
-    // (e.g. "cr7" -> "Cristiano Ronaldo", "craisitnao" -> "Cristiano Ronaldo", "mesi" -> "Lionel Messi")
-    const typoCheck = findDidYouMeanTriviaAnswer(trimmed, currentPrompt);
-    if (
-      typoCheck.hasCorrection &&
-      typoCheck.suggestedName &&
-      typoCheck.suggestedName.toLowerCase() !== trimmed.toLowerCase() &&
-      (!didYouMeanSuggestion || didYouMeanSuggestion.toLowerCase() !== typoCheck.suggestedName.toLowerCase())
-    ) {
-      soundFX.playClick(700);
-      setInputVal(typoCheck.suggestedName);
-      setDidYouMeanSuggestion(typoCheck.suggestedName);
-      setShakeMessage(`Did you mean "${typoCheck.suggestedName}"? Press ENTER to strike`);
-      return;
-    }
+    setShowDropdown(false);
 
-    // Target answer to evaluate (either confirmed suggestion or current input)
-    const answerToTest = didYouMeanSuggestion || trimmed;
-
-    // B. Validate strictly against the question's accepted answer pool
+    // Validate strictly against the question's accepted answer pool
     // Ensure the player CANNOT send a wrong answer no matter what!
     const evalPreview = evaluateAnswer(answerToTest, currentPrompt);
     if (!evalPreview.isValid) {
       soundFX.playVoltBuzz();
       setIsWrongAnswerShake(true);
-      setDidYouMeanSuggestion(null);
       setShakeMessage(`"${answerToTest}" is not a valid answer for this question! Try another player.`);
       window.setTimeout(() => setIsWrongAnswerShake(false), 900);
       return;
@@ -2573,6 +2574,29 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     // Valid answer -> Send and Dive!
     soundFX.playClick(900);
     triggerSubmission(answerToTest);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (diveState !== 'idle-surface') return;
+
+    if (e.key === 'ArrowDown' && suggestions.length > 0) {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp' && suggestions.length > 0) {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev - 1 + suggestions.length) % suggestions.length);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (showDropdown && suggestions.length > 0 && suggestions[selectedIndex]) {
+        const chosen = suggestions[selectedIndex];
+        setInputVal(chosen.name);
+        handleLockAnswer(undefined, chosen.name);
+      } else if (inputVal.trim().length > 0) {
+        handleLockAnswer();
+      }
+    } else if (e.key === 'Escape') {
+      setShowDropdown(false);
+    }
   };
 
   const handlePlayAgain = () => {
@@ -2588,7 +2612,8 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setSecondsLeft(initialSeconds);
 
     setInputVal('');
-    setDidYouMeanSuggestion(null);
+    setShowDropdown(false);
+    setSuggestions([]);
     setLastAttemptedInvalid(null);
     setIsWrongAnswerShake(false);
     setShakeMessage(null);
@@ -2993,17 +3018,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     )}
                     <span>{shakeMessage}</span>
                   </div>
-                  {didYouMeanSuggestion && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        triggerSubmission(didYouMeanSuggestion);
-                      }}
-                      className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-black font-mono text-[10px] font-black uppercase tracking-wider shrink-0 cursor-pointer transition-all"
-                    >
-                      SEND "{didYouMeanSuggestion}"
-                    </button>
-                  )}
                 </div>
               )}
 
@@ -3014,6 +3028,59 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                 }`}
               >
                 <div className="relative flex-1 min-w-0">
+                  {/* Floating Autocomplete Dropdown */}
+                  {showDropdown && suggestions.length > 0 && diveState === 'idle-surface' && (
+                    <div className="absolute left-0 right-0 bottom-full mb-2 rounded-xl bg-[#090d18] border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-md overflow-y-auto max-h-52 z-50 divide-y divide-white/5">
+                      {suggestions.map((item, idx) => {
+                        const isSelected = idx === selectedIndex;
+                        const posColor =
+                          item.position === 'FWD'
+                            ? 'text-rose-400 bg-rose-500/10 border-rose-500/30'
+                            : item.position === 'MID'
+                            ? 'text-amber-400 bg-amber-500/10 border-amber-500/30'
+                            : item.position === 'DEF'
+                            ? 'text-sky-400 bg-sky-500/10 border-sky-500/30'
+                            : item.position === 'GK'
+                            ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                            : 'text-slate-400 bg-white/5 border-white/10';
+
+                        return (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              setInputVal(item.name);
+                              handleLockAnswer(undefined, item.name);
+                            }}
+                            onMouseEnter={() => setSelectedIndex(idx)}
+                            className={`w-full px-4 py-2.5 text-left flex items-center justify-between gap-3 transition-colors ${
+                              isSelected
+                                ? 'bg-[#ccff00]/15 text-white cursor-pointer'
+                                : 'hover:bg-white/5 text-slate-200 cursor-pointer'
+                            }`}
+                          >
+                            <span className="font-sans font-black text-sm uppercase truncate text-white">
+                              {item.name}
+                            </span>
+                            <div className="flex items-center gap-2 shrink-0">
+                              {item.position && (
+                                <span
+                                  className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded border shrink-0 ${posColor}`}
+                                >
+                                  {item.position}
+                                </span>
+                              )}
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/5 text-[#ccff00]">
+                                STRIKE
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
                   <svg
                     viewBox="0 0 24 24"
                     className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none ${
@@ -3035,10 +3102,19 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     disabled={diveState !== 'idle-surface'}
                     onChange={(e) => {
                       setInputVal(e.target.value);
-                      if (didYouMeanSuggestion) setDidYouMeanSuggestion(null);
                       if (lastAttemptedInvalid) setLastAttemptedInvalid(null);
                       if (shakeMessage) setShakeMessage(null);
+                      setShowDropdown(true);
                     }}
+                    onFocus={() => {
+                      if (inputVal.trim().length >= 3) {
+                        setShowDropdown(true);
+                      }
+                    }}
+                    onBlur={() => {
+                      window.setTimeout(() => setShowDropdown(false), 200);
+                    }}
+                    onKeyDown={handleInputKeyDown}
                     placeholder="Name your shot..."
                     autoComplete="off"
                     autoCorrect="off"
@@ -3046,8 +3122,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                     className={`w-full h-full min-h-[52px] pl-10 pr-16 py-3 bg-[#040811]/95 border text-base sm:text-[15px] font-semibold text-white placeholder:text-slate-500 shadow-[0_12px_40px_rgba(0,0,0,0.6)] transition-all focus:outline-none ${
                       isWrongAnswerShake
                         ? 'border-rose-500 ring-2 ring-rose-500/50'
-                        : didYouMeanSuggestion
-                        ? 'border-amber-400 ring-2 ring-amber-400/50'
                         : 'border-white/15 focus:border-[#ccff00] focus:shadow-[0_0_0_1px_#ccff00,0_0_30px_rgba(204,255,0,0.2)]'
                     }`}
                     style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px))' }}
@@ -3064,8 +3138,8 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   disabled={!inputVal.trim() || diveState !== 'idle-surface'}
                   className="sn-strike sn-sheen px-4 sm:px-7 min-h-[52px] disabled:opacity-40 disabled:grayscale disabled:pointer-events-none text-black font-athletic italic text-lg sm:text-xl font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 hover:brightness-110 active:scale-[0.97]"
                 >
-                  <span>{didYouMeanSuggestion ? 'CONFIRM' : 'STRIKE'}</span>
-                  {didYouMeanSuggestion ? <ArrowRight className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                  <span>STRIKE</span>
+                  <Send className="w-4 h-4" />
                 </button>
 
                 <button
@@ -3592,7 +3666,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          leaveParty();
+          if (party.roomCode?.startsWith('match_')) {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -3603,7 +3679,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+          if (party.roomCode?.startsWith('match_')) {
             leaveParty();
           }
           setShowForfeitModal(false);

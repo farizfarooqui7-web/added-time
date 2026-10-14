@@ -471,8 +471,8 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       e.preventDefault();
       if (showDropdown && suggestions.length > 0 && suggestions[selectedIndex]) {
         const chosen = suggestions[selectedIndex];
-        setQuery(chosen);
-        handleLockIn(chosen, false);
+        setQuery(chosen.name);
+        handleLockIn(chosen.name, false);
       } else if (query.trim().length > 0) {
         handleLockIn(query, false);
       }
@@ -1110,29 +1110,40 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                     {/* Instant Fuzzy Autocomplete Dropdown */}
                     {showDropdown && suggestions.length > 0 && (
                       <div className="absolute left-0 right-0 bottom-full mb-2 rounded-xl bg-[#121722] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-y-auto max-h-48 sm:max-h-60 z-40 divide-y divide-white/5">
-                        {suggestions.map((name, idx) => {
+                        {suggestions.map((item, idx) => {
                           const isSelected = idx === selectedIndex;
                           const isTakenByOpponent =
                             opponentEval !== null &&
                             isSameRecordBooksPlayer(
-                              name,
+                              item.name,
                               opponentEval.playerName,
                               currentClub,
                               config.metric
                             );
 
+                          const posColor =
+                            item.position === 'FWD'
+                              ? 'text-rose-400 bg-rose-500/10 border-rose-500/30'
+                              : item.position === 'MID'
+                              ? 'text-amber-400 bg-amber-500/10 border-amber-500/30'
+                              : item.position === 'DEF'
+                              ? 'text-sky-400 bg-sky-500/10 border-sky-500/30'
+                              : item.position === 'GK'
+                              ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                              : 'text-slate-400 bg-white/5 border-white/10';
+
                           return (
                             <button
-                              key={name}
+                              key={item.name}
                               type="button"
                               disabled={isTakenByOpponent}
                               onMouseEnter={() => setSelectedIndex(idx)}
                               onClick={() => {
                                 if (isTakenByOpponent) return;
-                                setQuery(name);
-                                handleLockIn(name, false);
+                                setQuery(item.name);
+                                handleLockIn(item.name, false);
                               }}
-                              className={`w-full px-4 py-2.5 text-left flex items-center justify-between transition-colors ${
+                              className={`w-full px-4 py-2.5 text-left flex items-center justify-between gap-3 transition-colors ${
                                 isTakenByOpponent
                                   ? 'bg-rose-500/10 text-neutral-500 cursor-not-allowed'
                                   : isSelected
@@ -1141,21 +1152,33 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                               }`}
                             >
                               <span
-                                className={`font-display text-sm font-bold tracking-wide ${
-                                  isTakenByOpponent ? 'line-through text-neutral-500' : ''
+                                className={`font-display text-sm font-bold tracking-wide truncate ${
+                                  isTakenByOpponent ? 'line-through text-neutral-500' : 'text-white'
                                 }`}
                               >
-                                {name}
+                                {item.name}
                               </span>
-                              {isTakenByOpponent ? (
-                                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-rose-400">
-                                  TAKEN BY {opponentLabel}
-                                </span>
-                              ) : (
-                                <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff9f1c]">
-                                  LOCK IN
-                                </span>
-                              )}
+
+                              <div className="flex items-center gap-2 shrink-0">
+                                {isTakenByOpponent ? (
+                                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-rose-400">
+                                    TAKEN BY {opponentLabel}
+                                  </span>
+                                ) : (
+                                  <>
+                                    {item.position && (
+                                      <span
+                                        className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded border shrink-0 ${posColor}`}
+                                      >
+                                        {item.position}
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff9f1c]">
+                                      LOCK IN
+                                    </span>
+                                  </>
+                                )}
+                              </div>
                             </button>
                           );
                         })}
@@ -1230,7 +1253,9 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         forfeitEvent={playerForfeitEvent}
         onReturnToHub={() => {
           clearForfeit();
-          leaveParty();
+          if (party.roomCode?.startsWith('match_')) {
+            leaveParty();
+          }
           handleCleanExit();
         }}
       />
@@ -1241,7 +1266,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         onStay={() => setShowForfeitModal(false)}
         onForfeit={() => {
           if (isMultiplayer) sendGameLeave();
-          if (party.roomCode?.startsWith('match_') || party.visibility === 'public') {
+          if (party.roomCode?.startsWith('match_')) {
             leaveParty();
           }
           setShowForfeitModal(false);
