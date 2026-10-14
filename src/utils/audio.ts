@@ -1,4 +1,4 @@
-// Top Bins Arcade-Grade Audio Synthesizer
+// Added Time Arcade-Grade Audio Synthesizer
 // Zero external asset dependencies, zero latency, multi-layer Web Audio API sound engine
 
 class SoundFX {

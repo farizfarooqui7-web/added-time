@@ -1,12 +1,12 @@
-# Top Bins - Production Deployment Guide
+# Added Time - Production Deployment Guide
 
-This guide details how to deploy Top Bins to production using Cloudflare's official PartyServer architecture deployed via Wrangler, and an optimized static frontend (Vercel, Cloudflare Pages, or Netlify).
+This guide details how to deploy Added Time to production using Cloudflare's official PartyServer architecture deployed via Wrangler, and an optimized static frontend (Vercel, Cloudflare Pages, or Netlify).
 
 ---
 
 ## 1. Deploying the PartyServer Backend (Cloudflare Workers + Durable Objects)
 
-Top Bins uses Cloudflare's official `partyserver` package (`party/main.ts`) for zero-cold-start, serverless real-time WebSockets with room-level multiplayer synchronization and authoritative match state machines.
+Added Time uses Cloudflare's official `partyserver` package (`party/main.ts`) for zero-cold-start, serverless real-time WebSockets with room-level multiplayer synchronization and authoritative match state machines.
 
 ### Deployment Steps:
 1. Ensure dependencies are installed:

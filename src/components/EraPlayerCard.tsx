@@ -31,7 +31,7 @@ export const EraPlayerCard: React.FC<EraPlayerCardComponentProps> = ({
   clubAbbreviation,
   season = '2024',
   positions = [],
-  club = 'Top Bins',
+  club = 'Added Time',
   clubCrestUrl,
   crestPath,
   imageUrl,
@@ -120,7 +120,7 @@ export const EraPlayerCard: React.FC<EraPlayerCardComponentProps> = ({
   const displayFirstName = firstName || (nameParts.length > 1 ? nameParts[0] : '');
   const displayLastName = lastName || (nameParts.length > 1 ? nameParts.slice(1).join(' ') : safeName);
 
-  const safeClub = (club || 'TOP BINS').toUpperCase();
+  const safeClub = (club || 'ADDED TIME').toUpperCase();
 
   // Derive standard club abbreviation (e.g. LFC, FCB, RMA, CFC, MCFC, ACM, JUV, ARS)
   const displayClubAbbr =
@@ -518,7 +518,7 @@ export const EraPlayerCard: React.FC<EraPlayerCardComponentProps> = ({
           {/* Back Footer */}
           <div className="border-t border-neutral-800 pt-2 flex items-center justify-between text-[10px] font-mono text-neutral-500">
             <span>POSITION: [ {formatPositions(positions)} ]</span>
-            <span className="text-[#00f0ff] font-bold">TOP BINS MINT</span>
+            <span className="text-[#00f0ff] font-bold">ADDED TIME MINT</span>
           </div>
         </div>
       </div>

@@ -227,7 +227,7 @@ export const CardShowcaseVault: React.FC<CardShowcaseVaultProps> = ({ cards, onC
         <div className="flex items-center gap-2 mb-3">
           <CheckCircle2 className="w-4 h-4 text-[#ccff00]" />
           <h4 className="font-athletic font-black text-xl text-white uppercase tracking-tight">
-            TOP BINS SQUAD ARCHITECTURE
+            ADDED TIME SQUAD ARCHITECTURE
           </h4>
         </div>
 

@@ -74,7 +74,7 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({ server });
 
 server.listen(PORT, HOST, () => {
-  console.log(`[Top Bins WS] Party WebSocket server running on http://${HOST}:${PORT} (Health check: /health)`);
+  console.log(`[Added Time WS] Party WebSocket server running on http://${HOST}:${PORT} (Health check: /health)`);
 });
 
 const duelQueues = new Map<string, QueuedEntry[]>();
@@ -230,7 +230,7 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       sharedData = { cards: shuffled, totalRounds: 5 };
     }
   } catch (err) {
-    console.error('[Top Bins WS] Failed to generate shared match data:', err);
+    console.error('[Added Time WS] Failed to generate shared match data:', err);
   }
 
   return { sharedData, assignedRoles };
@@ -290,7 +290,7 @@ function launchEphemeralMatch(
     }
   }
 
-  console.log(`[Top Bins Matchmaking] Paired ${player1.name} vs ${player2.name} in mode ${normMode} (Room ${roomId})`);
+  console.log(`[Added Time Matchmaking] Paired ${player1.name} vs ${player2.name} in mode ${normMode} (Room ${roomId})`);
 
   // Inform players of match found
   send(player1.socket, {
@@ -415,7 +415,7 @@ function launchGroupMatch(players: ClientSession[], modeId: string) {
   }
 
   broadcastGlobalPresence();
-  console.log(`[Top Bins Matchmaking] Group match launched for ${players.length} players in mode ${normMode} (Room ${roomId})`);
+  console.log(`[Added Time Matchmaking] Group match launched for ${players.length} players in mode ${normMode} (Room ${roomId})`);
 }
 
 function handleBotFallback(session: ClientSession, modeId: string, queueType: 'duel' | 'ffa') {
@@ -436,7 +436,7 @@ function handleBotFallback(session: ClientSession, modeId: string, queueType: 'd
   const botName = BOT_USERNAMES[Math.floor(Math.random() * BOT_USERNAMES.length)];
   const botId = 'bot_' + Math.random().toString(36).substring(2, 8);
 
-  console.log(`[Top Bins Matchmaking] 10s queue timeout for ${session.name}. Pairing with AI Bot: ${botName}`);
+  console.log(`[Added Time Matchmaking] 10s queue timeout for ${session.name}. Pairing with AI Bot: ${botName}`);
 
   send(session.socket, {
     type: 'queue_status',
@@ -468,7 +468,7 @@ wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
       const msg = JSON.parse(data.toString()) as ClientToServerMessage;
       handleMessage(session, msg);
     } catch (err) {
-      console.error('[Top Bins WS] Invalid packet:', err);
+      console.error('[Added Time WS] Invalid packet:', err);
       send(ws, { type: 'error', payload: { message: 'Invalid packet received' } });
     }
   });
@@ -536,7 +536,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
           });
         }
 
-        console.log(`[Top Bins Matchmaking] ${session.name} entered Imposter staging (${activeList.length}/3 players joined)`);
+        console.log(`[Added Time Matchmaking] ${session.name} entered Imposter staging (${activeList.length}/3 players joined)`);
         broadcastGlobalPresence();
         break;
       }
@@ -571,7 +571,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
         payload: { modeId: normMode, status: 'queued', elapsedSeconds: 0, queueType },
       });
 
-      console.log(`[Top Bins Matchmaking] ${session.name} entered queue for ${normMode} (${queueType})`);
+      console.log(`[Added Time Matchmaking] ${session.name} entered queue for ${normMode} (${queueType})`);
       broadcastGlobalPresence();
       break;
     }
@@ -617,7 +617,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
       };
 
       rooms.set(roomId, room);
-      console.log(`[Top Bins WS] Party created: ${roomId} by ${hostName}`);
+      console.log(`[Added Time WS] Party created: ${roomId} by ${hostName}`);
 
       send(session.socket, {
         type: 'party_created',
@@ -666,7 +666,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
       };
 
       room.members.push(newMember);
-      console.log(`[Top Bins WS] ${name} joined party ${cleanCode}`);
+      console.log(`[Added Time WS] ${name} joined party ${cleanCode}`);
 
       send(session.socket, {
         type: 'party_joined',
@@ -780,7 +780,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
         status: 'in-game',
       };
 
-      console.log(`[Top Bins WS] Host ${session.name} launched match "${normMode}" in room ${session.roomId}`);
+      console.log(`[Added Time WS] Host ${session.name} launched match "${normMode}" in room ${session.roomId}`);
 
       broadcastToRoom(session.roomId, {
         type: 'match_launched',
@@ -923,7 +923,7 @@ function handleLeaveParty(session: ClientSession) {
       type: 'party_disbanded',
       payload: { reason: wasHost ? 'Party Host disbanded the squad.' : 'All members left.' },
     });
-    console.log(`[Top Bins WS] Room ${roomId} disbanded.`);
+    console.log(`[Added Time WS] Room ${roomId} disbanded.`);
   } else {
     broadcastToRoom(roomId, {
       type: 'party_updated',

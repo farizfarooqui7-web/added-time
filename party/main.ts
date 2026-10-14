@@ -112,7 +112,7 @@ function generateAuthoritativeMatchData(modeId: string, members: PartyMember[]) 
       sharedData = { cards: shuffled, totalRounds: 5 };
     }
   } catch (err) {
-    console.error('[Top Bins Match Engine] Failed to generate shared match data:', err);
+    console.error('[Added Time Match Engine] Failed to generate shared match data:', err);
   }
 
   return { sharedData, assignedRoles };

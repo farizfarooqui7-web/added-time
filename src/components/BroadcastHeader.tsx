@@ -68,14 +68,21 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
         </button>
       </div>
 
-      {/* Center: Prominent Centered "TOP BINS" Logo with Electric Blaze Orange Tag */}
+      {/* Center: Prominent Centered "ADDED TIME" Logo with 90+ Stoppage Board Accent */}
       <div className="w-1/3 flex items-center justify-center">
-        <div className="flex items-center gap-2.5">
-          <span className="font-sans font-black text-2xl md:text-3xl tracking-tight text-white uppercase select-none">
-            TOP BINS
-          </span>
-          <span className="font-mono text-[10px] font-bold border border-[#ff6b00]/40 text-[#ff6b00] bg-[#ff6b00]/10 px-2 py-0.5 rounded-full tracking-wider select-none shadow-sm">
-            EST. 2026
+        <div className="flex items-center gap-2 select-none group">
+          <div className="flex items-center gap-2">
+            <span className="font-sans font-black text-2xl md:text-3xl tracking-tight text-white uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.08)]">
+              ADDED TIME
+            </span>
+            <div className="flex items-center px-1.5 py-0.5 rounded bg-[#0a0d14] border border-[#ff6b00]/60 shadow-[0_0_10px_rgba(255,107,0,0.3)]">
+              <span className="font-mono text-xs font-black tracking-tight text-[#ff6b00]">
+                90+
+              </span>
+            </div>
+          </div>
+          <span className="hidden sm:inline-block font-mono text-[10px] font-bold text-neutral-400 bg-neutral-900/80 border border-neutral-800 px-2 py-0.5 rounded-full tracking-wider">
+            STOPPAGE DUELS
           </span>
         </div>
       </div>

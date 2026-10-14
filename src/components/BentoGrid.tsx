@@ -32,11 +32,23 @@ export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => 
 
     if (total <= 0) return null;
 
+    let label = `${total} playing`;
+    if (searching > 0 && inGame === 0) {
+      label = `${searching} in queue`;
+    } else if (inGame > 0 && searching === 0) {
+      label = `${inGame} playing`;
+    } else if (searching > 0 && inGame > 0) {
+      label = `${total} active`;
+    }
+
     return (
-      <div className="inline-flex items-center gap-1.5 font-mono text-[10px] text-slate-300">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] animate-pulse" />
-        <span className="font-semibold text-slate-300">
-          {searching > 0 ? `${searching} in queue` : `${inGame} playing`}
+      <div className="inline-flex items-center gap-1.5 font-mono text-[11px] text-neutral-400 select-none">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+        </span>
+        <span className="font-medium tracking-tight text-neutral-300">
+          {label}
         </span>
       </div>
     );
