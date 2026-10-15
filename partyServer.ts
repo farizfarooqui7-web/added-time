@@ -864,6 +864,11 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
       if (isMatchRoom) {
         rooms.delete(roomId);
         session.roomId = undefined;
+        for (const client of clients.values()) {
+          if (client.roomId === roomId) {
+            client.roomId = undefined;
+          }
+        }
       }
       break;
     }
@@ -945,6 +950,11 @@ function handleLeaveParty(session: ClientSession) {
       type: 'party_disbanded',
       payload: { reason: wasHost ? 'Party Host disbanded the squad.' : (isMatchRoom ? 'Match ended. Squad disbanded.' : 'All members left.') },
     });
+    for (const client of clients.values()) {
+      if (client.roomId === roomId) {
+        client.roomId = undefined;
+      }
+    }
     console.log(`[Added Time WS] Room ${roomId} disbanded.`);
   } else {
     broadcastToRoom(roomId, {

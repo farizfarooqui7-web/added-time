@@ -405,13 +405,39 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     }, 1000);
   };
 
-  // Keyboard shortcut: Press ENTER on round-done screen to immediately proceed to NEXT CLUB / Final Scoreboard
+  const [autoAdvanceSeconds, setAutoAdvanceSeconds] = useState<number>(4);
+
+  // Multiplayer auto-advance timer for round-done screen (4s auto transition)
   useEffect(() => {
-    if (stage !== 'round-done') return;
+    if (stage !== 'round-done' || !isMultiplayer) return;
+
+    setAutoAdvanceSeconds(4);
+    const interval = setInterval(() => {
+      setAutoAdvanceSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          if (isHost) {
+            handleNextRound();
+          } else {
+            setTimeout(() => {
+              handleNextRound(roundIdx + 1);
+            }, 600);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [stage, isMultiplayer, isHost, roundIdx]);
+
+  // Keyboard shortcut: Press ENTER on round-done screen to immediately proceed to NEXT CLUB / Final Scoreboard (Solo mode only)
+  useEffect(() => {
+    if (stage !== 'round-done' || isMultiplayer) return;
 
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
-        if (isMultiplayer && !isHost) return;
         e.preventDefault();
         handleNextRound();
       }
@@ -419,7 +445,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [stage, roundIdx, config.totalRounds, isMultiplayer, isHost]);
+  }, [stage, roundIdx, config.totalRounds, isMultiplayer]);
 
   const handleRematch = () => {
     soundFX.playClick(900);
@@ -657,6 +683,9 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
               type="button"
               onClick={() => {
                 if (isMultiplayer) sendGameLeave();
+                if (party.roomCode?.startsWith('match_')) {
+                  leaveParty();
+                }
                 handleCleanExit();
               }}
               className="flex-1 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-display font-extrabold uppercase tracking-widest text-neutral-300 transition-all cursor-pointer"
@@ -1221,15 +1250,15 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                   </span>
                 </div>
 
-                {isMultiplayer && !isHost ? (
-                  <button
-                    type="button"
-                    disabled
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 text-neutral-400 font-display text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 cursor-not-allowed opacity-75 border border-white/10 shrink-0"
-                  >
-                    <Clock className="w-3.5 h-3.5 text-neutral-400 animate-spin" />
-                    <span>WAITING FOR HOST...</span>
-                  </button>
+                {isMultiplayer ? (
+                  <div className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/15 shrink-0 shadow-inner">
+                    <Clock className="w-3.5 h-3.5 text-[#ff9f1c] animate-spin" />
+                    <span>
+                      {roundIdx + 1 >= config.totalRounds
+                        ? `FINAL SCOREBOARD IN ${autoAdvanceSeconds}S...`
+                        : `NEXT CLUB IN ${autoAdvanceSeconds}S...`}
+                    </span>
+                  </div>
                 ) : (
                   <button
                     type="button"

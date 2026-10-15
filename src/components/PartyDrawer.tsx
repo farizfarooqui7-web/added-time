@@ -44,6 +44,8 @@ export const PartyDrawer: React.FC = () => {
     wsConnected,
   } = useParty();
 
+  const isActualParty = party.isActive && !party.roomCode?.startsWith('match_');
+
   // Host setup form state
   const [hostNameInput, setHostNameInput] = useState(playerName || '');
   const [serverVisibility, setServerVisibility] = useState<'private' | 'public'>('private');
@@ -76,7 +78,7 @@ export const PartyDrawer: React.FC = () => {
   // Focus join input or host name input when drawer opens
   useEffect(() => {
     if (isDrawerOpen) {
-      if (!party.isActive) {
+      if (!isActualParty) {
         if (dockView === 'join' || drawerInitialFocusJoin) {
           setTimeout(() => {
             joinInputRef.current?.focus();
@@ -88,7 +90,7 @@ export const PartyDrawer: React.FC = () => {
         }
       }
     }
-  }, [isDrawerOpen, dockView, drawerInitialFocusJoin, party.isActive]);
+  }, [isDrawerOpen, dockView, drawerInitialFocusJoin, isActualParty]);
 
   // Reset errors when closed
   useEffect(() => {
@@ -188,7 +190,7 @@ export const PartyDrawer: React.FC = () => {
           <div
             className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-20"
             style={{
-              background: party.isActive
+              background: isActualParty
                 ? 'radial-gradient(circle, #ccff00 0%, transparent 70%)'
                 : 'radial-gradient(circle, #ff6b00 0%, transparent 70%)',
             }}
@@ -200,7 +202,7 @@ export const PartyDrawer: React.FC = () => {
             <div className="flex items-center gap-3 min-w-0">
               <div
                 className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${
-                  party.isActive
+                  isActualParty
                     ? 'bg-[#ccff00]/15 border-[#ccff00]/40 text-[#ccff00] shadow-[0_0_15px_rgba(204,255,0,0.25)]'
                     : 'bg-[#ff6b00]/15 border-[#ff6b00]/40 text-[#ff6b00] shadow-[0_0_15px_rgba(255,107,0,0.25)]'
                 }`}
@@ -210,14 +212,14 @@ export const PartyDrawer: React.FC = () => {
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-white truncate">
-                    {party.isActive ? 'SQUAD LOBBY' : 'PARTY HUB'}
+                    {isActualParty ? 'SQUAD LOBBY' : 'PARTY HUB'}
                   </h2>
                   {wsConnected && (
                     <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" title="Real-Time Server Connected" />
                   )}
                 </div>
                 <p className="text-[10px] sm:text-[11px] font-mono text-neutral-400 mt-0.5 truncate">
-                  {party.isActive
+                  {isActualParty
                     ? party.isCurrentUserHost
                       ? 'Squad Host: Control & Launch'
                       : 'Connected: Waiting for Host'
@@ -228,7 +230,7 @@ export const PartyDrawer: React.FC = () => {
 
             {/* Right: Flush Player Counter Badge + Clean Single "X" Close Button */}
             <div className="flex items-center gap-2 shrink-0">
-              {party.isActive && (
+              {isActualParty && (
                 <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#ccff00]/15 text-[#ccff00] border border-[#ccff00]/40 shadow-[0_0_10px_rgba(204,255,0,0.15)] flex items-center gap-1">
                   <Radio className="w-3 h-3 text-[#ccff00] animate-pulse" />
                   <span>{party.members.length}/{party.maxSlots} SQUAD</span>
@@ -248,7 +250,7 @@ export const PartyDrawer: React.FC = () => {
 
         {/* ================= 2. DRAWER BODY ================= */}
         <div className="relative z-10 flex-1 overflow-y-auto px-5 py-4 space-y-4">
-          {party.isActive ? (
+          {isActualParty ? (
             /* ================= STATE A: ACTIVE LOBBY VIEW ================= */
             <>
               {/* BIG ROOM CODE CARD (HOST ONLY) OR SQUAD CONNECTION STATUS (GUEST ONLY) */}
@@ -787,7 +789,7 @@ export const PartyDrawer: React.FC = () => {
         </div>
 
         {/* ================= 3. DRAWER FOOTER ================= */}
-        {party.isActive && (
+        {isActualParty && (
           <div className="relative z-10 px-5 py-4 border-t border-white/10 bg-[#0c101a]/95 backdrop-blur-md flex items-center justify-between gap-3 shrink-0">
             {/* Ready Up Toggle for Guest / Status for Host */}
             {!party.isCurrentUserHost ? (

@@ -127,6 +127,13 @@ export const NATION_CODES: Record<string, { code: string; iso2: string; tier: Li
   'Venezuela': { code: 'VEN', iso2: 've', tier: 'Hard' },
   'Iran': { code: 'IRN', iso2: 'ir', tier: 'Hard' },
   'New Zealand': { code: 'NZL', iso2: 'nz', tier: 'Hard' },
+  'Trinidad and Tobago': { code: 'TRI', iso2: 'tt', tier: 'Hard' },
+  'Bermuda': { code: 'BER', iso2: 'bm', tier: 'Hard' },
+  'Israel': { code: 'ISR', iso2: 'il', tier: 'Medium' },
+  'Philippines': { code: 'PHI', iso2: 'ph', tier: 'Hard' },
+  'Zambia': { code: 'ZAM', iso2: 'zm', tier: 'Hard' },
+  'Congo': { code: 'CGO', iso2: 'cg', tier: 'Hard' },
+  'Liberia': { code: 'LBR', iso2: 'lr', tier: 'Hard' },
 };
 
 export function getNationFlagUrl(nationality: string): string {

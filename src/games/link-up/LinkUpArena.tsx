@@ -521,13 +521,39 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     }, 1000);
   };
 
-  // Keyboard shortcut listener: Second Enter on round-result explicitly advances to the next round
+  const [autoAdvanceSeconds, setAutoAdvanceSeconds] = useState<number>(5);
+
+  // Multiplayer auto-advance timer for round-result screen (5s auto transition)
   useEffect(() => {
-    if (phase !== 'round-result') return;
+    if (phase !== 'round-result' || !isMultiplayer) return;
+
+    setAutoAdvanceSeconds(5);
+    const interval = setInterval(() => {
+      setAutoAdvanceSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          if (isHost) {
+            handleNextRound();
+          } else {
+            setTimeout(() => {
+              handleNextRound(roundNumber + 1);
+            }, 600);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [phase, isMultiplayer, isHost, roundNumber]);
+
+  // Keyboard shortcut listener: Second Enter on round-result explicitly advances to the next round (Solo mode only)
+  useEffect(() => {
+    if (phase !== 'round-result' || isMultiplayer) return;
 
     const handleWindowKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
-        if (isMultiplayer && !isHost) return;
         // Enforce 2-step Enter flow: ignore Enter if the round-result phase was just entered (< 450ms ago)
         if (Date.now() - roundResultEnteredAtRef.current < 450) {
           return;
@@ -539,7 +565,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
     window.addEventListener('keydown', handleWindowKeyDown);
     return () => window.removeEventListener('keydown', handleWindowKeyDown);
-  }, [phase, roundNumber, config.totalRounds, activeSlots, isMultiplayer, isHost]);
+  }, [phase, roundNumber, config.totalRounds, activeSlots, isMultiplayer]);
 
   const handleRestartMatch = () => {
     soundFX.playClick(900);
@@ -734,6 +760,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               onClick={() => {
                 soundFX.playClick(500);
                 if (isMultiplayer) sendGameLeave();
+                if (party.roomCode?.startsWith('match_')) {
+                  leaveParty();
+                }
                 handleCleanExit();
               }}
               className="px-7 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-sans font-bold text-xs md:text-sm uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
@@ -1152,15 +1181,15 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
               </div>
 
               {/* Next Round Action */}
-              {isMultiplayer && !isHost ? (
-                <button
-                  type="button"
-                  disabled
-                  className="px-6 py-3.5 rounded-xl bg-white/10 text-neutral-400 font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 cursor-not-allowed opacity-75 border border-white/10"
-                >
-                  <Clock className="w-3.5 h-3.5 text-neutral-400 animate-spin" />
-                  <span>WAITING FOR HOST...</span>
-                </button>
+              {isMultiplayer ? (
+                <div className="px-5 py-3.5 rounded-xl bg-white/10 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 border border-white/15 shadow-inner">
+                  <Clock className="w-3.5 h-3.5 text-[#ccff00] animate-spin" />
+                  <span>
+                    {roundNumber >= config.totalRounds
+                      ? `FINAL SCOREBOARD IN ${autoAdvanceSeconds}S...`
+                      : `NEXT QUESTION IN ${autoAdvanceSeconds}S...`}
+                  </span>
+                </div>
               ) : (
                 <button
                   type="button"

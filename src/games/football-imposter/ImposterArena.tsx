@@ -2216,6 +2216,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                 type="button"
                 onClick={() => {
                   if (isMultiplayer) sendGameLeave();
+                  if (party.roomCode?.startsWith('match_')) {
+                    leaveParty();
+                  }
                   handleCleanExit();
                 }}
                 className="flex-1 py-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 text-xs font-display font-extrabold uppercase tracking-widest text-neutral-300 transition-all cursor-pointer"

@@ -132,6 +132,93 @@ export function randomizeSlotConfiguration(): [LinkUpSlotType, LinkUpSlotType, L
   return chosen;
 }
 
+const CLUB_CANONICAL_SLUGS: Record<string, string> = {
+  'fc-barcelona': 'barcelona',
+  'barcelona': 'barcelona',
+  'real-madrid': 'real-madrid',
+  'manchester-united': 'manchester-united',
+  'man-utd': 'manchester-united',
+  'manchester-city': 'manchester-city',
+  'man-city': 'manchester-city',
+  'bayern-munich': 'bayern-munich',
+  'bayern-munchen': 'bayern-munich',
+  'atletico-madrid': 'atletico-madrid',
+  'inter-milan': 'inter-milan',
+  'inter': 'inter-milan',
+  'internazionale': 'inter-milan',
+  'ac-milan': 'ac-milan',
+  'milan': 'ac-milan',
+  'paris-saint-germain': 'paris-saint-germain',
+  'psg': 'paris-saint-germain',
+  'borussia-dortmund': 'borussia-dortmund',
+  'dortmund': 'borussia-dortmund',
+  'tottenham-hotspur': 'tottenham-hotspur',
+  'tottenham': 'tottenham-hotspur',
+  'spurs': 'tottenham-hotspur',
+  'sporting-cp': 'sporting-cp',
+  'sporting-lisbon': 'sporting-cp',
+  'athletic-bilbao': 'athletic-bilbao',
+  'athletic-club': 'athletic-bilbao',
+  'west-ham-united': 'west-ham-united',
+  'west-ham': 'west-ham-united',
+  'newcastle-united': 'newcastle-united',
+  'newcastle': 'newcastle-united',
+  'wolverhampton-wanderers': 'wolverhampton-wanderers',
+  'wolves': 'wolverhampton-wanderers',
+  'olympique-de-marseille': 'olympique-marseille',
+  'olympique-marseille': 'olympique-marseille',
+  'marseille': 'olympique-marseille',
+  'olympique-lyonnais': 'olympique-lyon',
+  'olympique-lyon': 'olympique-lyon',
+  'lyon': 'olympique-lyon',
+  'as-monaco': 'as-monaco',
+  'monaco': 'as-monaco',
+  'as-roma': 'as-roma',
+  'roma': 'as-roma',
+  'bayer-leverkusen': 'bayer-leverkusen',
+  'leverkusen': 'bayer-leverkusen',
+  'werder-bremen': 'werder-bremen',
+  'bremen': 'werder-bremen',
+  'vfl-wolfsburg': 'wolfsburg',
+  'wolfsburg': 'wolfsburg',
+  'fc-schalke-04': 'schalke-04',
+  'schalke-04': 'schalke-04',
+  'schalke': 'schalke-04',
+  'vfb-stuttgart': 'vfb-stuttgart',
+  'stuttgart': 'vfb-stuttgart',
+  'rb-leipzig': 'rb-leipzig',
+  'leipzig': 'rb-leipzig',
+  'real-betis': 'real-betis',
+  'betis': 'real-betis',
+  'real-sociedad': 'real-sociedad',
+  'sociedad': 'real-sociedad',
+  'celta-vigo': 'celta-vigo',
+  'celta': 'celta-vigo',
+  'deportivo-la-coruna': 'deportivo-la-coruna',
+  'deportivo': 'deportivo-la-coruna',
+  'fc-porto': 'fc-porto',
+  'porto': 'fc-porto',
+  'psv-eindhoven': 'psv-eindhoven',
+  'psv': 'psv-eindhoven',
+};
+
+const NATION_ALIASES: Record<string, string> = {
+  'usa': 'united states',
+  'united states': 'united states',
+  'united states of america': 'united states',
+  'ivory coast': 'ivory coast',
+  "cote d'ivoire": 'ivory coast',
+  'ireland': 'republic of ireland',
+  'republic of ireland': 'republic of ireland',
+  'dr congo': 'dr congo',
+  'democratic republic of the congo': 'dr congo',
+  'congo dr': 'dr congo',
+  'bosnia': 'bosnia and herzegovina',
+  'bosnia and herzegovina': 'bosnia and herzegovina',
+  'south korea': 'south korea',
+  'korea republic': 'south korea',
+};
+
 /**
  * Checks whether a player satisfies a single clue.
  */
@@ -140,17 +227,42 @@ export function doesPlayerSatisfySingleClue(
   clue: LinkUpClue
 ): boolean {
   if (clue.type === 'Club') {
-    return player.clubs.some(
-      (c) =>
-        (clue.slug && c.slug === clue.slug) ||
-        c.name.toLowerCase() === clue.value.toLowerCase()
-    );
+    const clueSlugNorm = clue.slug
+      ? CLUB_CANONICAL_SLUGS[clue.slug.toLowerCase().trim()] || clue.slug.toLowerCase().trim()
+      : '';
+    const clueValNorm = normalizeSearchText(clue.value);
+
+    return player.clubs.some((c) => {
+      const cSlugNorm = c.slug
+        ? CLUB_CANONICAL_SLUGS[c.slug.toLowerCase().trim()] || c.slug.toLowerCase().trim()
+        : '';
+      const cNameNorm = normalizeSearchText(c.name);
+
+      if (clueSlugNorm && cSlugNorm && clueSlugNorm === cSlugNorm) return true;
+      if (clueValNorm === cNameNorm) return true;
+      if (
+        clueValNorm.length >= 4 &&
+        (cNameNorm.includes(clueValNorm) || clueValNorm.includes(cNameNorm))
+      ) {
+        return true;
+      }
+      return false;
+    });
   }
   if (clue.type === 'Nation') {
-    const matchPrimary = player.nationality.toLowerCase() === clue.value.toLowerCase();
-    const matchSecondary =
-      player.secondaryNationality?.toLowerCase() === clue.value.toLowerCase();
-    return matchPrimary || matchSecondary;
+    const clueValNorm = clue.value.toLowerCase().trim();
+    const canonClue = NATION_ALIASES[clueValNorm] || clueValNorm;
+
+    const natNorm = player.nationality.toLowerCase().trim();
+    const canonNat = NATION_ALIASES[natNorm] || natNorm;
+    if (canonNat === canonClue) return true;
+
+    if (player.secondaryNationality) {
+      const secNorm = player.secondaryNationality.toLowerCase().trim();
+      const canonSec = NATION_ALIASES[secNorm] || secNorm;
+      if (canonSec === canonClue) return true;
+    }
+    return false;
   }
   if (clue.type === 'Position') {
     return player.position === clue.value || player.secondaryPosition === clue.value;

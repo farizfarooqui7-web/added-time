@@ -11,12 +11,13 @@ interface BentoGridProps {
 
 export const BentoGrid: React.FC<BentoGridProps> = ({ modes, onLaunchMode }) => {
   const { party, presence } = useParty();
-  const squadSize = party.isActive ? party.members.length : 1;
+  const isActualParty = party.isActive && !party.roomCode?.startsWith('match_');
+  const squadSize = isActualParty ? party.members.length : 1;
 
   // Capacity restrictions when party is active
-  const isAuctionBlocked = party.isActive && squadSize > 2;
-  const isRecordBooksBlocked = party.isActive && squadSize > 4;
-  const isImposterBlocked = party.isActive && squadSize < 3;
+  const isAuctionBlocked = isActualParty && squadSize > 2;
+  const isRecordBooksBlocked = isActualParty && squadSize > 4;
+  const isImposterBlocked = isActualParty && squadSize < 3;
 
   const auctionDraftMode = modes.find((m) => m.id === 'auction-draft') || modes[0];
   const linkUpMode = modes.find((m) => m.id === 'criteria-rush') || modes[1];

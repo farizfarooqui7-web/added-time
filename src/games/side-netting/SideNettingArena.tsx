@@ -8,7 +8,6 @@ import {
   Sparkles,
   SkipForward,
   Radio,
-  Check,
   ChevronRight,
 } from 'lucide-react';
 import type {
@@ -2312,7 +2311,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   // Strike completion, post-round popup & rematch states
   const [userFinishedRound, setUserFinishedRound] = useState(false);
   const [isPostRoundModalOpen, setIsPostRoundModalOpen] = useState(false);
-  const [isGuestReadyForNext, setIsGuestReadyForNext] = useState(false);
   const [guestHasClickedReady, setGuestHasClickedReady] = useState(false);
   const [isOpponentRematchReady, setIsOpponentRematchReady] = useState(false);
   const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
@@ -2359,7 +2357,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setUserFinishedRound(false);
     setOpponentStrikeFinished(false);
     setIsPostRoundModalOpen(false);
-    setIsGuestReadyForNext(false);
     setGuestHasClickedReady(false);
     if (config.timerSeconds > 0) {
       setSecondsLeft(config.timerSeconds);
@@ -2390,7 +2387,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         setOpponentStrikeFinished(true);
       }
     } else if (lastGameEvent.event === 'sidenetting_player_ready') {
-      setIsGuestReadyForNext(true);
       soundFX.playSuccess();
     } else if (lastGameEvent.event === 'sidenetting_next_round') {
       const { nextRoundIdx } = lastGameEvent.data || {};
@@ -2625,7 +2621,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     setRoundResults([]);
     setUserFinishedRound(false);
     setIsPostRoundModalOpen(false);
-    setIsGuestReadyForNext(false);
     setGuestHasClickedReady(false);
     setIsOpponentRematchReady(false);
     setHasRequestedRematch(false);
@@ -2683,7 +2678,6 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
       setUserFinishedRound(false);
       setOpponentStrikeFinished(false);
       setOpponentLockedIn(false);
-      setIsGuestReadyForNext(false);
       if (currentRoundIdx + 1 < prompts.length) {
         const nextRound = currentRoundIdx + 1;
         sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
@@ -2713,9 +2707,62 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     sendAction,
   ]);
 
-  // Keyboard shortcut: Press Enter while on Next Question / Scoreboard breakdown modal to proceed
+  const [autoAdvanceSeconds, setAutoAdvanceSeconds] = useState<number>(5);
+
+  // Multiplayer auto-advance timer for post-round scoreboard modal (5s auto transition)
   useEffect(() => {
-    if (!isPostRoundModalOpen) return;
+    if (!isPostRoundModalOpen || !isMultiplayer) return;
+
+    setAutoAdvanceSeconds(5);
+    const interval = setInterval(() => {
+      setAutoAdvanceSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          if (isHost) {
+            handleProceedNextQuestion();
+          } else {
+            setTimeout(() => {
+              if (currentRoundIdx + 1 < prompts.length) {
+                setIsPostRoundModalOpen(false);
+                setUserFinishedRound(false);
+                setOpponentStrikeFinished(false);
+                setOpponentLockedIn(false);
+                setDiveState('ascending');
+                window.setTimeout(() => {
+                  setCurrentRoundIdx((prevIdx) => prevIdx + 1);
+                  setDiveState('idle-surface');
+                  setDisplayDepth(0);
+                  setInputVal('');
+                  setSecondsLeft(config.timerSeconds > 0 ? config.timerSeconds : 60);
+                  window.setTimeout(() => inputRef.current?.focus(), 150);
+                }, 1200);
+              } else {
+                setIsPostRoundModalOpen(false);
+                setDiveState('game-over');
+                soundFX.playVictoryFanfare();
+              }
+            }, 600);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [
+    isPostRoundModalOpen,
+    isMultiplayer,
+    isHost,
+    currentRoundIdx,
+    prompts.length,
+    config.timerSeconds,
+    handleProceedNextQuestion,
+  ]);
+
+  // Keyboard shortcut: Press Enter while on Next Question / Scoreboard breakdown modal to proceed (Solo mode only)
+  useEffect(() => {
+    if (!isPostRoundModalOpen || isMultiplayer) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
@@ -2727,7 +2774,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPostRoundModalOpen, handleProceedNextQuestion]);
+  }, [isPostRoundModalOpen, isMultiplayer, handleProceedNextQuestion]);
 
   // Ball Knower classification for endgame
   const avgScore =
@@ -3306,6 +3353,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   type="button"
                   onClick={() => {
                     if (isMultiplayer) sendGameLeave();
+                    if (party.roomCode?.startsWith('match_')) {
+                      leaveParty();
+                    }
                     handleCleanExit();
                   }}
                   className="sn-panel flex-1 py-4 hover:bg-white/[0.06] text-sm font-athletic italic font-black uppercase tracking-widest text-slate-300 transition-all cursor-pointer"
@@ -3616,45 +3666,15 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 font-mono font-bold not-italic ml-1">↵ ENTER</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
-              ) : !isHost ? (
-                /* Guest */
-                <button
-                  type="button"
-                  disabled={guestHasClickedReady}
-                  onClick={handleProceedNextQuestion}
-                  className={`w-full py-3.5 font-athletic italic font-black text-base uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-                    guestHasClickedReady
-                      ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300 cursor-not-allowed opacity-80'
-                      : 'sn-strike sn-sheen text-black cursor-pointer hover:brightness-110'
-                  }`}
-                >
-                  <Check className="w-4 h-4" />
-                  <span>{guestHasClickedReady ? 'READY : WAITING FOR HOST...' : 'READY FOR NEXT'}</span>
-                  {!guestHasClickedReady && (
-                    <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 font-mono font-bold not-italic ml-1">↵ ENTER</span>
-                  )}
-                </button>
               ) : (
-                /* Host */
-                <button
-                  type="button"
-                  onClick={handleProceedNextQuestion}
-                  className={`sn-strike sn-sheen w-full py-3.5 text-black font-athletic italic font-black text-base uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 ${
-                    isGuestReadyForNext ? 'animate-pulse' : ''
-                  }`}
-                >
+                <div className="w-full py-3.5 bg-white/10 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/15 shadow-inner">
+                  <Clock className="w-4 h-4 text-cyan-400 animate-spin" />
                   <span>
                     {currentRoundIdx + 1 < prompts.length
-                      ? isGuestReadyForNext
-                        ? 'OPPONENT READY : NEXT QUESTION'
-                        : 'NEXT QUESTION'
-                      : isGuestReadyForNext
-                      ? 'OPPONENT READY : FINAL RESULTS'
-                      : 'VIEW FINAL RESULTS'}
+                      ? `NEXT QUESTION IN ${autoAdvanceSeconds}S...`
+                      : `FINAL SCOREBOARD IN ${autoAdvanceSeconds}S...`}
                   </span>
-                  <span className="text-[10px] bg-black/20 text-black px-1.5 py-0.5 font-mono font-bold not-italic ml-1">↵ ENTER</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                </div>
               )}
             </div>
           </div>

@@ -153,6 +153,13 @@ export function App() {
     clearRemoteMatch();
   }, [lastRemoteMatch, party.members.length, party.isCurrentUserHost, party.roomCode, party.isCodeMasked, clearRemoteMatch, clearForfeit]);
 
+  // Safety net: Always disband/leave ephemeral drop-in match rooms when returning to hub
+  useEffect(() => {
+    if (viewMode === 'hub' && party.isActive && party.roomCode?.startsWith('match_')) {
+      leaveParty();
+    }
+  }, [viewMode, party.isActive, party.roomCode, leaveParty]);
+
   const handleHostParty = () => {
     togglePartyHost();
   };
