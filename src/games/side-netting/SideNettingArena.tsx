@@ -366,7 +366,8 @@ function createStadiumEngine(
   let F = 800;
   let FZ = 800;
   let dpr = 1;
-  let dprCap = Math.min(window.devicePixelRatio || 1, 2);
+  // Cap canvas pixel ratio to 1.0 (or max 1.2) to prevent GPU memory bus saturation on 1440p/4K monitors
+  let dprCap = 1;
   let skyGrad: CanvasGradient | string = '#02040a';
   let hazeGrad: CanvasGradient | string = 'rgba(0,0,0,0)';
   let vignette = makeCanvas(2, 2);
@@ -1888,6 +1889,13 @@ function createStadiumEngine(
     if (!alive) return;
     raf = requestAnimationFrame(frame);
     let dtMs = nowMs - lastMs;
+
+    // Power efficiency: When ball is idle, throttle to ~35fps so background video (e.g. Twitch on 2nd monitor) never lags
+    const isIdle = phase === 'idle-surface' || phase === 'game-over';
+    if (isIdle && dtMs < 28) {
+      return;
+    }
+
     lastMs = nowMs;
     if (dtMs > 50) dtMs = 50;
     if (dtMs < 0) dtMs = 0;
