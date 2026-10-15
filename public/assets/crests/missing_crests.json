@@ -1,0 +1,2542 @@
+[
+  {
+    "filename": "1-fc-herzogenaurach.png",
+    "slug": "1-fc-herzogenaurach",
+    "name": "1. FC Herzogenaurach"
+  },
+  {
+    "filename": "1-fc-magdeburg.png",
+    "slug": "1-fc-magdeburg",
+    "name": "1. FC Magdeburg"
+  },
+  {
+    "filename": "1-fc-nurnberg.png",
+    "slug": "1-fc-nurnberg",
+    "name": "1. FC Nürnberg"
+  },
+  {
+    "filename": "1-fc-saarbrucken.png",
+    "slug": "1-fc-saarbrucken",
+    "name": "1. FC Saarbrücken"
+  },
+  {
+    "filename": "1860-munich.png",
+    "slug": "1860-munich",
+    "name": "1860 Munich"
+  },
+  {
+    "filename": "aarau.png",
+    "slug": "aarau",
+    "name": "Aarau"
+  },
+  {
+    "filename": "aberdeen.png",
+    "slug": "aberdeen",
+    "name": "Aberdeen"
+  },
+  {
+    "filename": "abha.png",
+    "slug": "abha",
+    "name": "Abha"
+  },
+  {
+    "filename": "accrington-stanley.png",
+    "slug": "accrington-stanley",
+    "name": "Accrington Stanley"
+  },
+  {
+    "filename": "admira-wacker.png",
+    "slug": "admira-wacker",
+    "name": "Admira Wacker"
+  },
+  {
+    "filename": "ado-den-haag.png",
+    "slug": "ado-den-haag",
+    "name": "ADO Den Haag"
+  },
+  {
+    "filename": "aek-athens.png",
+    "slug": "aek-athens",
+    "name": "AEK Athens"
+  },
+  {
+    "filename": "agovv.png",
+    "slug": "agovv",
+    "name": "AGOVV"
+  },
+  {
+    "filename": "agueda.png",
+    "slug": "agueda",
+    "name": "Águeda"
+  },
+  {
+    "filename": "airdrieonians.png",
+    "slug": "airdrieonians",
+    "name": "Airdrieonians"
+  },
+  {
+    "filename": "aix.png",
+    "slug": "aix",
+    "name": "Aix"
+  },
+  {
+    "filename": "ajaccio.png",
+    "slug": "ajaccio",
+    "name": "Ajaccio"
+  },
+  {
+    "filename": "al-wasl.png",
+    "slug": "al-wasl",
+    "name": "Al Wasl"
+  },
+  {
+    "filename": "al-ahli.png",
+    "slug": "al-ahli",
+    "name": "Al-Ahli"
+  },
+  {
+    "filename": "al-ain.png",
+    "slug": "al-ain",
+    "name": "Al-Ain"
+  },
+  {
+    "filename": "al-arabi.png",
+    "slug": "al-arabi",
+    "name": "Al-Arabi"
+  },
+  {
+    "filename": "al-ettifaq.png",
+    "slug": "al-ettifaq",
+    "name": "Al-Ettifaq"
+  },
+  {
+    "filename": "al-fayha.png",
+    "slug": "al-fayha",
+    "name": "Al-Fayha"
+  },
+  {
+    "filename": "al-gharafa.png",
+    "slug": "al-gharafa",
+    "name": "Al-Gharafa"
+  },
+  {
+    "filename": "al-ittihad.png",
+    "slug": "al-ittihad",
+    "name": "Al-Ittihad"
+  },
+  {
+    "filename": "al-jazira.png",
+    "slug": "al-jazira",
+    "name": "Al-Jazira"
+  },
+  {
+    "filename": "al-rayyan.png",
+    "slug": "al-rayyan",
+    "name": "Al-Rayyan"
+  },
+  {
+    "filename": "al-sadd.png",
+    "slug": "al-sadd",
+    "name": "Al-Sadd"
+  },
+  {
+    "filename": "al-shabab.png",
+    "slug": "al-shabab",
+    "name": "Al-Shabab"
+  },
+  {
+    "filename": "al-wahda.png",
+    "slug": "al-wahda",
+    "name": "Al-Wahda"
+  },
+  {
+    "filename": "alanyaspor.png",
+    "slug": "alanyaspor",
+    "name": "Alanyaspor"
+  },
+  {
+    "filename": "albacete.png",
+    "slug": "albacete",
+    "name": "Albacete"
+  },
+  {
+    "filename": "alcoyano.png",
+    "slug": "alcoyano",
+    "name": "Alcoyano"
+  },
+  {
+    "filename": "aldershot.png",
+    "slug": "aldershot",
+    "name": "Aldershot"
+  },
+  {
+    "filename": "alemannia-aachen.png",
+    "slug": "alemannia-aachen",
+    "name": "Alemannia Aachen"
+  },
+  {
+    "filename": "alessandria.png",
+    "slug": "alessandria",
+    "name": "Alessandria"
+  },
+  {
+    "filename": "alianza-lima.png",
+    "slug": "alianza-lima",
+    "name": "Alianza Lima"
+  },
+  {
+    "filename": "almeria.png",
+    "slug": "almeria",
+    "name": "Almería"
+  },
+  {
+    "filename": "altnordu.png",
+    "slug": "altnordu",
+    "name": "Altınordu"
+  },
+  {
+    "filename": "america.png",
+    "slug": "america",
+    "name": "América"
+  },
+  {
+    "filename": "america-mineiro.png",
+    "slug": "america-mineiro",
+    "name": "América Mineiro"
+  },
+  {
+    "filename": "amiens.png",
+    "slug": "amiens",
+    "name": "Amiens"
+  },
+  {
+    "filename": "amorebieta.png",
+    "slug": "amorebieta",
+    "name": "Amorebieta"
+  },
+  {
+    "filename": "angers.png",
+    "slug": "angers",
+    "name": "Angers"
+  },
+  {
+    "filename": "antalyaspor.png",
+    "slug": "antalyaspor",
+    "name": "Antalyaspor"
+  },
+  {
+    "filename": "anzhi-makhachkala.png",
+    "slug": "anzhi-makhachkala",
+    "name": "Anzhi Makhachkala"
+  },
+  {
+    "filename": "apollon-limassol.png",
+    "slug": "apollon-limassol",
+    "name": "Apollon Limassol"
+  },
+  {
+    "filename": "arles-avignon.png",
+    "slug": "arles-avignon",
+    "name": "Arles-Avignon"
+  },
+  {
+    "filename": "arminia-bielefeld.png",
+    "slug": "arminia-bielefeld",
+    "name": "Arminia Bielefeld"
+  },
+  {
+    "filename": "asante-kotoko.png",
+    "slug": "asante-kotoko",
+    "name": "Asante Kotoko"
+  },
+  {
+    "filename": "ascoli.png",
+    "slug": "ascoli",
+    "name": "Ascoli"
+  },
+  {
+    "filename": "asec-mimosas.png",
+    "slug": "asec-mimosas",
+    "name": "ASEC Mimosas"
+  },
+  {
+    "filename": "asti.png",
+    "slug": "asti",
+    "name": "Asti"
+  },
+  {
+    "filename": "athletico-paranaense.png",
+    "slug": "athletico-paranaense",
+    "name": "Athletico Paranaense"
+  },
+  {
+    "filename": "atlanta-united.png",
+    "slug": "atlanta-united",
+    "name": "Atlanta United"
+  },
+  {
+    "filename": "atletico-baleares.png",
+    "slug": "atletico-baleares",
+    "name": "Atlético Baleares"
+  },
+  {
+    "filename": "atletico-cp.png",
+    "slug": "atletico-cp",
+    "name": "Atlético CP"
+  },
+  {
+    "filename": "atletico-nacional.png",
+    "slug": "atletico-nacional",
+    "name": "Atlético Nacional"
+  },
+  {
+    "filename": "atletico-paranaense.png",
+    "slug": "atletico-paranaense",
+    "name": "Atlético Paranaense"
+  },
+  {
+    "filename": "audax.png",
+    "slug": "audax",
+    "name": "Audax"
+  },
+  {
+    "filename": "austria-karnten.png",
+    "slug": "austria-karnten",
+    "name": "Austria Kärnten"
+  },
+  {
+    "filename": "austria-wien.png",
+    "slug": "austria-wien",
+    "name": "Austria Wien"
+  },
+  {
+    "filename": "avai.png",
+    "slug": "avai",
+    "name": "Avaí"
+  },
+  {
+    "filename": "badajoz.png",
+    "slug": "badajoz",
+    "name": "Badajoz"
+  },
+  {
+    "filename": "bahia.png",
+    "slug": "bahia",
+    "name": "Bahia"
+  },
+  {
+    "filename": "banfield.png",
+    "slug": "banfield",
+    "name": "Banfield"
+  },
+  {
+    "filename": "baniyas.png",
+    "slug": "baniyas",
+    "name": "Baniyas"
+  },
+  {
+    "filename": "barakaldo.png",
+    "slug": "barakaldo",
+    "name": "Barakaldo"
+  },
+  {
+    "filename": "barnet.png",
+    "slug": "barnet",
+    "name": "Barnet"
+  },
+  {
+    "filename": "barnsley.png",
+    "slug": "barnsley",
+    "name": "Barnsley"
+  },
+  {
+    "filename": "barreirense.png",
+    "slug": "barreirense",
+    "name": "Barreirense"
+  },
+  {
+    "filename": "bastia.png",
+    "slug": "bastia",
+    "name": "Bastia"
+  },
+  {
+    "filename": "bayer-uerdingen.png",
+    "slug": "bayer-uerdingen",
+    "name": "Bayer Uerdingen"
+  },
+  {
+    "filename": "bedford-town.png",
+    "slug": "bedford-town",
+    "name": "Bedford Town"
+  },
+  {
+    "filename": "beerschot.png",
+    "slug": "beerschot",
+    "name": "Beerschot"
+  },
+  {
+    "filename": "beijing-guoan.png",
+    "slug": "beijing-guoan",
+    "name": "Beijing Guoan"
+  },
+  {
+    "filename": "belenenses.png",
+    "slug": "belenenses",
+    "name": "Belenenses"
+  },
+  {
+    "filename": "bellinzona.png",
+    "slug": "bellinzona",
+    "name": "Bellinzona"
+  },
+  {
+    "filename": "berwick-rangers.png",
+    "slug": "berwick-rangers",
+    "name": "Berwick Rangers"
+  },
+  {
+    "filename": "blackpool.png",
+    "slug": "blackpool",
+    "name": "Blackpool"
+  },
+  {
+    "filename": "blauw-wit.png",
+    "slug": "blauw-wit",
+    "name": "Blauw-Wit"
+  },
+  {
+    "filename": "boavista.png",
+    "slug": "boavista",
+    "name": "Boavista"
+  },
+  {
+    "filename": "bodglimt.png",
+    "slug": "bodglimt",
+    "name": "Bodø/Glimt"
+  },
+  {
+    "filename": "bohemian.png",
+    "slug": "bohemian",
+    "name": "Bohemian"
+  },
+  {
+    "filename": "botafogo.png",
+    "slug": "botafogo",
+    "name": "Botafogo"
+  },
+  {
+    "filename": "botafogo-sp.png",
+    "slug": "botafogo-sp",
+    "name": "Botafogo-SP"
+  },
+  {
+    "filename": "bradford-city.png",
+    "slug": "bradford-city",
+    "name": "Bradford City"
+  },
+  {
+    "filename": "braga.png",
+    "slug": "braga",
+    "name": "Braga"
+  },
+  {
+    "filename": "brisbane-roar.png",
+    "slug": "brisbane-roar",
+    "name": "Brisbane Roar"
+  },
+  {
+    "filename": "bristol-city.png",
+    "slug": "bristol-city",
+    "name": "Bristol City"
+  },
+  {
+    "filename": "brndby.png",
+    "slug": "brndby",
+    "name": "Brøndby"
+  },
+  {
+    "filename": "buducnost-podgorica.png",
+    "slug": "buducnost-podgorica",
+    "name": "Budućnost Podgorica"
+  },
+  {
+    "filename": "bursaspor.png",
+    "slug": "bursaspor",
+    "name": "Bursaspor"
+  },
+  {
+    "filename": "bury.png",
+    "slug": "bury",
+    "name": "Bury"
+  },
+  {
+    "filename": "cadiz.png",
+    "slug": "cadiz",
+    "name": "Cádiz"
+  },
+  {
+    "filename": "caen.png",
+    "slug": "caen",
+    "name": "Caen"
+  },
+  {
+    "filename": "cambridge-united.png",
+    "slug": "cambridge-united",
+    "name": "Cambridge United"
+  },
+  {
+    "filename": "cannes.png",
+    "slug": "cannes",
+    "name": "Cannes"
+  },
+  {
+    "filename": "carl-zeiss-jena.png",
+    "slug": "carl-zeiss-jena",
+    "name": "Carl Zeiss Jena"
+  },
+  {
+    "filename": "carlisle-united.png",
+    "slug": "carlisle-united",
+    "name": "Carlisle United"
+  },
+  {
+    "filename": "carolina-railhawks.png",
+    "slug": "carolina-railhawks",
+    "name": "Carolina RailHawks"
+  },
+  {
+    "filename": "casg-paris.png",
+    "slug": "casg-paris",
+    "name": "CASG Paris"
+  },
+  {
+    "filename": "castel-di-sangro.png",
+    "slug": "castel-di-sangro",
+    "name": "Castel di Sangro"
+  },
+  {
+    "filename": "castellon.png",
+    "slug": "castellon",
+    "name": "Castellón"
+  },
+  {
+    "filename": "catanzaro.png",
+    "slug": "catanzaro",
+    "name": "Catanzaro"
+  },
+  {
+    "filename": "cavese.png",
+    "slug": "cavese",
+    "name": "Cavese"
+  },
+  {
+    "filename": "celaya.png",
+    "slug": "celaya",
+    "name": "Celaya"
+  },
+  {
+    "filename": "central-coast-mariners.png",
+    "slug": "central-coast-mariners",
+    "name": "Central Coast Mariners"
+  },
+  {
+    "filename": "central-united.png",
+    "slug": "central-united",
+    "name": "Central United"
+  },
+  {
+    "filename": "cerezo-osaka.png",
+    "slug": "cerezo-osaka",
+    "name": "Cerezo Osaka"
+  },
+  {
+    "filename": "cerro-porteno.png",
+    "slug": "cerro-porteno",
+    "name": "Cerro Porteño"
+  },
+  {
+    "filename": "cesena.png",
+    "slug": "cesena",
+    "name": "Cesena"
+  },
+  {
+    "filename": "charleroi.png",
+    "slug": "charleroi",
+    "name": "Charleroi"
+  },
+  {
+    "filename": "chateauroux.png",
+    "slug": "chateauroux",
+    "name": "Châteauroux"
+  },
+  {
+    "filename": "cheltenham-town.png",
+    "slug": "cheltenham-town",
+    "name": "Cheltenham Town"
+  },
+  {
+    "filename": "chemnitzer-fc.png",
+    "slug": "chemnitzer-fc",
+    "name": "Chemnitzer FC"
+  },
+  {
+    "filename": "chester.png",
+    "slug": "chester",
+    "name": "Chester"
+  },
+  {
+    "filename": "chester-city.png",
+    "slug": "chester-city",
+    "name": "Chester City"
+  },
+  {
+    "filename": "chesterfield.png",
+    "slug": "chesterfield",
+    "name": "Chesterfield"
+  },
+  {
+    "filename": "chicago-fire.png",
+    "slug": "chicago-fire",
+    "name": "Chicago Fire"
+  },
+  {
+    "filename": "chivas-usa.png",
+    "slug": "chivas-usa",
+    "name": "Chivas USA"
+  },
+  {
+    "filename": "cholet.png",
+    "slug": "cholet",
+    "name": "Cholet"
+  },
+  {
+    "filename": "chur-97.png",
+    "slug": "chur-97",
+    "name": "Chur 97"
+  },
+  {
+    "filename": "cittadella.png",
+    "slug": "cittadella",
+    "name": "Cittadella"
+  },
+  {
+    "filename": "clausenengen.png",
+    "slug": "clausenengen",
+    "name": "Clausenengen"
+  },
+  {
+    "filename": "clermont.png",
+    "slug": "clermont",
+    "name": "Clermont"
+  },
+  {
+    "filename": "clyde.png",
+    "slug": "clyde",
+    "name": "Clyde"
+  },
+  {
+    "filename": "clydebank.png",
+    "slug": "clydebank",
+    "name": "Clydebank"
+  },
+  {
+    "filename": "colchester-united.png",
+    "slug": "colchester-united",
+    "name": "Colchester United"
+  },
+  {
+    "filename": "colon.png",
+    "slug": "colon",
+    "name": "Colón"
+  },
+  {
+    "filename": "colorado-rapids.png",
+    "slug": "colorado-rapids",
+    "name": "Colorado Rapids"
+  },
+  {
+    "filename": "compostela.png",
+    "slug": "compostela",
+    "name": "Compostela"
+  },
+  {
+    "filename": "concordia-hamburg.png",
+    "slug": "concordia-hamburg",
+    "name": "Concordia Hamburg"
+  },
+  {
+    "filename": "condal.png",
+    "slug": "condal",
+    "name": "Condal"
+  },
+  {
+    "filename": "consadole-sapporo.png",
+    "slug": "consadole-sapporo",
+    "name": "Consadole Sapporo"
+  },
+  {
+    "filename": "cork-celtic.png",
+    "slug": "cork-celtic",
+    "name": "Cork Celtic"
+  },
+  {
+    "filename": "cork-city.png",
+    "slug": "cork-city",
+    "name": "Cork City"
+  },
+  {
+    "filename": "coton-sport.png",
+    "slug": "coton-sport",
+    "name": "Coton Sport"
+  },
+  {
+    "filename": "coventry-city.png",
+    "slug": "coventry-city",
+    "name": "Coventry City"
+  },
+  {
+    "filename": "cremonese.png",
+    "slug": "cremonese",
+    "name": "Cremonese"
+  },
+  {
+    "filename": "crotone.png",
+    "slug": "crotone",
+    "name": "Crotone"
+  },
+  {
+    "filename": "cruz-azul.png",
+    "slug": "cruz-azul",
+    "name": "Cruz Azul"
+  },
+  {
+    "filename": "cska-sofia.png",
+    "slug": "cska-sofia",
+    "name": "CSKA Sofia"
+  },
+  {
+    "filename": "cuf-barreiro.png",
+    "slug": "cuf-barreiro",
+    "name": "CUF Barreiro"
+  },
+  {
+    "filename": "cultural-leonesa.png",
+    "slug": "cultural-leonesa",
+    "name": "Cultural Leonesa"
+  },
+  {
+    "filename": "dc-united.png",
+    "slug": "dc-united",
+    "name": "D.C. United"
+  },
+  {
+    "filename": "dalian-aerbin.png",
+    "slug": "dalian-aerbin",
+    "name": "Dalian Aerbin"
+  },
+  {
+    "filename": "dalian-professional.png",
+    "slug": "dalian-professional",
+    "name": "Dalian Professional"
+  },
+  {
+    "filename": "dalian-yifang.png",
+    "slug": "dalian-yifang",
+    "name": "Dalian Yifang"
+  },
+  {
+    "filename": "danubio.png",
+    "slug": "danubio",
+    "name": "Danubio"
+  },
+  {
+    "filename": "debrecen.png",
+    "slug": "debrecen",
+    "name": "Debrecen"
+  },
+  {
+    "filename": "defensa-y-justicia.png",
+    "slug": "defensa-y-justicia",
+    "name": "Defensa y Justicia"
+  },
+  {
+    "filename": "delhi-dynamos.png",
+    "slug": "delhi-dynamos",
+    "name": "Delhi Dynamos"
+  },
+  {
+    "filename": "den-haag.png",
+    "slug": "den-haag",
+    "name": "Den Haag"
+  },
+  {
+    "filename": "deportivo-cali.png",
+    "slug": "deportivo-cali",
+    "name": "Deportivo Cali"
+  },
+  {
+    "filename": "dinamo-bucuresti.png",
+    "slug": "dinamo-bucuresti",
+    "name": "Dinamo București"
+  },
+  {
+    "filename": "dinamo-tbilisi.png",
+    "slug": "dinamo-tbilisi",
+    "name": "Dinamo Tbilisi"
+  },
+  {
+    "filename": "djurgarden.png",
+    "slug": "djurgarden",
+    "name": "Djurgården"
+  },
+  {
+    "filename": "dnipro-1.png",
+    "slug": "dnipro-1",
+    "name": "Dnipro-1"
+  },
+  {
+    "filename": "doncaster-rovers.png",
+    "slug": "doncaster-rovers",
+    "name": "Doncaster Rovers"
+  },
+  {
+    "filename": "dumbarton.png",
+    "slug": "dumbarton",
+    "name": "Dumbarton"
+  },
+  {
+    "filename": "dundee.png",
+    "slug": "dundee",
+    "name": "Dundee"
+  },
+  {
+    "filename": "dundee-united.png",
+    "slug": "dundee-united",
+    "name": "Dundee United"
+  },
+  {
+    "filename": "durban-city.png",
+    "slug": "durban-city",
+    "name": "Durban City"
+  },
+  {
+    "filename": "dynamo-dresden.png",
+    "slug": "dynamo-dresden",
+    "name": "Dynamo Dresden"
+  },
+  {
+    "filename": "dynamo-moscow.png",
+    "slug": "dynamo-moscow",
+    "name": "Dynamo Moscow"
+  },
+  {
+    "filename": "east-stirlingshire.png",
+    "slug": "east-stirlingshire",
+    "name": "East Stirlingshire"
+  },
+  {
+    "filename": "eibar.png",
+    "slug": "eibar",
+    "name": "Eibar"
+  },
+  {
+    "filename": "eintracht-braunschweig.png",
+    "slug": "eintracht-braunschweig",
+    "name": "Eintracht Braunschweig"
+  },
+  {
+    "filename": "elche.png",
+    "slug": "elche",
+    "name": "Elche"
+  },
+  {
+    "filename": "energie-cottbus.png",
+    "slug": "energie-cottbus",
+    "name": "Energie Cottbus"
+  },
+  {
+    "filename": "envigado.png",
+    "slug": "envigado",
+    "name": "Envigado"
+  },
+  {
+    "filename": "erandio.png",
+    "slug": "erandio",
+    "name": "Erandio"
+  },
+  {
+    "filename": "eskisehirspor.png",
+    "slug": "eskisehirspor",
+    "name": "Eskişehirspor"
+  },
+  {
+    "filename": "esperance.png",
+    "slug": "esperance",
+    "name": "Espérance"
+  },
+  {
+    "filename": "estoril.png",
+    "slug": "estoril",
+    "name": "Estoril"
+  },
+  {
+    "filename": "estoril-praia.png",
+    "slug": "estoril-praia",
+    "name": "Estoril Praia"
+  },
+  {
+    "filename": "estudiantes.png",
+    "slug": "estudiantes",
+    "name": "Estudiantes"
+  },
+  {
+    "filename": "etar-veliko-tarnovo.png",
+    "slug": "etar-veliko-tarnovo",
+    "name": "Etar Veliko Tarnovo"
+  },
+  {
+    "filename": "evian.png",
+    "slug": "evian",
+    "name": "Evian"
+  },
+  {
+    "filename": "excelsior.png",
+    "slug": "excelsior",
+    "name": "Excelsior"
+  },
+  {
+    "filename": "exeter-city.png",
+    "slug": "exeter-city",
+    "name": "Exeter City"
+  },
+  {
+    "filename": "extremadura.png",
+    "slug": "extremadura",
+    "name": "Extremadura"
+  },
+  {
+    "filename": "fakel-voronezh.png",
+    "slug": "fakel-voronezh",
+    "name": "Fakel Voronezh"
+  },
+  {
+    "filename": "falkirk.png",
+    "slug": "falkirk",
+    "name": "Falkirk"
+  },
+  {
+    "filename": "famalicao.png",
+    "slug": "famalicao",
+    "name": "Famalicão"
+  },
+  {
+    "filename": "fc-copenhagen.png",
+    "slug": "fc-copenhagen",
+    "name": "FC Copenhagen"
+  },
+  {
+    "filename": "fc-emmen.png",
+    "slug": "fc-emmen",
+    "name": "FC Emmen"
+  },
+  {
+    "filename": "fc-gifu.png",
+    "slug": "fc-gifu",
+    "name": "FC Gifu"
+  },
+  {
+    "filename": "fc-luzern.png",
+    "slug": "fc-luzern",
+    "name": "FC Luzern"
+  },
+  {
+    "filename": "fc-st-pauli.png",
+    "slug": "fc-st-pauli",
+    "name": "FC St. Pauli"
+  },
+  {
+    "filename": "fc-wegberg-beeck.png",
+    "slug": "fc-wegberg-beeck",
+    "name": "FC Wegberg-Beeck"
+  },
+  {
+    "filename": "fc-zurich.png",
+    "slug": "fc-zurich",
+    "name": "FC Zürich"
+  },
+  {
+    "filename": "fk-sarajevo.png",
+    "slug": "fk-sarajevo",
+    "name": "FK Sarajevo"
+  },
+  {
+    "filename": "fleetwood-town.png",
+    "slug": "fleetwood-town",
+    "name": "Fleetwood Town"
+  },
+  {
+    "filename": "foggia.png",
+    "slug": "foggia",
+    "name": "Foggia"
+  },
+  {
+    "filename": "fortuna-dusseldorf.png",
+    "slug": "fortuna-dusseldorf",
+    "name": "Fortuna Düsseldorf"
+  },
+  {
+    "filename": "fortuna-sittard.png",
+    "slug": "fortuna-sittard",
+    "name": "Fortuna Sittard"
+  },
+  {
+    "filename": "frem.png",
+    "slug": "frem",
+    "name": "Frem"
+  },
+  {
+    "filename": "frigg.png",
+    "slug": "frigg",
+    "name": "Frigg"
+  },
+  {
+    "filename": "gamba-osaka.png",
+    "slug": "gamba-osaka",
+    "name": "Gamba Osaka"
+  },
+  {
+    "filename": "gent.png",
+    "slug": "gent",
+    "name": "Gent"
+  },
+  {
+    "filename": "gif-sundsvall.png",
+    "slug": "gif-sundsvall",
+    "name": "GIF Sundsvall"
+  },
+  {
+    "filename": "gil-vicente.png",
+    "slug": "gil-vicente",
+    "name": "Gil Vicente"
+  },
+  {
+    "filename": "gillingham.png",
+    "slug": "gillingham",
+    "name": "Gillingham"
+  },
+  {
+    "filename": "gimnasia-la-plata.png",
+    "slug": "gimnasia-la-plata",
+    "name": "Gimnasia La Plata"
+  },
+  {
+    "filename": "gimnastic-de-tarragona.png",
+    "slug": "gimnastic-de-tarragona",
+    "name": "Gimnàstic de Tarragona"
+  },
+  {
+    "filename": "glentoran.png",
+    "slug": "glentoran",
+    "name": "Glentoran"
+  },
+  {
+    "filename": "goias.png",
+    "slug": "goias",
+    "name": "Goiás"
+  },
+  {
+    "filename": "gornik-zabrze.png",
+    "slug": "gornik-zabrze",
+    "name": "Górnik Zabrze"
+  },
+  {
+    "filename": "granada.png",
+    "slug": "granada",
+    "name": "Granada"
+  },
+  {
+    "filename": "grasshoppers.png",
+    "slug": "grasshoppers",
+    "name": "Grasshoppers"
+  },
+  {
+    "filename": "grazer-ak.png",
+    "slug": "grazer-ak",
+    "name": "Grazer AK"
+  },
+  {
+    "filename": "gremio-anapolis.png",
+    "slug": "gremio-anapolis",
+    "name": "Grêmio Anápolis"
+  },
+  {
+    "filename": "grenoble.png",
+    "slug": "grenoble",
+    "name": "Grenoble"
+  },
+  {
+    "filename": "greuther-furth.png",
+    "slug": "greuther-furth",
+    "name": "Greuther Fürth"
+  },
+  {
+    "filename": "grimsby-town.png",
+    "slug": "grimsby-town",
+    "name": "Grimsby Town"
+  },
+  {
+    "filename": "groningen.png",
+    "slug": "groningen",
+    "name": "Groningen"
+  },
+  {
+    "filename": "guarani.png",
+    "slug": "guarani",
+    "name": "Guarani"
+  },
+  {
+    "filename": "guingamp.png",
+    "slug": "guingamp",
+    "name": "Guingamp"
+  },
+  {
+    "filename": "gvav.png",
+    "slug": "gvav",
+    "name": "GVAV"
+  },
+  {
+    "filename": "hajduk-split.png",
+    "slug": "hajduk-split",
+    "name": "Hajduk Split"
+  },
+  {
+    "filename": "halifax-town.png",
+    "slug": "halifax-town",
+    "name": "Halifax Town"
+  },
+  {
+    "filename": "halmstads-bk.png",
+    "slug": "halmstads-bk",
+    "name": "Halmstads BK"
+  },
+  {
+    "filename": "hamilton-academical.png",
+    "slug": "hamilton-academical",
+    "name": "Hamilton Academical"
+  },
+  {
+    "filename": "hansa-rostock.png",
+    "slug": "hansa-rostock",
+    "name": "Hansa Rostock"
+  },
+  {
+    "filename": "hastings-united.png",
+    "slug": "hastings-united",
+    "name": "Hastings United"
+  },
+  {
+    "filename": "hatayspor.png",
+    "slug": "hatayspor",
+    "name": "Hatayspor"
+  },
+  {
+    "filename": "hearts.png",
+    "slug": "hearts",
+    "name": "Hearts"
+  },
+  {
+    "filename": "hebei-china-fortune.png",
+    "slug": "hebei-china-fortune",
+    "name": "Hebei China Fortune"
+  },
+  {
+    "filename": "heerenveen.png",
+    "slug": "heerenveen",
+    "name": "Heerenveen"
+  },
+  {
+    "filename": "helmondia.png",
+    "slug": "helmondia",
+    "name": "Helmondia"
+  },
+  {
+    "filename": "heracles-almelo.png",
+    "slug": "heracles-almelo",
+    "name": "Heracles Almelo"
+  },
+  {
+    "filename": "hercules.png",
+    "slug": "hercules",
+    "name": "Hércules"
+  },
+  {
+    "filename": "hibernian.png",
+    "slug": "hibernian",
+    "name": "Hibernian"
+  },
+  {
+    "filename": "hjk-helsinki.png",
+    "slug": "hjk-helsinki",
+    "name": "HJK Helsinki"
+  },
+  {
+    "filename": "holland-sport.png",
+    "slug": "holland-sport",
+    "name": "Holland Sport"
+  },
+  {
+    "filename": "holstein-kiel.png",
+    "slug": "holstein-kiel",
+    "name": "Holstein Kiel"
+  },
+  {
+    "filename": "horoya.png",
+    "slug": "horoya",
+    "name": "Horoya"
+  },
+  {
+    "filename": "houston-hurricane.png",
+    "slug": "houston-hurricane",
+    "name": "Houston Hurricane"
+  },
+  {
+    "filename": "huddersfield-town.png",
+    "slug": "huddersfield-town",
+    "name": "Huddersfield Town"
+  },
+  {
+    "filename": "huesca.png",
+    "slug": "huesca",
+    "name": "Huesca"
+  },
+  {
+    "filename": "ifk-goteborg.png",
+    "slug": "ifk-goteborg",
+    "name": "IFK Göteborg"
+  },
+  {
+    "filename": "ifk-norrkoping.png",
+    "slug": "ifk-norrkoping",
+    "name": "IFK Norrköping"
+  },
+  {
+    "filename": "ik-sleipner.png",
+    "slug": "ik-sleipner",
+    "name": "IK Sleipner"
+  },
+  {
+    "filename": "indautxu.png",
+    "slug": "indautxu",
+    "name": "Indautxu"
+  },
+  {
+    "filename": "independiente-del-valle.png",
+    "slug": "independiente-del-valle",
+    "name": "Independiente del Valle"
+  },
+  {
+    "filename": "independiente-medellin.png",
+    "slug": "independiente-medellin",
+    "name": "Independiente Medellín"
+  },
+  {
+    "filename": "instituto.png",
+    "slug": "instituto",
+    "name": "Instituto"
+  },
+  {
+    "filename": "inter-zapresic.png",
+    "slug": "inter-zapresic",
+    "name": "Inter Zaprešić"
+  },
+  {
+    "filename": "interblock.png",
+    "slug": "interblock",
+    "name": "Interblock"
+  },
+  {
+    "filename": "internacional.png",
+    "slug": "internacional",
+    "name": "Internacional"
+  },
+  {
+    "filename": "internapoli.png",
+    "slug": "internapoli",
+    "name": "Internapoli"
+  },
+  {
+    "filename": "ipswich-town.png",
+    "slug": "ipswich-town",
+    "name": "Ipswich Town"
+  },
+  {
+    "filename": "istanbul-basaksehir.png",
+    "slug": "istanbul-basaksehir",
+    "name": "İstanbul Başakşehir"
+  },
+  {
+    "filename": "istres.png",
+    "slug": "istres",
+    "name": "Istres"
+  },
+  {
+    "filename": "junior.png",
+    "slug": "junior",
+    "name": "Junior"
+  },
+  {
+    "filename": "juventude.png",
+    "slug": "juventude",
+    "name": "Juventude"
+  },
+  {
+    "filename": "kansas-city-wizards.png",
+    "slug": "kansas-city-wizards",
+    "name": "Kansas City Wizards"
+  },
+  {
+    "filename": "karlsruher-sc.png",
+    "slug": "karlsruher-sc",
+    "name": "Karlsruher SC"
+  },
+  {
+    "filename": "karnten.png",
+    "slug": "karnten",
+    "name": "Kärnten"
+  },
+  {
+    "filename": "kasmpasa.png",
+    "slug": "kasmpasa",
+    "name": "Kasımpaşa"
+  },
+  {
+    "filename": "kawasaki-frontale.png",
+    "slug": "kawasaki-frontale",
+    "name": "Kawasaki Frontale"
+  },
+  {
+    "filename": "kerala-blasters.png",
+    "slug": "kerala-blasters",
+    "name": "Kerala Blasters"
+  },
+  {
+    "filename": "kickers-offenbach.png",
+    "slug": "kickers-offenbach",
+    "name": "Kickers Offenbach"
+  },
+  {
+    "filename": "kilmarnock.png",
+    "slug": "kilmarnock",
+    "name": "Kilmarnock"
+  },
+  {
+    "filename": "kjbenhavns-boldklub.png",
+    "slug": "kjbenhavns-boldklub",
+    "name": "Kjøbenhavns Boldklub"
+  },
+  {
+    "filename": "kortrijk.png",
+    "slug": "kortrijk",
+    "name": "Kortrijk"
+  },
+  {
+    "filename": "kosice.png",
+    "slug": "kosice",
+    "name": "Košice"
+  },
+  {
+    "filename": "kuban-krasnodar.png",
+    "slug": "kuban-krasnodar",
+    "name": "Kuban Krasnodar"
+  },
+  {
+    "filename": "kv-oostende.png",
+    "slug": "kv-oostende",
+    "name": "KV Oostende"
+  },
+  {
+    "filename": "lanus.png",
+    "slug": "lanus",
+    "name": "Lanús"
+  },
+  {
+    "filename": "las-palmas.png",
+    "slug": "las-palmas",
+    "name": "Las Palmas"
+  },
+  {
+    "filename": "lausanne-sport.png",
+    "slug": "lausanne-sport",
+    "name": "Lausanne-Sport"
+  },
+  {
+    "filename": "laval.png",
+    "slug": "laval",
+    "name": "Laval"
+  },
+  {
+    "filename": "le-havre.png",
+    "slug": "le-havre",
+    "name": "Le Havre"
+  },
+  {
+    "filename": "le-mans.png",
+    "slug": "le-mans",
+    "name": "Le Mans"
+  },
+  {
+    "filename": "lech-poznan.png",
+    "slug": "lech-poznan",
+    "name": "Lech Poznań"
+  },
+  {
+    "filename": "leganes.png",
+    "slug": "leganes",
+    "name": "Leganés"
+  },
+  {
+    "filename": "legia-warsaw.png",
+    "slug": "legia-warsaw",
+    "name": "Legia Warsaw"
+  },
+  {
+    "filename": "leyton-orient.png",
+    "slug": "leyton-orient",
+    "name": "Leyton Orient"
+  },
+  {
+    "filename": "libourne.png",
+    "slug": "libourne",
+    "name": "Libourne"
+  },
+  {
+    "filename": "liefering.png",
+    "slug": "liefering",
+    "name": "Liefering"
+  },
+  {
+    "filename": "linfield.png",
+    "slug": "linfield",
+    "name": "Linfield"
+  },
+  {
+    "filename": "livingston.png",
+    "slug": "livingston",
+    "name": "Livingston"
+  },
+  {
+    "filename": "lleida.png",
+    "slug": "lleida",
+    "name": "Lleida"
+  },
+  {
+    "filename": "lokeren.png",
+    "slug": "lokeren",
+    "name": "Lokeren"
+  },
+  {
+    "filename": "lokomotiv-moscow.png",
+    "slug": "lokomotiv-moscow",
+    "name": "Lokomotiv Moscow"
+  },
+  {
+    "filename": "lokomotiv-plovdiv.png",
+    "slug": "lokomotiv-plovdiv",
+    "name": "Lokomotiv Plovdiv"
+  },
+  {
+    "filename": "lokomotiva.png",
+    "slug": "lokomotiva",
+    "name": "Lokomotiva"
+  },
+  {
+    "filename": "lorient.png",
+    "slug": "lorient",
+    "name": "Lorient"
+  },
+  {
+    "filename": "lucchese.png",
+    "slug": "lucchese",
+    "name": "Lucchese"
+  },
+  {
+    "filename": "lugano.png",
+    "slug": "lugano",
+    "name": "Lugano"
+  },
+  {
+    "filename": "luton-town.png",
+    "slug": "luton-town",
+    "name": "Luton Town"
+  },
+  {
+    "filename": "lyn.png",
+    "slug": "lyn",
+    "name": "Lyn"
+  },
+  {
+    "filename": "lyngby.png",
+    "slug": "lyngby",
+    "name": "Lyngby"
+  },
+  {
+    "filename": "lyon.png",
+    "slug": "lyon",
+    "name": "Lyon"
+  },
+  {
+    "filename": "macarthur-fc.png",
+    "slug": "macarthur-fc",
+    "name": "Macarthur FC"
+  },
+  {
+    "filename": "malmo-ff.png",
+    "slug": "malmo-ff",
+    "name": "Malmö FF"
+  },
+  {
+    "filename": "mansfield-town.png",
+    "slug": "mansfield-town",
+    "name": "Mansfield Town"
+  },
+  {
+    "filename": "maribor.png",
+    "slug": "maribor",
+    "name": "Maribor"
+  },
+  {
+    "filename": "maritimo.png",
+    "slug": "maritimo",
+    "name": "Marítimo"
+  },
+  {
+    "filename": "massese.png",
+    "slug": "massese",
+    "name": "Massese"
+  },
+  {
+    "filename": "mechelen.png",
+    "slug": "mechelen",
+    "name": "Mechelen"
+  },
+  {
+    "filename": "melbourne-city.png",
+    "slug": "melbourne-city",
+    "name": "Melbourne City"
+  },
+  {
+    "filename": "merida.png",
+    "slug": "merida",
+    "name": "Mérida"
+  },
+  {
+    "filename": "messina.png",
+    "slug": "messina",
+    "name": "Messina"
+  },
+  {
+    "filename": "metrostars.png",
+    "slug": "metrostars",
+    "name": "MetroStars"
+  },
+  {
+    "filename": "mid-rhondda.png",
+    "slug": "mid-rhondda",
+    "name": "Mid Rhondda"
+  },
+  {
+    "filename": "midtjylland.png",
+    "slug": "midtjylland",
+    "name": "Midtjylland"
+  },
+  {
+    "filename": "millonarios.png",
+    "slug": "millonarios",
+    "name": "Millonarios"
+  },
+  {
+    "filename": "millwall.png",
+    "slug": "millwall",
+    "name": "Millwall"
+  },
+  {
+    "filename": "milton-keynes-dons.png",
+    "slug": "milton-keynes-dons",
+    "name": "Milton Keynes Dons"
+  },
+  {
+    "filename": "modena.png",
+    "slug": "modena",
+    "name": "Modena"
+  },
+  {
+    "filename": "molde.png",
+    "slug": "molde",
+    "name": "Molde"
+  },
+  {
+    "filename": "monterrey.png",
+    "slug": "monterrey",
+    "name": "Monterrey"
+  },
+  {
+    "filename": "monza.png",
+    "slug": "monza",
+    "name": "Monza"
+  },
+  {
+    "filename": "morton.png",
+    "slug": "morton",
+    "name": "Morton"
+  },
+  {
+    "filename": "motherwell.png",
+    "slug": "motherwell",
+    "name": "Motherwell"
+  },
+  {
+    "filename": "msv-duisburg.png",
+    "slug": "msv-duisburg",
+    "name": "MSV Duisburg"
+  },
+  {
+    "filename": "mvv-maastricht.png",
+    "slug": "mvv-maastricht",
+    "name": "MVV Maastricht"
+  },
+  {
+    "filename": "na-hussein-dey.png",
+    "slug": "na-hussein-dey",
+    "name": "NA Hussein Dey"
+  },
+  {
+    "filename": "nac-breda.png",
+    "slug": "nac-breda",
+    "name": "NAC Breda"
+  },
+  {
+    "filename": "nacional.png",
+    "slug": "nacional",
+    "name": "Nacional"
+  },
+  {
+    "filename": "nacional-sp.png",
+    "slug": "nacional-sp",
+    "name": "Nacional-SP"
+  },
+  {
+    "filename": "nchanga-rangers.png",
+    "slug": "nchanga-rangers",
+    "name": "Nchanga Rangers"
+  },
+  {
+    "filename": "nec-nijmegen.png",
+    "slug": "nec-nijmegen",
+    "name": "NEC Nijmegen"
+  },
+  {
+    "filename": "new-york-cosmos.png",
+    "slug": "new-york-cosmos",
+    "name": "New York Cosmos"
+  },
+  {
+    "filename": "new-york-red-bulls.png",
+    "slug": "new-york-red-bulls",
+    "name": "New York Red Bulls"
+  },
+  {
+    "filename": "newcastle-blue-star.png",
+    "slug": "newcastle-blue-star",
+    "name": "Newcastle Blue Star"
+  },
+  {
+    "filename": "newells-old-boys.png",
+    "slug": "newells-old-boys",
+    "name": "Newell's Old Boys"
+  },
+  {
+    "filename": "newport-county.png",
+    "slug": "newport-county",
+    "name": "Newport County"
+  },
+  {
+    "filename": "northampton-town.png",
+    "slug": "northampton-town",
+    "name": "Northampton Town"
+  },
+  {
+    "filename": "notts-county.png",
+    "slug": "notts-county",
+    "name": "Notts County"
+  },
+  {
+    "filename": "novese.png",
+    "slug": "novese",
+    "name": "Novese"
+  },
+  {
+    "filename": "ofk-beograd.png",
+    "slug": "ofk-beograd",
+    "name": "OFK Beograd"
+  },
+  {
+    "filename": "oh-leuven.png",
+    "slug": "oh-leuven",
+    "name": "OH Leuven"
+  },
+  {
+    "filename": "oldham-athletic.png",
+    "slug": "oldham-athletic",
+    "name": "Oldham Athletic"
+  },
+  {
+    "filename": "omonia.png",
+    "slug": "omonia",
+    "name": "Omonia"
+  },
+  {
+    "filename": "once-caldas.png",
+    "slug": "once-caldas",
+    "name": "Once Caldas"
+  },
+  {
+    "filename": "oxford-united.png",
+    "slug": "oxford-united",
+    "name": "Oxford United"
+  },
+  {
+    "filename": "pachuca.png",
+    "slug": "pachuca",
+    "name": "Pachuca"
+  },
+  {
+    "filename": "pacos-de-ferreira.png",
+    "slug": "pacos-de-ferreira",
+    "name": "Paços de Ferreira"
+  },
+  {
+    "filename": "padova.png",
+    "slug": "padova",
+    "name": "Padova"
+  },
+  {
+    "filename": "panathinaikos.png",
+    "slug": "panathinaikos",
+    "name": "Panathinaikos"
+  },
+  {
+    "filename": "panionios.png",
+    "slug": "panionios",
+    "name": "Panionios"
+  },
+  {
+    "filename": "paok.png",
+    "slug": "paok",
+    "name": "PAOK"
+  },
+  {
+    "filename": "partick-thistle.png",
+    "slug": "partick-thistle",
+    "name": "Partick Thistle"
+  },
+  {
+    "filename": "partizan.png",
+    "slug": "partizan",
+    "name": "Partizan"
+  },
+  {
+    "filename": "pau.png",
+    "slug": "pau",
+    "name": "Pau"
+  },
+  {
+    "filename": "pavia.png",
+    "slug": "pavia",
+    "name": "Pavia"
+  },
+  {
+    "filename": "penarol.png",
+    "slug": "penarol",
+    "name": "Peñarol"
+  },
+  {
+    "filename": "persepolis.png",
+    "slug": "persepolis",
+    "name": "Persepolis"
+  },
+  {
+    "filename": "perugia.png",
+    "slug": "perugia",
+    "name": "Perugia"
+  },
+  {
+    "filename": "pescara.png",
+    "slug": "pescara",
+    "name": "Pescara"
+  },
+  {
+    "filename": "philadelphia-union.png",
+    "slug": "philadelphia-union",
+    "name": "Philadelphia Union"
+  },
+  {
+    "filename": "pisa.png",
+    "slug": "pisa",
+    "name": "Pisa"
+  },
+  {
+    "filename": "pistoiese.png",
+    "slug": "pistoiese",
+    "name": "Pistoiese"
+  },
+  {
+    "filename": "plus-ultra.png",
+    "slug": "plus-ultra",
+    "name": "Plus Ultra"
+  },
+  {
+    "filename": "plymouth-argyle.png",
+    "slug": "plymouth-argyle",
+    "name": "Plymouth Argyle"
+  },
+  {
+    "filename": "portimonense.png",
+    "slug": "portimonense",
+    "name": "Portimonense"
+  },
+  {
+    "filename": "portland-timbers.png",
+    "slug": "portland-timbers",
+    "name": "Portland Timbers"
+  },
+  {
+    "filename": "power-dynamos.png",
+    "slug": "power-dynamos",
+    "name": "Power Dynamos"
+  },
+  {
+    "filename": "preston-north-end.png",
+    "slug": "preston-north-end",
+    "name": "Preston North End"
+  },
+  {
+    "filename": "puebla.png",
+    "slug": "puebla",
+    "name": "Puebla"
+  },
+  {
+    "filename": "pumas-unam.png",
+    "slug": "pumas-unam",
+    "name": "Pumas UNAM"
+  },
+  {
+    "filename": "qatar-sc.png",
+    "slug": "qatar-sc",
+    "name": "Qatar SC"
+  },
+  {
+    "filename": "racing-club.png",
+    "slug": "racing-club",
+    "name": "Racing Club"
+  },
+  {
+    "filename": "racing-paris.png",
+    "slug": "racing-paris",
+    "name": "Racing Paris"
+  },
+  {
+    "filename": "racing-santander.png",
+    "slug": "racing-santander",
+    "name": "Racing Santander"
+  },
+  {
+    "filename": "raith-rovers.png",
+    "slug": "raith-rovers",
+    "name": "Raith Rovers"
+  },
+  {
+    "filename": "rapid-wien.png",
+    "slug": "rapid-wien",
+    "name": "Rapid Wien"
+  },
+  {
+    "filename": "real-espana.png",
+    "slug": "real-espana",
+    "name": "Real España"
+  },
+  {
+    "filename": "real-murcia.png",
+    "slug": "real-murcia",
+    "name": "Real Murcia"
+  },
+  {
+    "filename": "real-oviedo.png",
+    "slug": "real-oviedo",
+    "name": "Real Oviedo"
+  },
+  {
+    "filename": "red-star.png",
+    "slug": "red-star",
+    "name": "Red Star"
+  },
+  {
+    "filename": "red-star-belgrade.png",
+    "slug": "red-star-belgrade",
+    "name": "Red Star Belgrade"
+  },
+  {
+    "filename": "rijeka.png",
+    "slug": "rijeka",
+    "name": "Rijeka"
+  },
+  {
+    "filename": "rio-ave.png",
+    "slug": "rio-ave",
+    "name": "Rio Ave"
+  },
+  {
+    "filename": "river-plate-uruguay.png",
+    "slug": "river-plate-uruguay",
+    "name": "River Plate (Uruguay)"
+  },
+  {
+    "filename": "rosenborg.png",
+    "slug": "rosenborg",
+    "name": "Rosenborg"
+  },
+  {
+    "filename": "ross-county.png",
+    "slug": "ross-county",
+    "name": "Ross County"
+  },
+  {
+    "filename": "rot-weiss-ahlen.png",
+    "slug": "rot-weiss-ahlen",
+    "name": "Rot Weiss Ahlen"
+  },
+  {
+    "filename": "rot-weiss-essen.png",
+    "slug": "rot-weiss-essen",
+    "name": "Rot-Weiss Essen"
+  },
+  {
+    "filename": "rotherham-united.png",
+    "slug": "rotherham-united",
+    "name": "Rotherham United"
+  },
+  {
+    "filename": "rotor-volgograd.png",
+    "slug": "rotor-volgograd",
+    "name": "Rotor Volgograd"
+  },
+  {
+    "filename": "sabadell.png",
+    "slug": "sabadell",
+    "name": "Sabadell"
+  },
+  {
+    "filename": "salernitana.png",
+    "slug": "salernitana",
+    "name": "Salernitana"
+  },
+  {
+    "filename": "sampierdarenese.png",
+    "slug": "sampierdarenese",
+    "name": "Sampierdarenese"
+  },
+  {
+    "filename": "samsunspor.png",
+    "slug": "samsunspor",
+    "name": "Samsunspor"
+  },
+  {
+    "filename": "san-diego-fc.png",
+    "slug": "san-diego-fc",
+    "name": "San Diego FC"
+  },
+  {
+    "filename": "san-jose-earthquakes.png",
+    "slug": "san-jose-earthquakes",
+    "name": "San Jose Earthquakes"
+  },
+  {
+    "filename": "san-lorenzo.png",
+    "slug": "san-lorenzo",
+    "name": "San Lorenzo"
+  },
+  {
+    "filename": "santa-cruz.png",
+    "slug": "santa-cruz",
+    "name": "Santa Cruz"
+  },
+  {
+    "filename": "sarmiento.png",
+    "slug": "sarmiento",
+    "name": "Sarmiento"
+  },
+  {
+    "filename": "sc-emma.png",
+    "slug": "sc-emma",
+    "name": "SC Emma"
+  },
+  {
+    "filename": "sc-paderborn.png",
+    "slug": "sc-paderborn",
+    "name": "SC Paderborn"
+  },
+  {
+    "filename": "scunthorpe-united.png",
+    "slug": "scunthorpe-united",
+    "name": "Scunthorpe United"
+  },
+  {
+    "filename": "seattle-sounders.png",
+    "slug": "seattle-sounders",
+    "name": "Seattle Sounders"
+  },
+  {
+    "filename": "sedan.png",
+    "slug": "sedan",
+    "name": "Sedan"
+  },
+  {
+    "filename": "seraing.png",
+    "slug": "seraing",
+    "name": "Seraing"
+  },
+  {
+    "filename": "seregno.png",
+    "slug": "seregno",
+    "name": "Seregno"
+  },
+  {
+    "filename": "servette.png",
+    "slug": "servette",
+    "name": "Servette"
+  },
+  {
+    "filename": "sete.png",
+    "slug": "sete",
+    "name": "Sète"
+  },
+  {
+    "filename": "shandong-luneng.png",
+    "slug": "shandong-luneng",
+    "name": "Shandong Luneng"
+  },
+  {
+    "filename": "shanghai-port.png",
+    "slug": "shanghai-port",
+    "name": "Shanghai Port"
+  },
+  {
+    "filename": "shanghai-shenhua.png",
+    "slug": "shanghai-shenhua",
+    "name": "Shanghai Shenhua"
+  },
+  {
+    "filename": "shanghai-sipg.png",
+    "slug": "shanghai-sipg",
+    "name": "Shanghai SIPG"
+  },
+  {
+    "filename": "sharjah.png",
+    "slug": "sharjah",
+    "name": "Sharjah"
+  },
+  {
+    "filename": "sheffield-wednesday.png",
+    "slug": "sheffield-wednesday",
+    "name": "Sheffield Wednesday"
+  },
+  {
+    "filename": "siena.png",
+    "slug": "siena",
+    "name": "Siena"
+  },
+  {
+    "filename": "sint-truiden.png",
+    "slug": "sint-truiden",
+    "name": "Sint-Truiden"
+  },
+  {
+    "filename": "slavia-prague.png",
+    "slug": "slavia-prague",
+    "name": "Slavia Prague"
+  },
+  {
+    "filename": "sligo-rovers.png",
+    "slug": "sligo-rovers",
+    "name": "Sligo Rovers"
+  },
+  {
+    "filename": "slovan-liberec.png",
+    "slug": "slovan-liberec",
+    "name": "Slovan Liberec"
+  },
+  {
+    "filename": "small-heath.png",
+    "slug": "small-heath",
+    "name": "Small Heath"
+  },
+  {
+    "filename": "sochaux.png",
+    "slug": "sochaux",
+    "name": "Sochaux"
+  },
+  {
+    "filename": "snderjyske.png",
+    "slug": "snderjyske",
+    "name": "SønderjyskE"
+  },
+  {
+    "filename": "southend-united.png",
+    "slug": "southend-united",
+    "name": "Southend United"
+  },
+  {
+    "filename": "spal.png",
+    "slug": "spal",
+    "name": "SPAL"
+  },
+  {
+    "filename": "sparta-rotterdam.png",
+    "slug": "sparta-rotterdam",
+    "name": "Sparta Rotterdam"
+  },
+  {
+    "filename": "spartak-moscow.png",
+    "slug": "spartak-moscow",
+    "name": "Spartak Moscow"
+  },
+  {
+    "filename": "sport-recife.png",
+    "slug": "sport-recife",
+    "name": "Sport Recife"
+  },
+  {
+    "filename": "sportfreunde-siegen.png",
+    "slug": "sportfreunde-siegen",
+    "name": "Sportfreunde Siegen"
+  },
+  {
+    "filename": "sporting-gijon.png",
+    "slug": "sporting-gijon",
+    "name": "Sporting Gijón"
+  },
+  {
+    "filename": "ssv-ulm.png",
+    "slug": "ssv-ulm",
+    "name": "SSV Ulm"
+  },
+  {
+    "filename": "st-johnstone.png",
+    "slug": "st-johnstone",
+    "name": "St Johnstone"
+  },
+  {
+    "filename": "st-mirren.png",
+    "slug": "st-mirren",
+    "name": "St Mirren"
+  },
+  {
+    "filename": "st-gallen.png",
+    "slug": "st-gallen",
+    "name": "St. Gallen"
+  },
+  {
+    "filename": "standard-liege.png",
+    "slug": "standard-liege",
+    "name": "Standard Liège"
+  },
+  {
+    "filename": "steaua-bucuresti.png",
+    "slug": "steaua-bucuresti",
+    "name": "Steaua București"
+  },
+  {
+    "filename": "stella-club.png",
+    "slug": "stella-club",
+    "name": "Stella Club"
+  },
+  {
+    "filename": "stockport-county.png",
+    "slug": "stockport-county",
+    "name": "Stockport County"
+  },
+  {
+    "filename": "strmsgodset.png",
+    "slug": "strmsgodset",
+    "name": "Strømsgodset"
+  },
+  {
+    "filename": "sturm-graz.png",
+    "slug": "sturm-graz",
+    "name": "Sturm Graz"
+  },
+  {
+    "filename": "stuttgarter-kickers.png",
+    "slug": "stuttgarter-kickers",
+    "name": "Stuttgarter Kickers"
+  },
+  {
+    "filename": "sv-babelsberg.png",
+    "slug": "sv-babelsberg",
+    "name": "SV Babelsberg"
+  },
+  {
+    "filename": "sv-meppen.png",
+    "slug": "sv-meppen",
+    "name": "SV Meppen"
+  },
+  {
+    "filename": "sv-rodinghausen.png",
+    "slug": "sv-rodinghausen",
+    "name": "SV Rödinghausen"
+  },
+  {
+    "filename": "swindon-town.png",
+    "slug": "swindon-town",
+    "name": "Swindon Town"
+  },
+  {
+    "filename": "sydney-fc.png",
+    "slug": "sydney-fc",
+    "name": "Sydney FC"
+  },
+  {
+    "filename": "taranto.png",
+    "slug": "taranto",
+    "name": "Taranto"
+  },
+  {
+    "filename": "tenerife.png",
+    "slug": "tenerife",
+    "name": "Tenerife"
+  },
+  {
+    "filename": "ternana.png",
+    "slug": "ternana",
+    "name": "Ternana"
+  },
+  {
+    "filename": "third-lanark.png",
+    "slug": "third-lanark",
+    "name": "Third Lanark"
+  },
+  {
+    "filename": "thun.png",
+    "slug": "thun",
+    "name": "Thun"
+  },
+  {
+    "filename": "tianjin-teda.png",
+    "slug": "tianjin-teda",
+    "name": "Tianjin TEDA"
+  },
+  {
+    "filename": "tigres-uanl.png",
+    "slug": "tigres-uanl",
+    "name": "Tigres UANL"
+  },
+  {
+    "filename": "tokyo-verdy.png",
+    "slug": "tokyo-verdy",
+    "name": "Tokyo Verdy"
+  },
+  {
+    "filename": "toluca.png",
+    "slug": "toluca",
+    "name": "Toluca"
+  },
+  {
+    "filename": "tombense.png",
+    "slug": "tombense",
+    "name": "Tombense"
+  },
+  {
+    "filename": "toronto-blizzard.png",
+    "slug": "toronto-blizzard",
+    "name": "Toronto Blizzard"
+  },
+  {
+    "filename": "toronto-fc.png",
+    "slug": "toronto-fc",
+    "name": "Toronto FC"
+  },
+  {
+    "filename": "toulon.png",
+    "slug": "toulon",
+    "name": "Toulon"
+  },
+  {
+    "filename": "toulouse.png",
+    "slug": "toulouse",
+    "name": "Toulouse"
+  },
+  {
+    "filename": "tours.png",
+    "slug": "tours",
+    "name": "Tours"
+  },
+  {
+    "filename": "trabzonspor.png",
+    "slug": "trabzonspor",
+    "name": "Trabzonspor"
+  },
+  {
+    "filename": "tranmere-rovers.png",
+    "slug": "tranmere-rovers",
+    "name": "Tranmere Rovers"
+  },
+  {
+    "filename": "triestina.png",
+    "slug": "triestina",
+    "name": "Triestina"
+  },
+  {
+    "filename": "trofense.png",
+    "slug": "trofense",
+    "name": "Trofense"
+  },
+  {
+    "filename": "troyes.png",
+    "slug": "troyes",
+    "name": "Troyes"
+  },
+  {
+    "filename": "tsv-havelse.png",
+    "slug": "tsv-havelse",
+    "name": "TSV Havelse"
+  },
+  {
+    "filename": "unam.png",
+    "slug": "unam",
+    "name": "UNAM"
+  },
+  {
+    "filename": "uniao-de-leiria.png",
+    "slug": "uniao-de-leiria",
+    "name": "União de Leiria"
+  },
+  {
+    "filename": "union-saint-gilloise.png",
+    "slug": "union-saint-gilloise",
+    "name": "Union Saint-Gilloise"
+  },
+  {
+    "filename": "universidad-catolica.png",
+    "slug": "universidad-catolica",
+    "name": "Universidad Católica"
+  },
+  {
+    "filename": "ural.png",
+    "slug": "ural",
+    "name": "Ural"
+  },
+  {
+    "filename": "urawa-red-diamonds.png",
+    "slug": "urawa-red-diamonds",
+    "name": "Urawa Red Diamonds"
+  },
+  {
+    "filename": "utrecht.png",
+    "slug": "utrecht",
+    "name": "Utrecht"
+  },
+  {
+    "filename": "uvv-utrecht.png",
+    "slug": "uvv-utrecht",
+    "name": "UVV Utrecht"
+  },
+  {
+    "filename": "valenciennes.png",
+    "slug": "valenciennes",
+    "name": "Valenciennes"
+  },
+  {
+    "filename": "valur.png",
+    "slug": "valur",
+    "name": "Valur"
+  },
+  {
+    "filename": "vancouver-whitecaps.png",
+    "slug": "vancouver-whitecaps",
+    "name": "Vancouver Whitecaps"
+  },
+  {
+    "filename": "varese.png",
+    "slug": "varese",
+    "name": "Varese"
+  },
+  {
+    "filename": "vasco-da-gama.png",
+    "slug": "vasco-da-gama",
+    "name": "Vasco da Gama"
+  },
+  {
+    "filename": "velez-sarsfield.png",
+    "slug": "velez-sarsfield",
+    "name": "Vélez Sarsfield"
+  },
+  {
+    "filename": "venezia.png",
+    "slug": "venezia",
+    "name": "Venezia"
+  },
+  {
+    "filename": "veracruz.png",
+    "slug": "veracruz",
+    "name": "Veracruz"
+  },
+  {
+    "filename": "verona.png",
+    "slug": "verona",
+    "name": "Verona"
+  },
+  {
+    "filename": "vfl-bochum.png",
+    "slug": "vfl-bochum",
+    "name": "VfL Bochum"
+  },
+  {
+    "filename": "vfl-osnabruck.png",
+    "slug": "vfl-osnabruck",
+    "name": "VfL Osnabrück"
+  },
+  {
+    "filename": "vfr-aalen.png",
+    "slug": "vfr-aalen",
+    "name": "VfR Aalen"
+  },
+  {
+    "filename": "vicenza.png",
+    "slug": "vicenza",
+    "name": "Vicenza"
+  },
+  {
+    "filename": "viktoria-zizkov.png",
+    "slug": "viktoria-zizkov",
+    "name": "Viktoria Žižkov"
+  },
+  {
+    "filename": "vissel-kobe.png",
+    "slug": "vissel-kobe",
+    "name": "Vissel Kobe"
+  },
+  {
+    "filename": "vitoria.png",
+    "slug": "vitoria",
+    "name": "Vitória"
+  },
+  {
+    "filename": "vitoria-de-guimaraes.png",
+    "slug": "vitoria-de-guimaraes",
+    "name": "Vitória de Guimarães"
+  },
+  {
+    "filename": "vitoria-de-setubal.png",
+    "slug": "vitoria-de-setubal",
+    "name": "Vitória de Setúbal"
+  },
+  {
+    "filename": "vojvodina.png",
+    "slug": "vojvodina",
+    "name": "Vojvodina"
+  },
+  {
+    "filename": "vushtrria.png",
+    "slug": "vushtrria",
+    "name": "Vushtrria"
+  },
+  {
+    "filename": "vvv-venlo.png",
+    "slug": "vvv-venlo",
+    "name": "VVV-Venlo"
+  },
+  {
+    "filename": "waldhof-mannheim.png",
+    "slug": "waldhof-mannheim",
+    "name": "Waldhof Mannheim"
+  },
+  {
+    "filename": "walsall.png",
+    "slug": "walsall",
+    "name": "Walsall"
+  },
+  {
+    "filename": "wellington-phoenix.png",
+    "slug": "wellington-phoenix",
+    "name": "Wellington Phoenix"
+  },
+  {
+    "filename": "western-sydney-wanderers.png",
+    "slug": "western-sydney-wanderers",
+    "name": "Western Sydney Wanderers"
+  },
+  {
+    "filename": "western-united.png",
+    "slug": "western-united",
+    "name": "Western United"
+  },
+  {
+    "filename": "wiener-neustadt.png",
+    "slug": "wiener-neustadt",
+    "name": "Wiener Neustadt"
+  },
+  {
+    "filename": "willem-ii.png",
+    "slug": "willem-ii",
+    "name": "Willem II"
+  },
+  {
+    "filename": "winterthur.png",
+    "slug": "winterthur",
+    "name": "Winterthur"
+  },
+  {
+    "filename": "wisa-krakow.png",
+    "slug": "wisa-krakow",
+    "name": "Wisła Kraków"
+  },
+  {
+    "filename": "wurzburger-kickers.png",
+    "slug": "wurzburger-kickers",
+    "name": "Würzburger Kickers"
+  },
+  {
+    "filename": "york-city.png",
+    "slug": "york-city",
+    "name": "York City"
+  },
+  {
+    "filename": "young-boys.png",
+    "slug": "young-boys",
+    "name": "Young Boys"
+  },
+  {
+    "filename": "zaandijk.png",
+    "slug": "zaandijk",
+    "name": "Zaandijk"
+  },
+  {
+    "filename": "zadar.png",
+    "slug": "zadar",
+    "name": "Zadar"
+  },
+  {
+    "filename": "zanaco.png",
+    "slug": "zanaco",
+    "name": "Zanaco"
+  },
+  {
+    "filename": "zfc.png",
+    "slug": "zfc",
+    "name": "ZFC"
+  },
+  {
+    "filename": "zulte-waregem.png",
+    "slug": "zulte-waregem",
+    "name": "Zulte Waregem"
+  }
+]
