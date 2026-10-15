@@ -26,6 +26,10 @@ export interface PartyMember {
   isReady: boolean;
   avatarSeed: string;
   joinedAt: number;
+  /** Server-simulated opponent (matchmaking bot fallback); never connects. */
+  isBot?: boolean;
+  /** False while the player is inside their reconnect grace period. */
+  isConnected?: boolean;
 }
 
 export interface PartyState {
@@ -54,6 +58,17 @@ export interface GameInitPayload {
   sharedData: any;
   assignedRole?: any;
   myPlayerId?: string;
+  matchId?: string;
+  roster?: PartyMember[];
+  hostId?: string;
+}
+
+/** Who is in the running match. Fixed at launch: it never shrinks when players drop or leave. */
+export interface MatchRoster {
+  matchId?: string;
+  modeId: string;
+  hostId: string;
+  members: PartyMember[];
 }
 
 export interface GameEventPayload {
@@ -108,11 +123,17 @@ interface PartyContextType {
   // Matchmaking & Live Presence
   presence: GlobalPresence;
   queueState: MatchmakingQueueState;
-  joinQueue: (modeId: string, queueType?: 'duel' | 'ffa') => void;
+  joinQueue: (modeId: string, queueType?: 'duel' | 'ffa', options?: { formationId?: string }) => void;
+  /** Per-member preferences the host's launch picks up (Auction: own formation). */
+  setMemberPrefs: (prefs: { formationId?: string }) => void;
   leaveQueue: () => void;
   // Live in-game multiplayer sync
   gameInitData: GameInitPayload | null;
-  lastGameEvent: GameEventPayload | null;
+  matchRoster: MatchRoster | null;
+  /** Register a listener that is pinged whenever new game events are buffered. Returns an unsubscribe fn. */
+  subscribeGameEvents: (listener: () => void) => () => void;
+  /** Remove and return every buffered (not yet consumed) game event whose modeId is accepted. */
+  takeGameEvents: (accept: (modeId?: string) => boolean) => GameEventPayload[];
   playerForfeitEvent: PlayerForfeitPayload | null;
   sendGameAction: (modeId: string, action: string, data?: any) => void;
   sendGameLeave: () => void;
@@ -127,6 +148,26 @@ interface PartyContextType {
   wsConnected: boolean;
 }
 
+// One stable identity per browser tab, shared by the lobby and room sockets and kept across
+// reconnects and page refreshes, so the server sees the same player id everywhere.
+function loadClientId(): string {
+  const make = () =>
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  try {
+    const saved = sessionStorage.getItem('topbins_client_id');
+    if (saved) return saved;
+    const id = make();
+    sessionStorage.setItem('topbins_client_id', id);
+    return id;
+  } catch {
+    return make();
+  }
+}
+
+const CLIENT_ID = loadClientId();
+
 const DEFAULT_PARTY: PartyState = {
   isActive: false,
   roomCode: '',
@@ -135,10 +176,15 @@ const DEFAULT_PARTY: PartyState = {
   visibility: 'private',
   members: [],
   isCurrentUserHost: false,
-  currentUserId: 'user-local',
+  currentUserId: CLIENT_ID,
 };
 
 const PartyContext = createContext<PartyContextType | null>(null);
+
+// Reliable game-event delivery: events are buffered until an arena consumes them, so
+// back-to-back packets can never overwrite each other inside a single React render.
+const MAX_PENDING_GAME_EVENTS = 300;
+const MAX_SEEN_EVENT_IDS = 2000;
 
 function generateRoomCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -190,7 +236,33 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // In-game live multiplayer synchronization state
   const [gameInitData, setGameInitData] = useState<GameInitPayload | null>(null);
-  const [lastGameEvent, setLastGameEvent] = useState<GameEventPayload | null>(null);
+  const [matchRoster, setMatchRoster] = useState<MatchRoster | null>(null);
+  const pendingGameEventsRef = useRef<GameEventPayload[]>([]);
+  const seenGameEventIdsRef = useRef<Set<string>>(new Set());
+  const gameEventListenersRef = useRef<Set<() => void>>(new Set());
+  const localEventSeqRef = useRef(0);
+
+  const clearPendingGameEvents = useCallback(() => {
+    pendingGameEventsRef.current = [];
+  }, []);
+
+  const subscribeGameEvents = useCallback((listener: () => void) => {
+    gameEventListenersRef.current.add(listener);
+    return () => {
+      gameEventListenersRef.current.delete(listener);
+    };
+  }, []);
+
+  const takeGameEvents = useCallback((accept: (modeId?: string) => boolean) => {
+    const taken: GameEventPayload[] = [];
+    const remaining: GameEventPayload[] = [];
+    for (const evt of pendingGameEventsRef.current) {
+      if (accept(evt.modeId)) taken.push(evt);
+      else remaining.push(evt);
+    }
+    pendingGameEventsRef.current = remaining;
+    return taken;
+  }, []);
   const [playerForfeitEvent, setPlayerForfeitEvent] = useState<PlayerForfeitPayload | null>(null);
 
   // Matchmaking & Live Presence state
@@ -224,12 +296,27 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [escapeHatchIntent, setEscapeHatchIntent] = useState<'solo' | 'matchmaking'>('solo');
   const [pendingLaunchCallback, setPendingLaunchCallback] = useState<(() => void) | null>(null);
 
+  const partyRef = useRef(party);
+  const playerNameRef = useRef(playerName);
+  const gameInitDataRef = useRef(gameInitData);
+  const queueStateRef = useRef(queueState);
+  // Auction Quick Match: the formation sent with join_queue (kept for automatic re-queues)
+  const queueFormationRef = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    partyRef.current = party;
+    playerNameRef.current = playerName;
+    gameInitDataRef.current = gameInitData;
+    queueStateRef.current = queueState;
+  }, [party, playerName, gameInitData, queueState]);
+
   const lobbySocketRef = useRef<PartySocket | null>(null);
   const roomSocketRef = useRef<PartySocket | null>(null);
   const handleWsMessageRef = useRef<((msg: { type: string; payload?: any }) => void) | null>(null);
 
   const connectToRoomSocket = useCallback((roomId: string, initialMessage?: ClientToServerMessage) => {
-    const cleanRoom = roomId.trim().toUpperCase();
+    // Squad codes are case-insensitive; matchmade room names are server-generated and exact.
+    const trimmedRoom = roomId.trim();
+    const cleanRoom = trimmedRoom.startsWith('match_') ? trimmedRoom : trimmedRoom.toUpperCase();
     if (!cleanRoom) return null;
 
     if (roomSocketRef.current && roomSocketRef.current.room === cleanRoom) {
@@ -252,15 +339,35 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const socket = new PartySocket({
         host: getPartyKitHost(),
         room: cleanRoom,
+        id: CLIENT_ID,
       });
       roomSocketRef.current = socket;
 
+      let hasOpened = false;
       socket.addEventListener('open', () => {
         setWsConnected(true);
-        const joinMsg = initialMessage || {
-          type: 'join_party',
-          payload: { roomId: cleanRoom, playerName: getStoredPlayerName() || 'BALLER' },
-        };
+        const name = playerNameRef.current || getStoredPlayerName() || 'BALLER';
+        let joinMsg: ClientToServerMessage;
+        if (!hasOpened && initialMessage) {
+          joinMsg = initialMessage;
+        } else if (!hasOpened) {
+          joinMsg = { type: 'join_party', payload: { roomId: cleanRoom, playerName: name } };
+        } else {
+          // Auto-reconnect: reclaim our seat instead of re-creating or re-joining the party
+          const current = partyRef.current;
+          joinMsg = {
+            type: 'rejoin_party',
+            payload: {
+              roomId: cleanRoom,
+              playerName: name,
+              wasHost: current.isCurrentUserHost,
+              maxSlots: current.maxSlots,
+              visibility: current.visibility,
+              resumeMatch: Boolean(gameInitDataRef.current),
+            },
+          };
+        }
+        hasOpened = true;
         socket.send(JSON.stringify(joinMsg));
       });
 
@@ -308,6 +415,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       case 'party_joined': {
         const { room, myPlayerId } = msg.payload;
         const isHost = room.hostId === myPlayerId;
+        const alreadyInRoom = partyRef.current.isActive && partyRef.current.roomCode === room.roomId;
         setParty({
           isActive: true,
           roomCode: room.roomId,
@@ -318,7 +426,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           isCurrentUserHost: isHost,
           currentUserId: myPlayerId,
         });
-        soundFX.playLobbyReady();
+        if (!alreadyInRoom) soundFX.playLobbyReady();
         if (room?.roomId && (!roomSocketRef.current || roomSocketRef.current.room !== room.roomId)) {
           connectToRoomSocket(room.roomId);
         }
@@ -360,6 +468,19 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const { modeId, config } = msg.payload;
         soundFX.playPhaseShift();
         setPlayerForfeitEvent(null);
+        clearPendingGameEvents();
+        seenGameEventIdsRef.current.clear();
+        setGameInitData(null);
+        setMatchRoster(
+          Array.isArray(msg.payload?.roster)
+            ? {
+                matchId: msg.payload.matchId,
+                modeId,
+                hostId: msg.payload.hostId,
+                members: msg.payload.roster,
+              }
+            : null
+        );
         setQueueState({
           isQueued: false,
           modeId: null,
@@ -400,15 +521,45 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       case 'game_init': {
-        setGameInitData(msg.payload);
+        const init = msg.payload as GameInitPayload;
+        setGameInitData((prev) =>
+          prev && init.matchId && prev.matchId === init.matchId ? prev : init
+        );
+        if (Array.isArray(init.roster) && init.hostId) {
+          setMatchRoster((prev) =>
+            prev && init.matchId && prev.matchId === init.matchId
+              ? prev
+              : { matchId: init.matchId, modeId: init.modeId, hostId: init.hostId!, members: init.roster! }
+          );
+        }
         break;
       }
 
       case 'game_event': {
-        setLastGameEvent({
+        localEventSeqRef.current += 1;
+        const evt: GameEventPayload = {
           ...msg.payload,
-          _eventId: msg.payload?._eventId || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        });
+          _eventId:
+            msg.payload?._eventId ??
+            `local-${localEventSeqRef.current}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        };
+
+        // De-duplicate re-delivered packets (server stamps a unique id per relayed action)
+        const idKey = String(evt._eventId);
+        const seen = seenGameEventIdsRef.current;
+        if (seen.has(idKey)) break;
+        seen.add(idKey);
+        if (seen.size > MAX_SEEN_EVENT_IDS) {
+          const oldest = seen.values().next().value;
+          if (oldest !== undefined) seen.delete(oldest);
+        }
+
+        const pending = pendingGameEventsRef.current;
+        pending.push(evt);
+        if (pending.length > MAX_PENDING_GAME_EVENTS) {
+          pending.splice(0, pending.length - MAX_PENDING_GAME_EVENTS);
+        }
+        gameEventListenersRef.current.forEach((listener) => listener());
         break;
       }
 
@@ -426,6 +577,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       case 'party_disbanded': {
         soundFX.playClick(450);
+        if (msg.payload?.reason) console.info('[Party]', msg.payload.reason);
         if (roomSocketRef.current) {
           try {
             roomSocketRef.current.close();
@@ -436,7 +588,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
         setParty(DEFAULT_PARTY);
         setGameInitData(null);
-        setLastGameEvent(null);
+        setMatchRoster(null);
+        clearPendingGameEvents();
         break;
       }
 
@@ -452,7 +605,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
         setParty(DEFAULT_PARTY);
         setGameInitData(null);
-        setLastGameEvent(null);
+        setMatchRoster(null);
+        clearPendingGameEvents();
         break;
       }
 
@@ -461,7 +615,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         break;
       }
     }
-  }, [connectToRoomSocket]);
+  }, [connectToRoomSocket, clearPendingGameEvents]);
 
   handleWsMessageRef.current = handleWsMessage;
 
@@ -474,12 +628,28 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const lobbySocket = new PartySocket({
         host,
         room: 'global-lobby',
+        id: CLIENT_ID,
       });
       lobbySocketRef.current = lobbySocket;
 
       lobbySocket.addEventListener('open', () => {
         if (!isMounted) return;
         setWsConnected(true);
+        // After a dropped lobby connection the server forgot our queue slot: re-queue.
+        const q = queueStateRef.current;
+        if (q.isQueued && q.modeId) {
+          lobbySocket.send(
+            JSON.stringify({
+              type: 'join_queue',
+              payload: {
+                modeId: q.modeId,
+                queueType: q.queueType,
+                playerName: playerNameRef.current,
+                formationId: queueFormationRef.current,
+              },
+            })
+          );
+        }
       });
 
       lobbySocket.addEventListener('message', (event) => {
@@ -505,8 +675,15 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     if (party.isActive && party.roomCode) {
       connectToRoomSocket(party.roomCode, {
-        type: 'join_party',
-        payload: { roomId: party.roomCode, playerName },
+        type: 'rejoin_party',
+        payload: {
+          roomId: party.roomCode,
+          playerName,
+          wasHost: party.isCurrentUserHost,
+          maxSlots: party.maxSlots,
+          visibility: party.visibility,
+          resumeMatch: false,
+        },
       });
     }
 
@@ -523,8 +700,9 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, []);
 
-  const joinQueue = (modeId: string, queueType: 'duel' | 'ffa' = 'duel') => {
+  const joinQueue = (modeId: string, queueType: 'duel' | 'ffa' = 'duel', options?: { formationId?: string }) => {
     soundFX.playClick(800);
+    queueFormationRef.current = options?.formationId;
     setQueueState({
       isQueued: true,
       modeId,
@@ -536,7 +714,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       lobbySocketRef.current.send(
         JSON.stringify({
           type: 'join_queue',
-          payload: { modeId, queueType, playerName },
+          payload: { modeId, queueType, playerName, formationId: options?.formationId },
         })
       );
     }
@@ -624,7 +802,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       lobbySocketRef.current.send(JSON.stringify(msg));
     }
     setGameInitData(null);
-    setLastGameEvent(null);
+    setMatchRoster(null);
+    clearPendingGameEvents();
   };
 
   const clearForfeit = () => {
@@ -703,7 +882,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const newCode = generateRoomCode();
     const hostUser: PartyMember = {
-      id: 'user-local',
+      id: CLIENT_ID,
       name: chosenName,
       isHost: true,
       isReady: true,
@@ -719,7 +898,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       visibility,
       members: [hostUser],
       isCurrentUserHost: true,
-      currentUserId: 'user-local',
+      currentUserId: CLIENT_ID,
     });
 
     connectToRoomSocket(newCode, {
@@ -756,7 +935,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     const meGuest: PartyMember = {
-      id: 'user-local',
+      id: CLIENT_ID,
       name: chosenName,
       isHost: false,
       isReady: false,
@@ -772,7 +951,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       visibility: 'private',
       members: [hostUser, meGuest],
       isCurrentUserHost: false,
-      currentUserId: 'user-local',
+      currentUserId: CLIENT_ID,
     });
 
     connectToRoomSocket(cleanCode, {
@@ -810,7 +989,8 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     setParty(DEFAULT_PARTY);
     setGameInitData(null);
-    setLastGameEvent(null);
+    setMatchRoster(null);
+    clearPendingGameEvents();
     setIsDrawerOpen(false);
   };
 
@@ -891,6 +1071,12 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  const setMemberPrefs = (prefs: { formationId?: string }) => {
+    if (roomSocketRef.current && roomSocketRef.current.readyState === WebSocket.OPEN) {
+      roomSocketRef.current.send(JSON.stringify({ type: 'set_member_prefs', payload: prefs }));
+    }
+  };
+
   const syncSetupSettings = (modeId: string, settings: any) => {
     setParty((prev) => ({
       ...prev,
@@ -964,7 +1150,9 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         lastRemoteMatch,
         clearRemoteMatch,
         gameInitData,
-        lastGameEvent,
+        matchRoster,
+        subscribeGameEvents,
+        takeGameEvents,
         playerForfeitEvent,
         sendGameAction,
         sendGameLeave,
@@ -979,6 +1167,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         presence,
         queueState,
         joinQueue,
+        setMemberPrefs,
         leaveQueue,
       }}
     >
@@ -995,12 +1184,23 @@ export const useParty = (): PartyContextType => {
   return ctx;
 };
 
+// Arenas and the server use aliased mode ids (e.g. link-up / criteria-rush); treat aliases as one mode.
+function gameModeMatches(targetModeId: string, mode?: string): boolean {
+  if (!mode) return false;
+  if (mode === targetModeId) return true;
+  if ((targetModeId === 'link-up' || targetModeId === 'criteria-rush') && (mode === 'link-up' || mode === 'criteria-rush')) return true;
+  if ((targetModeId === 'record-books' || targetModeId === 'tally-race') && (mode === 'record-books' || mode === 'tally-race')) return true;
+  return false;
+}
+
 export function useGameSync(targetModeId: string) {
   const {
     party,
     playerName,
     gameInitData,
-    lastGameEvent,
+    matchRoster,
+    subscribeGameEvents,
+    takeGameEvents,
     playerForfeitEvent,
     clearForfeit,
     sendGameAction,
@@ -1008,18 +1208,17 @@ export function useGameSync(targetModeId: string) {
     leaveParty,
   } = useParty();
 
-  const isMultiplayer = party.isActive && party.members.length > 1;
-  const isHost = party.isCurrentUserHost;
+  // The match roster is fixed at launch, so multiplayer-ness, host and opponents never flip
+  // mid-match when someone drops, and server bots (matchmaking fallback) count as solo play.
+  const roster = matchRoster && gameModeMatches(targetModeId, matchRoster.modeId) ? matchRoster : null;
   const myPlayerId = party.currentUserId;
-  const opponent = party.members.find((m) => m.id !== myPlayerId);
+  const humanCount = roster ? roster.members.filter((m) => !m.isBot).length : 0;
+  const isMultiplayer = roster ? humanCount > 1 : party.isActive && party.members.length > 1;
+  const isHost = roster ? roster.hostId === myPlayerId : party.isCurrentUserHost;
+  const partyMembers = roster ? roster.members : party.members;
+  const opponent = partyMembers.find((m) => m.id !== myPlayerId);
 
-  const isMatchMode = (mode?: string) => {
-    if (!mode) return false;
-    if (mode === targetModeId) return true;
-    if ((targetModeId === 'link-up' || targetModeId === 'criteria-rush') && (mode === 'link-up' || mode === 'criteria-rush')) return true;
-    if ((targetModeId === 'record-books' || targetModeId === 'tally-race') && (mode === 'record-books' || mode === 'tally-race')) return true;
-    return false;
-  };
+  const isMatchMode = (mode?: string) => gameModeMatches(targetModeId, mode);
 
   const sendAction = useCallback(
     (action: string, data?: any) => {
@@ -1030,6 +1229,32 @@ export function useGameSync(targetModeId: string) {
     [isMultiplayer, sendGameAction, targetModeId]
   );
 
+  // ---------- Reliable FIFO event delivery ----------
+  // Every received event for this mode is queued and surfaced as `lastGameEvent` exactly once,
+  // one per render, then cleared. Bursts are never coalesced, and stale events never replay
+  // when an arena's other effect dependencies change.
+  const [eventQueue, setEventQueue] = useState<GameEventPayload[]>([]);
+
+  useEffect(() => {
+    const pull = () => {
+      const taken = takeGameEvents((modeId) => gameModeMatches(targetModeId, modeId));
+      if (taken.length > 0) {
+        setEventQueue((queue) => [...queue, ...taken]);
+      }
+    };
+    pull(); // drain anything that arrived before this arena mounted
+    return subscribeGameEvents(pull);
+  }, [subscribeGameEvents, takeGameEvents, targetModeId]);
+
+  const currentGameEvent = eventQueue[0] ?? null;
+
+  // Advance the queue after the arena's handler effects have seen the current event.
+  // Identity check keeps StrictMode's double effect invocation from skipping events.
+  useEffect(() => {
+    if (!currentGameEvent) return;
+    setEventQueue((queue) => (queue[0] === currentGameEvent ? queue.slice(1) : queue));
+  }, [currentGameEvent]);
+
   return {
     isMultiplayer,
     isHost,
@@ -1037,9 +1262,9 @@ export function useGameSync(targetModeId: string) {
     myPlayerName: playerName,
     opponent,
     party,
-    partyMembers: party.members,
+    partyMembers,
     gameInitData: isMatchMode(gameInitData?.modeId) ? gameInitData : null,
-    lastGameEvent: isMatchMode(lastGameEvent?.modeId) ? lastGameEvent : null,
+    lastGameEvent: currentGameEvent,
     playerForfeitEvent,
     clearForfeit,
     sendAction,

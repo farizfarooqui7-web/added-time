@@ -19,6 +19,8 @@ export interface ImposterMatchConfig {
   rolePreference: ImposterRolePreference;
   imposterClueEnabled: boolean;
   isMultiplayer?: boolean;
+  /** Quick Match: secret footballer drawn from well-known players only. */
+  wellKnownOnly?: boolean;
 }
 
 export interface ImposterSecretPlayer {
@@ -52,7 +54,7 @@ export interface ImposterClueEntry {
   id: string;
   participantId: string;
   participantName: string;
-  round: 1 | 2;
+  round: number;
   text: string;
 }
 

@@ -74,63 +74,7 @@ export function levenshteinDistance(a: string, b: string): number {
   return matrix[b.length][a.length];
 }
 
-/**
- * Validates that 'Position' appears at most once across the 3 slots.
- */
-export function isValidSlotConfiguration(
-  slots: [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType]
-): boolean {
-  const posCount = slots.filter((s) => s === 'Position').length;
-  return posCount <= 1;
-}
-
-/**
- * Updates a single slot while strictly enforcing the rule that 'Position' can appear at most once.
- * If the user selects 'Position' on `slotIndex` while another slot already has 'Position',
- * the other slot automatically switches to 'Club'.
- */
-export function updateSlotConfiguration(
-  currentSlots: [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType],
-  slotIndex: 0 | 1 | 2,
-  newType: LinkUpSlotType
-): [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType] {
-  const next: [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType] = [...currentSlots];
-  if (newType === 'Position') {
-    for (let i = 0; i < 3; i++) {
-      if (i !== slotIndex && next[i] === 'Position') {
-        next[i] = 'Club';
-      }
-    }
-  }
-  next[slotIndex] = newType;
-  return next;
-}
-
-/**
- * Generates a randomized 3-slot configuration while respecting the single-position rule.
- */
-export function randomizeSlotConfiguration(): [LinkUpSlotType, LinkUpSlotType, LinkUpSlotType] {
-  const presets: Array<[LinkUpSlotType, LinkUpSlotType, LinkUpSlotType]> = [
-    ['Club', 'Club', 'Nation'],
-    ['Club', 'Club', 'Club'],
-    ['Club', 'Club', 'Position'],
-    ['Club', 'Nation', 'Position'],
-    ['Club', 'Nation', 'Club'],
-    ['Nation', 'Club', 'Position'],
-    ['Position', 'Club', 'Club'],
-  ];
-  const chosen = [...presets[Math.floor(Math.random() * presets.length)]] as [
-    LinkUpSlotType,
-    LinkUpSlotType,
-    LinkUpSlotType
-  ];
-  // Shuffle order
-  for (let i = chosen.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [chosen[i], chosen[j]] = [chosen[j], chosen[i]];
-  }
-  return chosen;
-}
+export { isValidSlotConfiguration, updateSlotConfiguration, randomizeSlotConfiguration } from './slotConfig';
 
 const CLUB_CANONICAL_SLUGS: Record<string, string> = {
   'fc-barcelona': 'barcelona',
@@ -232,21 +176,14 @@ export function doesPlayerSatisfySingleClue(
       : '';
     const clueValNorm = normalizeSearchText(clue.value);
 
+    // Exact club identity only: substring matching used to let e.g. "Nacional" match
+    // "Atlético Nacional" or "Red Star" match "Red Star Belgrade".
     return player.clubs.some((c) => {
       const cSlugNorm = c.slug
         ? CLUB_CANONICAL_SLUGS[c.slug.toLowerCase().trim()] || c.slug.toLowerCase().trim()
         : '';
-      const cNameNorm = normalizeSearchText(c.name);
-
-      if (clueSlugNorm && cSlugNorm && clueSlugNorm === cSlugNorm) return true;
-      if (clueValNorm === cNameNorm) return true;
-      if (
-        clueValNorm.length >= 4 &&
-        (cNameNorm.includes(clueValNorm) || clueValNorm.includes(cNameNorm))
-      ) {
-        return true;
-      }
-      return false;
+      if (clueSlugNorm && cSlugNorm) return clueSlugNorm === cSlugNorm;
+      return clueValNorm === normalizeSearchText(c.name);
     });
   }
   if (clue.type === 'Nation') {
@@ -257,12 +194,13 @@ export function doesPlayerSatisfySingleClue(
     const canonNat = NATION_ALIASES[natNorm] || natNorm;
     if (canonNat === canonClue) return true;
 
-    if (player.secondaryNationality) {
-      const secNorm = player.secondaryNationality.toLowerCase().trim();
-      const canonSec = NATION_ALIASES[secNorm] || secNorm;
-      if (canonSec === canonClue) return true;
-    }
-    return false;
+    // Dual internationals count for every senior national team they represented
+    const others = [player.secondaryNationality, ...(player.nationalTeams || [])];
+    return others.some((n) => {
+      if (!n) return false;
+      const norm = n.toLowerCase().trim();
+      return (NATION_ALIASES[norm] || norm) === canonClue;
+    });
   }
   if (clue.type === 'Position') {
     return player.position === clue.value || player.secondaryPosition === clue.value;

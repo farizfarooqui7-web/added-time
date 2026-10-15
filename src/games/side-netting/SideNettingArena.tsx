@@ -2241,6 +2241,13 @@ interface SideNettingArenaProps {
 
 type DiveState = 'idle-surface' | 'answered-bubble' | 'diving' | 'at-depth' | 'ascending' | 'game-over';
 
+// How long a guest waits for the host's round transition before advancing on its own
+const HOST_FALLBACK_MS = 2500;
+// Timed rounds: extra wait past the opponent's clock for their (auto-)lock-in to land
+const OPPONENT_LOCK_GRACE_MS = 8000;
+// Relaxed (untimed) rounds: how long to wait for an idle opponent once you've answered
+const RELAXED_OPPONENT_WAIT_MS = 90000;
+
 export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   config,
   onExitArena,
@@ -2316,6 +2323,13 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [hasRequestedRematch, setHasRequestedRematch] = useState(false);
   const lastProcessedEventIdRef = useRef<number | string | null>(null);
 
+  // Multiplayer round bookkeeping: highest round we've committed to (host request or fallback),
+  // when this round started, and opponent packets that arrived a round early.
+  const committedRoundIdxRef = useRef<number>(0);
+  const roundStartedAtRef = useRef<number>(Date.now());
+  const pendingOpponentLocksRef = useRef<Record<number, SideNettingRoundSubmission>>({});
+  const pendingOpponentFinishedRef = useRef<Set<number>>(new Set());
+
   const { handleCleanExit } = useArenaBackGuard({
     isMatchOver: diveState === 'game-over',
     onTriggerForfeit: () => setShowForfeitModal(true),
@@ -2361,6 +2375,21 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     if (config.timerSeconds > 0) {
       setSecondsLeft(config.timerSeconds);
     }
+    roundStartedAtRef.current = Date.now();
+    committedRoundIdxRef.current = Math.max(committedRoundIdxRef.current, currentRoundIdx);
+
+    // Opponent was a round ahead: apply what they already sent for this round
+    const bufferedLock = pendingOpponentLocksRef.current[currentRoundIdx];
+    if (bufferedLock) {
+      delete pendingOpponentLocksRef.current[currentRoundIdx];
+      setOpponentLockedIn(true);
+      setOpponentSubmission(bufferedLock);
+      setOpponentTotalScore((prev) => prev + (bufferedLock.score || 0));
+    }
+    if (pendingOpponentFinishedRef.current.has(currentRoundIdx)) {
+      pendingOpponentFinishedRef.current.delete(currentRoundIdx);
+      setOpponentStrikeFinished(true);
+    }
     window.setTimeout(() => inputRef.current?.focus(), 100);
   }, [currentRoundIdx, config.timerSeconds]);
 
@@ -2380,17 +2409,26 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         setOpponentLockedIn(true);
         setOpponentSubmission(submission);
         setOpponentTotalScore((prev) => prev + (submission.score || 0));
+      } else if (typeof evRound === 'number' && evRound > currentRoundIdx && submission) {
+        pendingOpponentLocksRef.current[evRound] = submission;
       }
     } else if (lastGameEvent.event === 'sidenetting_strike_finished') {
       const { roundIdx: evRound } = lastGameEvent.data || {};
       if (evRound === currentRoundIdx) {
         setOpponentStrikeFinished(true);
+      } else if (typeof evRound === 'number' && evRound > currentRoundIdx) {
+        pendingOpponentFinishedRef.current.add(evRound);
       }
     } else if (lastGameEvent.event === 'sidenetting_player_ready') {
       soundFX.playSuccess();
     } else if (lastGameEvent.event === 'sidenetting_next_round') {
       const { nextRoundIdx } = lastGameEvent.data || {};
-      if (typeof nextRoundIdx === 'number' && nextRoundIdx > currentRoundIdx) {
+      if (
+        typeof nextRoundIdx === 'number' &&
+        nextRoundIdx > currentRoundIdx &&
+        nextRoundIdx > committedRoundIdxRef.current
+      ) {
+        committedRoundIdxRef.current = nextRoundIdx;
         setIsPostRoundModalOpen(false);
         setUserFinishedRound(false);
         setOpponentStrikeFinished(false);
@@ -2438,6 +2476,21 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
     }, 4000);
     return () => window.clearTimeout(fallbackTimer);
   }, [isMultiplayer, opponentLockedIn, opponentStrikeFinished]);
+
+  // AFK safeguard: if the opponent never locks in (e.g. idle in relaxed mode with no clock),
+  // stop waiting once their round would be long over so the match can't freeze.
+  useEffect(() => {
+    if (!isMultiplayer || !userFinishedRound || opponentLockedIn) return;
+    const deadlineMs =
+      config.timerSeconds > 0
+        ? config.timerSeconds * 1000 + OPPONENT_LOCK_GRACE_MS - (Date.now() - roundStartedAtRef.current)
+        : RELAXED_OPPONENT_WAIT_MS;
+    const afkTimer = window.setTimeout(() => {
+      setOpponentLockedIn(true);
+      setOpponentStrikeFinished(true);
+    }, Math.max(OPPONENT_LOCK_GRACE_MS, deadlineMs));
+    return () => window.clearTimeout(afkTimer);
+  }, [isMultiplayer, userFinishedRound, opponentLockedIn, config.timerSeconds, currentRoundIdx]);
 
   // 2. ROUND TIMER
   useEffect(() => {
@@ -2597,10 +2650,19 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
   const handlePlayAgain = () => {
     soundFX.playClick(950);
-    // Draw fresh non-repeating questions
-    const nextResult = drawMatchPrompts(config.roundCount, usedPromptIds);
-    setPrompts(nextResult.prompts);
-    setUsedPromptIds(nextResult.updatedExcludedIds);
+    committedRoundIdxRef.current = 0;
+    pendingOpponentLocksRef.current = {};
+    pendingOpponentFinishedRef.current = new Set();
+    const seededPrompts = isMultiplayer ? gameInitData?.sharedData?.prompts : undefined;
+    if (seededPrompts && seededPrompts.length > 0) {
+      // Multiplayer rematches replay the server's freshly seeded prompt set
+      setPrompts(seededPrompts);
+    } else {
+      // Draw fresh non-repeating questions
+      const nextResult = drawMatchPrompts(config.roundCount, usedPromptIds);
+      setPrompts(nextResult.prompts);
+      setUsedPromptIds(nextResult.updatedExcludedIds);
+    }
     setCurrentRoundIdx(0);
 
     // Reset timer before resetting diveState to prevent the 0-second auto-skip bug
@@ -2637,7 +2699,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         soundFX.playClick(900);
         return;
       }
+      // Host asks the server to re-seed; everyone (host included) restarts on its match_restart
       sendAction('match_restart', {});
+      soundFX.playClick(900);
+      return;
     }
     handlePlayAgain();
   };
@@ -2680,6 +2745,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
       setOpponentLockedIn(false);
       if (currentRoundIdx + 1 < prompts.length) {
         const nextRound = currentRoundIdx + 1;
+        committedRoundIdxRef.current = Math.max(committedRoundIdxRef.current, nextRound);
         sendAction('sidenetting_next_round', { nextRoundIdx: nextRound });
         setDiveState('ascending');
         window.setTimeout(() => {
@@ -2721,15 +2787,19 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           if (isHost) {
             handleProceedNextQuestion();
           } else {
+            // Guest fallback: only if the host's transition never arrived
             setTimeout(() => {
+              if (committedRoundIdxRef.current > currentRoundIdx) return;
               if (currentRoundIdx + 1 < prompts.length) {
+                const nextRound = currentRoundIdx + 1;
+                committedRoundIdxRef.current = nextRound;
                 setIsPostRoundModalOpen(false);
                 setUserFinishedRound(false);
                 setOpponentStrikeFinished(false);
                 setOpponentLockedIn(false);
                 setDiveState('ascending');
                 window.setTimeout(() => {
-                  setCurrentRoundIdx((prevIdx) => prevIdx + 1);
+                  setCurrentRoundIdx(nextRound);
                   setDiveState('idle-surface');
                   setDisplayDepth(0);
                   setInputVal('');
@@ -2741,7 +2811,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                 setDiveState('game-over');
                 soundFX.playVictoryFanfare();
               }
-            }, 600);
+            }, HOST_FALLBACK_MS);
           }
           return 0;
         }

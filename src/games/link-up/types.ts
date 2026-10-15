@@ -21,6 +21,8 @@ export interface LinkUpPlayerRecord {
   secondaryPosition?: LinkUpPosition;
   nationality: string;
   secondaryNationality?: string;
+  /** Every senior national team the player represented (dual internationals). */
+  nationalTeams?: string[];
   clubs: LinkUpClubEntry[];
   difficulty: LinkUpDifficulty;
 }
@@ -56,6 +58,8 @@ export interface LinkUpMatchConfig {
   randomizeSlotsEachRound: boolean;
   totalRounds: number;
   isMultiplayer?: boolean;
+  /** Public Quick Match: rounds 1–3 Easy, 4–7 Medium, 8–10 Hard. */
+  difficultyCurve?: 'rising';
 }
 
 export interface LinkUpPlayerEvaluation {

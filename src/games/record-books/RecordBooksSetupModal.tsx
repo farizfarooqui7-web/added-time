@@ -9,7 +9,6 @@ import { soundFX } from '../../utils/audio';
 import {
   Bot,
   Goal,
-  Trophy,
   Users,
   X,
   Zap,
@@ -203,19 +202,13 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
           <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
             <span className="text-[#ff9f1c]">01.</span> TARGET STATISTIC METRIC
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {[
               {
                 id: 'Goals',
-                title: 'TOP GOALSCORERS',
-                desc: 'All-time top competitive goals scored for the club.',
+                title: 'LEAGUE GOALS',
+                desc: "Senior league goals scored for the club, as listed in each player's Wikipedia infobox.",
                 icon: Goal,
-              },
-              {
-                id: 'Appearances',
-                title: 'MOST APPEARANCES',
-                desc: 'All-time official first-team appearances across all comps.',
-                icon: Trophy,
               },
             ].map((m) => {
               const isSelected = metric === m.id;
@@ -355,7 +348,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Drop-in duel queue. Pairs with online ballers or automated bot at 10s.
+                Ranked: 10 rounds, rising difficulty. Goals tally. Pairs with a live baller or a bot at 10s.
               </p>
             </button>
 

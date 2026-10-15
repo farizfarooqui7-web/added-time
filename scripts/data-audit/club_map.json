@@ -1,0 +1,5163 @@
+{
+ "al-nassr": {
+  "name": "Al-Nassr",
+  "qid": "Q482764",
+  "label": "Al-Nassr",
+  "votes": 15,
+  "players": 20
+ },
+ "sporting-cp": {
+  "name": "Sporting CP",
+  "qid": "Q75729",
+  "label": "Sporting CP",
+  "votes": 106,
+  "players": 116
+ },
+ "manchester-united": {
+  "name": "Manchester United",
+  "qid": "Q18656",
+  "label": "Manchester United F.C.",
+  "votes": 162,
+  "players": 198
+ },
+ "real-madrid": {
+  "name": "Real Madrid",
+  "qid": "Q8682",
+  "label": "Real Madrid Club de Fútbol",
+  "votes": 186,
+  "players": 229
+ },
+ "juventus": {
+  "name": "Juventus",
+  "qid": "Q1422",
+  "label": "Juventus FC",
+  "votes": 228,
+  "players": 248
+ },
+ "fc-barcelona": {
+  "name": "FC Barcelona",
+  "qid": "Q7156",
+  "label": "FC Barcelona",
+  "votes": 236,
+  "players": 256
+ },
+ "sevilla": {
+  "name": "Sevilla",
+  "qid": "Q10329",
+  "label": "Sevilla FC",
+  "votes": 135,
+  "players": 146
+ },
+ "napoli": {
+  "name": "Napoli",
+  "qid": "Q2641",
+  "label": "SSC Napoli",
+  "votes": 109,
+  "players": 123
+ },
+ "boca-juniors": {
+  "name": "Boca Juniors",
+  "qid": "Q170703",
+  "label": "Boca Juniors",
+  "votes": 62,
+  "players": 57
+ },
+ "santos": {
+  "name": "Santos",
+  "qid": "Q80955",
+  "label": "Santos F.C.",
+  "votes": 111,
+  "players": 86
+ },
+ "paris-saint-germain": {
+  "name": "Paris Saint-Germain",
+  "qid": "Q483020",
+  "label": "Paris Saint-Germain FC",
+  "votes": 18,
+  "players": 70
+ },
+ "al-hilal": {
+  "name": "Al-Hilal",
+  "qid": "Q73965",
+  "label": "Al Hilal SFC",
+  "votes": 2,
+  "players": 9
+ },
+ "bordeaux": {
+  "name": "Girondins de Bordeaux",
+  "qid": "Q172476",
+  "label": "FC Girondins de Bordeaux",
+  "votes": 69,
+  "players": 71
+ },
+ "ac-milan": {
+  "name": "AC Milan",
+  "qid": "Q1543",
+  "label": "AC Milan",
+  "votes": 253,
+  "players": 255
+ },
+ "la-galaxy": {
+  "name": "LA Galaxy",
+  "qid": "Q204357",
+  "label": "LA Galaxy",
+  "votes": 4,
+  "players": 7
+ },
+ "as-monaco": {
+  "name": "AS Monaco",
+  "qid": "Q180305",
+  "label": "AS Monaco FC",
+  "votes": 109,
+  "players": 136
+ },
+ "ajax": {
+  "name": "Ajax",
+  "qid": "Q81888",
+  "label": "AFC Ajax",
+  "votes": 144,
+  "players": 156
+ },
+ "feyenoord": {
+  "name": "Feyenoord",
+  "qid": "Q134241",
+  "label": "Feyenoord Rotterdam",
+  "votes": 76,
+  "players": 80
+ },
+ "levante": {
+  "name": "Levante",
+  "qid": "Q8823",
+  "label": "Levante UD",
+  "votes": 62,
+  "players": 58
+ },
+ "inter-milan": {
+  "name": "Inter Milan",
+  "qid": "Q631",
+  "label": "Inter Milan",
+  "votes": 251,
+  "players": 262
+ },
+ "psv-eindhoven": {
+  "name": "PSV Eindhoven",
+  "qid": "Q11938",
+  "label": "PSV Eindhoven",
+  "votes": 105,
+  "players": 116
+ },
+ "corinthians": {
+  "name": "Corinthians",
+  "qid": "Q35933",
+  "label": "S.C. Corinthians Paulista",
+  "votes": 114,
+  "players": 91
+ },
+ "flamengo": {
+  "name": "Flamengo",
+  "qid": "Q17479",
+  "label": "Clube de Regatas do Flamengo",
+  "votes": 124,
+  "players": 99
+ },
+ "dinamo-zagreb": {
+  "name": "Dinamo Zagreb",
+  "qid": "Q172803",
+  "label": "GNK Dinamo Zagreb",
+  "votes": 57,
+  "players": 50
+ },
+ "tottenham-hotspur": {
+  "name": "Tottenham Hotspur",
+  "qid": "Q18741",
+  "label": "Tottenham Hotspur F.C.",
+  "votes": 152,
+  "players": 176
+ },
+ "arsenal": {
+  "name": "Arsenal",
+  "qid": "Q9617",
+  "label": "Arsenal F.C.",
+  "votes": 155,
+  "players": 196
+ },
+ "fenerbahce": {
+  "name": "Fenerbahçe",
+  "qid": "Q6601875",
+  "label": "Fenerbahçe Istanbul",
+  "votes": 77,
+  "players": 84
+ },
+ "schalke-04": {
+  "name": "Schalke 04",
+  "qid": "Q32494",
+  "label": "Schalke 04",
+  "votes": 8,
+  "players": 33
+ },
+ "werder-bremen": {
+  "name": "Werder Bremen",
+  "qid": "Q51976",
+  "label": "SV Werder Bremen",
+  "votes": 18,
+  "players": 32
+ },
+ "chelsea": {
+  "name": "Chelsea",
+  "qid": "Q9616",
+  "label": "Chelsea F.C.",
+  "votes": 168,
+  "players": 224
+ },
+ "manchester-city": {
+  "name": "Manchester City",
+  "qid": "Q50602",
+  "label": "Manchester City F.C.",
+  "votes": 152,
+  "players": 203
+ },
+ "swansea-city": {
+  "name": "Swansea City",
+  "qid": "Q18659",
+  "label": "Swansea City A.F.C.",
+  "votes": 60,
+  "players": 60
+ },
+ "west-ham-united": {
+  "name": "West Ham United",
+  "qid": "Q18747",
+  "label": "West Ham United F.C.",
+  "votes": 17,
+  "players": 45
+ },
+ "everton": {
+  "name": "Everton",
+  "qid": "Q5794",
+  "label": "Everton F.C.",
+  "votes": 130,
+  "players": 146
+ },
+ "derby-county": {
+  "name": "Derby County",
+  "qid": "Q19470",
+  "label": "Derby County F.C.",
+  "votes": 82,
+  "players": 79
+ },
+ "bayern-munich": {
+  "name": "Bayern Munich",
+  "qid": "Q15789",
+  "label": "FC Bayern Munich",
+  "votes": 117,
+  "players": 159
+ },
+ "lazio": {
+  "name": "Lazio",
+  "qid": "Q2609",
+  "label": "SS Lazio",
+  "votes": 128,
+  "players": 131
+ },
+ "kaiserslautern": {
+  "name": "1. FC Kaiserslautern",
+  "qid": "Q8466",
+  "label": "1. FC Kaiserslautern",
+  "votes": 39,
+  "players": 37
+ },
+ "sao-paulo": {
+  "name": "São Paulo",
+  "qid": "Q38568",
+  "label": "São Paulo FC",
+  "votes": 131,
+  "players": 109
+ },
+ "red-bull-salzburg": {
+  "name": "Red Bull Salzburg",
+  "qid": "Q994811",
+  "label": "FC Red Bull Salzburg",
+  "votes": 20,
+  "players": 32
+ },
+ "borussia-dortmund": {
+  "name": "Borussia Dortmund",
+  "qid": "Q41420",
+  "label": "Borussia Dortmund",
+  "votes": 90,
+  "players": 129
+ },
+ "parma": {
+  "name": "Parma",
+  "qid": "Q2693",
+  "label": "Parma Calcio 1913",
+  "votes": 130,
+  "players": 111
+ },
+ "leicester-city": {
+  "name": "Leicester City",
+  "qid": "Q19481",
+  "label": "Leicester City F.C.",
+  "votes": 91,
+  "players": 112
+ },
+ "norwich-city": {
+  "name": "Norwich City",
+  "qid": "Q18721",
+  "label": "Norwich City F.C.",
+  "votes": 1,
+  "players": 14
+ },
+ "brescia": {
+  "name": "Brescia",
+  "qid": "Q6651",
+  "label": "Brescia Calcio",
+  "votes": 58,
+  "players": 54
+ },
+ "fiorentina": {
+  "name": "Fiorentina",
+  "qid": "Q2052",
+  "label": "ACF Fiorentina",
+  "votes": 157,
+  "players": 164
+ },
+ "bologna": {
+  "name": "Bologna",
+  "qid": "Q1893",
+  "label": "Bologna F.C. 1909",
+  "votes": 2,
+  "players": 8
+ },
+ "galatasaray": {
+  "name": "Galatasaray",
+  "qid": "Q495299",
+  "label": "Galatasaray S.K.",
+  "votes": 95,
+  "players": 93
+ },
+ "ogc-nice": {
+  "name": "OGC Nice",
+  "qid": "Q185163",
+  "label": "OGC Nice",
+  "votes": 3,
+  "players": 57
+ },
+ "crystal-palace": {
+  "name": "Crystal Palace",
+  "qid": "Q19467",
+  "label": "Crystal Palace F.C.",
+  "votes": 91,
+  "players": 94
+ },
+ "sampdoria": {
+  "name": "Sampdoria",
+  "qid": "Q1457",
+  "label": "U.C. Sampdoria",
+  "votes": 122,
+  "players": 106
+ },
+ "deportivo-la-coruna": {
+  "name": "Deportivo La Coruña",
+  "qid": "Q8760",
+  "label": "Deportivo de A Coruña",
+  "votes": 96,
+  "players": 88
+ },
+ "liverpool": {
+  "name": "Liverpool",
+  "qid": "Q1130849",
+  "label": "Liverpool F.C.",
+  "votes": 173,
+  "players": 208
+ },
+ "atletico-madrid": {
+  "name": "Atlético Madrid",
+  "qid": "Q8701",
+  "label": "Atlético Madrid",
+  "votes": 154,
+  "players": 178
+ },
+ "inter-miami": {
+  "name": "Inter Miami",
+  "qid": "Q16844931",
+  "label": "Inter Miami CF",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "mallorca": {
+  "name": "RCD Mallorca",
+  "qid": "Q8835",
+  "label": "RCD Mallorca",
+  "votes": 83,
+  "players": 77
+ },
+ "espanyol": {
+  "name": "Espanyol",
+  "qid": "Q8780",
+  "label": "RCD Espanyol de Barcelona",
+  "votes": 110,
+  "players": 101
+ },
+ "dynamo-kyiv": {
+  "name": "Dynamo Kyiv",
+  "qid": "Q179075",
+  "label": "FC Dynamo Kyiv",
+  "votes": 35,
+  "players": 30
+ },
+ "valencia": {
+  "name": "Valencia",
+  "qid": "Q10333",
+  "label": "Valencia CF",
+  "votes": 158,
+  "players": 174
+ },
+ "real-zaragoza": {
+  "name": "Real Zaragoza",
+  "qid": "Q10308",
+  "label": "Real Zaragoza",
+  "votes": 72,
+  "players": 68
+ },
+ "as-roma": {
+  "name": "AS Roma",
+  "qid": "Q2739",
+  "label": "AS Roma",
+  "votes": 200,
+  "players": 212
+ },
+ "olympiacos": {
+  "name": "Olympiacos",
+  "qid": "Q19628",
+  "label": "Olympiacos F.C.",
+  "votes": 77,
+  "players": 79
+ },
+ "villarreal": {
+  "name": "Villarreal",
+  "qid": "Q12297",
+  "label": "Villarreal CF",
+  "votes": 102,
+  "players": 104
+ },
+ "nottingham-forest": {
+  "name": "Nottingham Forest",
+  "qid": "Q19490",
+  "label": "Nottingham Forest F.C.",
+  "votes": 100,
+  "players": 94
+ },
+ "cardiff-city": {
+  "name": "Cardiff City",
+  "qid": "Q18662",
+  "label": "Cardiff City F.C.",
+  "votes": 3,
+  "players": 20
+ },
+ "rangers": {
+  "name": "Rangers",
+  "qid": "Q19597",
+  "label": "Rangers F.C.",
+  "votes": 13,
+  "players": 34
+ },
+ "fc-porto": {
+  "name": "FC Porto",
+  "qid": "Q128446",
+  "label": "FC Porto",
+  "votes": 88,
+  "players": 107
+ },
+ "benfica": {
+  "name": "Benfica",
+  "qid": "Q131499",
+  "label": "S.L. Benfica",
+  "votes": 103,
+  "players": 117
+ },
+ "west-bromwich-albion": {
+  "name": "West Bromwich Albion",
+  "qid": "Q18744",
+  "label": "West Bromwich Albion F.C.",
+  "votes": 93,
+  "players": 100
+ },
+ "bolton-wanderers": {
+  "name": "Bolton Wanderers",
+  "qid": "Q19451",
+  "label": "Bolton Wanderers F.C.",
+  "votes": 85,
+  "players": 86
+ },
+ "olympique-marseille": {
+  "name": "Olympique de Marseille",
+  "qid": "Q132885",
+  "label": "Olympique de Marseille",
+  "votes": 10,
+  "players": 33
+ },
+ "aston-villa": {
+  "name": "Aston Villa",
+  "qid": "Q18711",
+  "label": "Aston Villa F.C.",
+  "votes": 152,
+  "players": 177
+ },
+ "lille": {
+  "name": "Lille OSC",
+  "qid": "Q19516",
+  "label": "Lille OSC",
+  "votes": 52,
+  "players": 63
+ },
+ "birmingham-city": {
+  "name": "Birmingham City",
+  "qid": "Q19444",
+  "label": "Birmingham City F.C.",
+  "votes": 10,
+  "players": 94
+ },
+ "malaga": {
+  "name": "Málaga",
+  "qid": "Q8857",
+  "label": "Málaga CF",
+  "votes": 63,
+  "players": 56
+ },
+ "hamburger-sv": {
+  "name": "Hamburger SV",
+  "qid": "Q51974",
+  "label": "Hamburger SV",
+  "votes": 1,
+  "players": 13
+ },
+ "genk": {
+  "name": "KRC Genk",
+  "qid": "Q216032",
+  "label": "K.R.C. Genk",
+  "votes": 22,
+  "players": 28
+ },
+ "vfb-stuttgart": {
+  "name": "VfB Stuttgart",
+  "qid": "Q4512",
+  "label": "VfB Stuttgart",
+  "votes": 6,
+  "players": 34
+ },
+ "newcastle-united": {
+  "name": "Newcastle United",
+  "qid": "Q18716",
+  "label": "Newcastle United F.C.",
+  "votes": 122,
+  "players": 147
+ },
+ "stoke-city": {
+  "name": "Stoke City",
+  "qid": "Q18736",
+  "label": "Stoke City F.C.",
+  "votes": 74,
+  "players": 79
+ },
+ "bayer-leverkusen": {
+  "name": "Bayer Leverkusen",
+  "qid": "Q104761",
+  "label": "Bayer 04 Leverkusen",
+  "votes": 7,
+  "players": 41
+ },
+ "southampton": {
+  "name": "Southampton",
+  "qid": "Q18732",
+  "label": "Southampton F.C.",
+  "votes": 84,
+  "players": 89
+ },
+ "real-sociedad": {
+  "name": "Real Sociedad",
+  "qid": "Q10315",
+  "label": "Real Sociedad",
+  "votes": 61,
+  "players": 83
+ },
+ "leeds-united": {
+  "name": "Leeds United",
+  "qid": "Q1128631",
+  "label": "Leeds United F.C.",
+  "votes": 89,
+  "players": 105
+ },
+ "bournemouth": {
+  "name": "Bournemouth",
+  "qid": "Q19568",
+  "label": "AFC Bournemouth",
+  "votes": 46,
+  "players": 43
+ },
+ "queens-park-rangers": {
+  "name": "Queens Park Rangers",
+  "qid": "Q18723",
+  "label": "Queens Park Rangers F.C.",
+  "votes": 85,
+  "players": 83
+ },
+ "hull-city": {
+  "name": "Hull City",
+  "qid": "Q19477",
+  "label": "Hull City A.F.C.",
+  "votes": 76,
+  "players": 69
+ },
+ "udinese": {
+  "name": "Udinese",
+  "qid": "Q2798",
+  "label": "Udinese Calcio",
+  "votes": 1,
+  "players": 10
+ },
+ "celta-vigo": {
+  "name": "Celta Vigo",
+  "qid": "Q8749",
+  "label": "RC Celta de Vigo",
+  "votes": 81,
+  "players": 79
+ },
+ "fulham": {
+  "name": "Fulham",
+  "qid": "Q18708",
+  "label": "Fulham F.C.",
+  "votes": 131,
+  "players": 133
+ },
+ "vfl-wolfsburg": {
+  "name": "VfL Wolfsburg",
+  "qid": "Q101859",
+  "label": "VfL Wolfsburg",
+  "votes": 1,
+  "players": 19
+ },
+ "wolfsburg": {
+  "name": "Wolfsburg",
+  "qid": "Q101859",
+  "label": "VfL Wolfsburg",
+  "votes": 5,
+  "players": 11
+ },
+ "saint-etienne": {
+  "name": "Saint-Étienne",
+  "qid": "Q19521",
+  "label": "AS Saint-Étienne",
+  "votes": 2,
+  "players": 8
+ },
+ "montpellier": {
+  "name": "Montpellier",
+  "qid": "Q19513",
+  "label": "Montpellier Hérault Sport Club",
+  "votes": 1,
+  "players": 5
+ },
+ "anderlecht": {
+  "name": "Anderlecht",
+  "qid": "Q187528",
+  "label": "R.S.C. Anderlecht",
+  "votes": 65,
+  "players": 63
+ },
+ "fc-basel": {
+  "name": "FC Basel",
+  "qid": "Q189671",
+  "label": "FC Basel",
+  "votes": 43,
+  "players": 39
+ },
+ "river-plate": {
+  "name": "River Plate",
+  "qid": "Q15799",
+  "label": "Club Atlético River Plate",
+  "votes": 91,
+  "players": 75
+ },
+ "hoffenheim": {
+  "name": "TSG Hoffenheim",
+  "qid": "Q22707",
+  "label": "TSG 1899 Hoffenheim",
+  "votes": 37,
+  "players": 37
+ },
+ "olympique-lyonnais": {
+  "name": "Olympique Lyonnais",
+  "qid": "Q704",
+  "label": "Olympique Lyonnais",
+  "votes": 6,
+  "players": 37
+ },
+ "genoa": {
+  "name": "Genoa",
+  "qid": "Q2074",
+  "label": "Genoa CFC",
+  "votes": 130,
+  "players": 114
+ },
+ "fc-koln": {
+  "name": "1. FC Köln",
+  "qid": "Q104770",
+  "label": "1. FC Köln",
+  "votes": 54,
+  "players": 51
+ },
+ "palermo": {
+  "name": "Palermo",
+  "qid": "Q2674",
+  "label": "Palermo F.C.",
+  "votes": 55,
+  "players": 55
+ },
+ "palmeiras": {
+  "name": "Palmeiras",
+  "qid": "Q80964",
+  "label": "Sociedade Esportiva Palmeiras",
+  "votes": 95,
+  "players": 77
+ },
+ "bahia": {
+  "name": "Bahia",
+  "qid": "Q198032",
+  "label": "Esporte Clube Bahia",
+  "votes": 1,
+  "players": 1
+ },
+ "pumas-unam": {
+  "name": "Pumas UNAM",
+  "qid": "Q1143000",
+  "label": "Pumas UNAM",
+  "votes": 1,
+  "players": 1
+ },
+ "rc-lens": {
+  "name": "RC Lens",
+  "qid": "Q191843",
+  "label": "R.C. Lens",
+  "votes": 0,
+  "players": 22,
+  "via": "search"
+ },
+ "auxerre": {
+  "name": "AJ Auxerre",
+  "qid": "Q182876",
+  "label": "AJ Auxerre",
+  "votes": 37,
+  "players": 36
+ },
+ "celtic": {
+  "name": "Celtic",
+  "qid": "Q19593",
+  "label": "Celtic F.C.",
+  "votes": 83,
+  "players": 100
+ },
+ "hertha-bsc": {
+  "name": "Hertha BSC",
+  "qid": "Q102720",
+  "label": "Hertha BSC",
+  "votes": 56,
+  "players": 57
+ },
+ "cagliari": {
+  "name": "Cagliari",
+  "qid": "Q1900",
+  "label": "Cagliari Calcio",
+  "votes": 75,
+  "players": 68
+ },
+ "besiktas": {
+  "name": "Beşiktaş",
+  "qid": "Q172567",
+  "label": "Beşiktaş J.K.",
+  "votes": 74,
+  "players": 70
+ },
+ "stade-rennais": {
+  "name": "Stade Rennais",
+  "qid": "Q19509",
+  "label": "Stade Rennais F.C.",
+  "votes": 54,
+  "players": 56
+ },
+ "vitesse": {
+  "name": "Vitesse",
+  "qid": "Q219233",
+  "label": "SBV Vitesse",
+  "votes": 36,
+  "players": 41
+ },
+ "cska-moscow": {
+  "name": "CSKA Moscow",
+  "qid": "Q176371",
+  "label": "PFC CSKA Moscow",
+  "votes": 36,
+  "players": 30
+ },
+ "middlesbrough": {
+  "name": "Middlesbrough",
+  "qid": "Q18661",
+  "label": "Middlesbrough F.C.",
+  "votes": 93,
+  "players": 88
+ },
+ "wolverhampton-wanderers": {
+  "name": "Wolverhampton Wanderers",
+  "qid": "Q19500",
+  "label": "Wolverhampton Wanderers F.C.",
+  "votes": 64,
+  "players": 75
+ },
+ "real-valladolid": {
+  "name": "Real Valladolid",
+  "qid": "Q10319",
+  "label": "Real Valladolid",
+  "votes": 56,
+  "players": 54
+ },
+ "rayo-vallecano": {
+  "name": "Rayo Vallecano",
+  "qid": "Q10300",
+  "label": "Rayo Vallecano",
+  "votes": 62,
+  "players": 62
+ },
+ "sc-braga": {
+  "name": "SC Braga",
+  "qid": "Q75684",
+  "label": "S.C. Braga",
+  "votes": 34,
+  "players": 36
+ },
+ "hellas-verona": {
+  "name": "Hellas Verona",
+  "qid": "Q8639",
+  "label": "Hellas Verona FC",
+  "votes": 69,
+  "players": 68
+ },
+ "watford": {
+  "name": "Watford",
+  "qid": "Q2714",
+  "label": "Watford F.C.",
+  "votes": 77,
+  "players": 74
+ },
+ "union-berlin": {
+  "name": "Union Berlin",
+  "qid": "Q141971",
+  "label": "1. FC Union Berlin",
+  "votes": 9,
+  "players": 13
+ },
+ "brentford": {
+  "name": "Brentford",
+  "qid": "Q19571",
+  "label": "Brentford F.C.",
+  "votes": 18,
+  "players": 25
+ },
+ "mainz-05": {
+  "name": "Mainz 05",
+  "qid": "Q105254",
+  "label": "1. FSV Mainz 05",
+  "votes": 37,
+  "players": 36
+ },
+ "lecce": {
+  "name": "Lecce",
+  "qid": "Q13391",
+  "label": "US Lecce",
+  "votes": 39,
+  "players": 36
+ },
+ "blackburn-rovers": {
+  "name": "Blackburn Rovers",
+  "qid": "Q19446",
+  "label": "Blackburn Rovers F.C.",
+  "votes": 11,
+  "players": 100
+ },
+ "atalanta": {
+  "name": "Atalanta",
+  "qid": "Q1886",
+  "label": "Atalanta BC",
+  "votes": 95,
+  "players": 94
+ },
+ "real-betis": {
+  "name": "Real Betis",
+  "qid": "Q8723",
+  "label": "Real Betis Balompié",
+  "votes": 90,
+  "players": 84
+ },
+ "empoli": {
+  "name": "Empoli",
+  "qid": "Q6703",
+  "label": "Empoli FC",
+  "votes": 50,
+  "players": 54
+ },
+ "zenit": {
+  "name": "Zenit Saint Petersburg",
+  "qid": "Q29108",
+  "label": "FC Zenit Saint Petersburg",
+  "votes": 30,
+  "players": 25
+ },
+ "wigan-athletic": {
+  "name": "Wigan Athletic",
+  "qid": "Q18750",
+  "label": "Wigan Athletic F.C.",
+  "votes": 73,
+  "players": 70
+ },
+ "chievo": {
+  "name": "Chievo Verona",
+  "qid": "Q2037",
+  "label": "AC ChievoVerona",
+  "votes": 0,
+  "players": 45,
+  "via": "label"
+ },
+ "sunderland": {
+  "name": "Sunderland",
+  "qid": "Q18739",
+  "label": "Sunderland A.F.C.",
+  "votes": 117,
+  "players": 120
+ },
+ "fc-nantes": {
+  "name": "FC Nantes",
+  "qid": "Q192071",
+  "label": "FC Nantes",
+  "votes": 0,
+  "players": 33,
+  "via": "label"
+ },
+ "burnley": {
+  "name": "Burnley",
+  "qid": "Q19458",
+  "label": "Burnley F.C.",
+  "votes": 61,
+  "players": 61
+ },
+ "brighton": {
+  "name": "Brighton & Hove Albion",
+  "qid": "Q19453",
+  "label": "Brighton & Hove Albion F.C.",
+  "votes": 41,
+  "players": 53
+ },
+ "newells-old-boys": {
+  "name": "Newell's Old Boys",
+  "qid": "Q221882",
+  "label": "Newell's Old Boys",
+  "votes": 3,
+  "players": 2
+ },
+ "penarol": {
+  "name": "Peñarol",
+  "qid": "Q16320",
+  "label": "Club Atlético Peñarol",
+  "votes": 1,
+  "players": 3
+ },
+ "athletic-bilbao": {
+  "name": "Athletic Bilbao",
+  "qid": "Q8687",
+  "label": "Athletic Club",
+  "votes": 0,
+  "players": 53,
+  "via": "label"
+ },
+ "alaves": {
+  "name": "Deportivo Alavés",
+  "qid": "Q223620",
+  "label": "Deportivo Alavés",
+  "votes": 47,
+  "players": 48
+ },
+ "sheffield-united": {
+  "name": "Sheffield United",
+  "qid": "Q19607",
+  "label": "Sheffield United F.C.",
+  "votes": 43,
+  "players": 43
+ },
+ "fc-augsburg": {
+  "name": "FC Augsburg",
+  "qid": "Q15755",
+  "label": "FC Augsburg",
+  "votes": 25,
+  "players": 23
+ },
+ "osasuna": {
+  "name": "Osasuna",
+  "qid": "Q10286",
+  "label": "Club Atlético Osasuna",
+  "votes": 41,
+  "players": 39
+ },
+ "reims": {
+  "name": "Stade de Reims",
+  "qid": "Q208228",
+  "label": "Stade de Reims",
+  "votes": 16,
+  "players": 16
+ },
+ "club-brugge": {
+  "name": "Club Brugge",
+  "qid": "Q190916",
+  "label": "Club Brugge K.V.",
+  "votes": 33,
+  "players": 36
+ },
+ "reading": {
+  "name": "Reading",
+  "qid": "Q18729",
+  "label": "Reading F.C.",
+  "votes": 75,
+  "players": 76
+ },
+ "strasbourg": {
+  "name": "RC Strasbourg",
+  "qid": "Q126334",
+  "label": "RC Strasbourg Alsace",
+  "votes": 24,
+  "players": 23
+ },
+ "portsmouth": {
+  "name": "Portsmouth",
+  "qid": "Q19604",
+  "label": "Portsmouth F.C.",
+  "votes": 0,
+  "players": 15,
+  "via": "label"
+ },
+ "fc-twente": {
+  "name": "FC Twente",
+  "qid": "Q19603",
+  "label": "FC Twente",
+  "votes": 47,
+  "players": 44
+ },
+ "hannover-96": {
+  "name": "Hannover 96",
+  "qid": "Q33748",
+  "label": "Hannover 96",
+  "votes": 37,
+  "players": 43
+ },
+ "shakhtar-donetsk": {
+  "name": "Shakhtar Donetsk",
+  "qid": "Q172969",
+  "label": "FC Shakhtar Donetsk",
+  "votes": 28,
+  "players": 25
+ },
+ "aek-athens": {
+  "name": "AEK Athens",
+  "qid": "Q201584",
+  "label": "AEK Athens F.C.",
+  "votes": 1,
+  "players": 2
+ },
+ "girona": {
+  "name": "Girona",
+  "qid": "Q11945",
+  "label": "Girona FC",
+  "votes": 16,
+  "players": 21
+ },
+ "charlton-athletic": {
+  "name": "Charlton Athletic",
+  "qid": "Q19462",
+  "label": "Charlton Athletic F.C.",
+  "votes": 52,
+  "players": 53
+ },
+ "getafe": {
+  "name": "Getafe",
+  "qid": "Q8806",
+  "label": "Getafe CF",
+  "votes": 62,
+  "players": 60
+ },
+ "eintracht-frankfurt": {
+  "name": "Eintracht Frankfurt",
+  "qid": "Q38245",
+  "label": "Eintracht Frankfurt",
+  "votes": 1,
+  "players": 12
+ },
+ "sc-freiburg": {
+  "name": "SC Freiburg",
+  "qid": "Q106394",
+  "label": "SC Freiburg",
+  "votes": 24,
+  "players": 22
+ },
+ "qpr": {
+  "name": "Qpr",
+  "qid": "Q18723",
+  "label": "Queens Park Rangers F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "spartak-moscow": {
+  "name": "Spartak Moscow",
+  "qid": "Q29112",
+  "label": "Spartak Moscow",
+  "votes": 1,
+  "players": 4
+ },
+ "fakel-voronezh": {
+  "name": "Fakel Voronezh",
+  "qid": "Q1388889",
+  "label": "FC Fakel Voronezh",
+  "votes": 1,
+  "players": 1
+ },
+ "borussia-monchengladbach": {
+  "name": "Borussia Mönchengladbach",
+  "qid": "Q101959",
+  "label": "Borussia Mönchengladbach",
+  "votes": 1,
+  "players": 14
+ },
+ "banfield": {
+  "name": "Banfield",
+  "qid": "Q692646",
+  "label": "Club Atlético Banfield",
+  "votes": 1,
+  "players": 3
+ },
+ "boavista": {
+  "name": "Boavista",
+  "qid": "Q219703",
+  "label": "Boavista F.C.",
+  "votes": 3,
+  "players": 1
+ },
+ "grenoble": {
+  "name": "Grenoble",
+  "qid": "Q209509",
+  "label": "Grenoble Foot 38",
+  "votes": 1,
+  "players": 2
+ },
+ "river-plate-uruguay": {
+  "name": "River Plate (Uruguay)",
+  "qid": "Q980573",
+  "label": "Club Atlético River Plate",
+  "votes": 2,
+  "players": 1
+ },
+ "al-ettifaq": {
+  "name": "Al-Ettifaq",
+  "qid": "Q72844",
+  "label": "Al-Ettifaq FC",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "rb-leipzig": {
+  "name": "Rb Leipzig",
+  "qid": "Q702455",
+  "label": "RB Leipzig",
+  "votes": 1,
+  "players": 36
+ },
+ "troyes": {
+  "name": "Troyes",
+  "qid": "Q501693",
+  "label": "ES Troyes AC",
+  "votes": 0,
+  "players": 4,
+  "via": "search"
+ },
+ "avai": {
+  "name": "Avaí",
+  "qid": "Q374069",
+  "label": "Avaí Futebol Clube",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "az-alkmaar": {
+  "name": "Az Alkmaar",
+  "qid": "Q191264",
+  "label": "AZ Alkmaar",
+  "votes": 0,
+  "players": 7,
+  "via": "label"
+ },
+ "rennes": {
+  "name": "Rennes",
+  "qid": "Q19509",
+  "label": "Stade Rennais F.C.",
+  "votes": 0,
+  "players": 7,
+  "via": "label"
+ },
+ "junior": {
+  "name": "Junior",
+  "qid": "Q332524",
+  "label": "Junior de Barranquilla",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "almeria": {
+  "name": "Almería",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 4
+ },
+ "beerschot": {
+  "name": "Beerschot",
+  "qid": "Q646079",
+  "label": "Beerschot A.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "independiente-del-valle": {
+  "name": "Independiente del Valle",
+  "qid": "Q249648",
+  "label": "Independiente del Valle",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "defensa-y-justicia": {
+  "name": "Defensa y Justicia",
+  "qid": "Q1024338",
+  "label": "Defensa y Justicia",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "fluminense": {
+  "name": "Fluminense",
+  "qid": "Q80987",
+  "label": "Fluminense F.C.",
+  "votes": 0,
+  "players": 7,
+  "via": "label"
+ },
+ "athletico-paranaense": {
+  "name": "Athletico Paranaense",
+  "qid": "Q506832",
+  "label": "Club Athletico Paranaense",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "audax": {
+  "name": "Audax",
+  "qid": "Q758689",
+  "label": "Audax Italiano",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "karlsruher-sc": {
+  "name": "Karlsruher SC",
+  "qid": "Q105853",
+  "label": "Karlsruher SC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "como": {
+  "name": "Como",
+  "qid": "Q1120838",
+  "label": "Como 1907",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "torino": {
+  "name": "Torino",
+  "qid": "Q2768",
+  "label": "Torino FC",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "barcelona": {
+  "name": "Barcelona",
+  "qid": "Q7156",
+  "label": "FC Barcelona",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "al-sadd": {
+  "name": "Al-Sadd",
+  "qid": "Q283545",
+  "label": "Al Sadd Sports Club",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "porto": {
+  "name": "Porto",
+  "qid": "Q128446",
+  "label": "FC Porto",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "monaco": {
+  "name": "Monaco",
+  "qid": "Q180305",
+  "label": "AS Monaco FC",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "racing-santander": {
+  "name": "Racing Santander",
+  "qid": "Q12236",
+  "label": "Racing de Santander",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "granada": {
+  "name": "Granada",
+  "qid": "Q8812",
+  "label": "Granada CF",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "puebla": {
+  "name": "Puebla",
+  "qid": "Q646596",
+  "label": "Puebla F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "celaya": {
+  "name": "Celaya",
+  "qid": "Q1052781",
+  "label": "Club Celaya",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "partizan": {
+  "name": "Partizan",
+  "qid": "Q188656",
+  "label": "FK Partizan",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "cultural-leonesa": {
+  "name": "Cultural Leonesa",
+  "qid": "Q5193427",
+  "label": "Cultural y Deportiva Leonesa B",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "elche": {
+  "name": "Elche",
+  "qid": "Q10512",
+  "label": "Elche CF",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "nice": {
+  "name": "Nice",
+  "qid": "Q185163",
+  "label": "OGC Nice",
+  "votes": 0,
+  "players": 10,
+  "via": "label"
+ },
+ "sete": {
+  "name": "Sète",
+  "qid": "Q940001",
+  "label": "FC Sète",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "bohemian": {
+  "name": "Bohemian",
+  "qid": "Q212708",
+  "label": "Bohemian F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "gimnastic-de-tarragona": {
+  "name": "Gimnàstic de Tarragona",
+  "qid": "Q257984",
+  "label": "Gimnàstic de Tarragona",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "condal": {
+  "name": "Condal",
+  "qid": "Q856083",
+  "label": "CD Condal",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lleida": {
+  "name": "Lleida",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "veracruz": {
+  "name": "Veracruz",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "plymouth-argyle": {
+  "name": "Plymouth Argyle",
+  "qid": "Q48947",
+  "label": "Plymouth Argyle F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "chesterfield": {
+  "name": "Chesterfield",
+  "qid": "Q48935",
+  "label": "Chesterfield F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "bury": {
+  "name": "Bury",
+  "qid": "Q19573",
+  "label": "Bury F.C.",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "chester-city": {
+  "name": "Chester City",
+  "qid": "Q1070732",
+  "label": "Chester City F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "stockport-county": {
+  "name": "Stockport County",
+  "qid": "Q18526",
+  "label": "Stockport County F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "barnsley": {
+  "name": "Barnsley",
+  "qid": "Q19442",
+  "label": "Barnsley F.C.",
+  "votes": 0,
+  "players": 10,
+  "via": "label"
+ },
+ "molde": {
+  "name": "Molde",
+  "qid": "Q208552",
+  "label": "Molde FK",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "clausenengen": {
+  "name": "Clausenengen",
+  "qid": "Q2699446",
+  "label": "Clausenengen FK",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sydney-fc": {
+  "name": "Sydney FC",
+  "qid": "Q330143",
+  "label": "Sydney FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "vissel-kobe": {
+  "name": "Vissel Kobe",
+  "qid": "Q844271",
+  "label": "Vissel Kobe",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "western-sydney-wanderers": {
+  "name": "Western Sydney Wanderers",
+  "qid": "Q999035",
+  "label": "Western Sydney Wanderers FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sturm-graz": {
+  "name": "Sturm Graz",
+  "qid": "Q124007617",
+  "label": "SK Sturm Graz",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "fc-copenhagen": {
+  "name": "FC Copenhagen",
+  "qid": "Q188430",
+  "label": "F.C. Copenhagen",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "motherwell": {
+  "name": "Motherwell",
+  "qid": "Q216523",
+  "label": "Motherwell F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "coventry-city": {
+  "name": "Coventry City",
+  "qid": "Q19580",
+  "label": "Coventry City F.C.",
+  "votes": 0,
+  "players": 7,
+  "via": "label"
+ },
+ "exeter-city": {
+  "name": "Exeter City",
+  "qid": "Q48939",
+  "label": "Exeter City F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "walsall": {
+  "name": "Walsall",
+  "qid": "Q19644",
+  "label": "Walsall F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "huddersfield-town": {
+  "name": "Huddersfield Town",
+  "qid": "Q19473",
+  "label": "Huddersfield Town A.F.C.",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "heerenveen": {
+  "name": "Heerenveen",
+  "qid": "Q200321",
+  "label": "SC Heerenveen",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "strmsgodset": {
+  "name": "Strømsgodset",
+  "qid": "Q638288",
+  "label": "Strømsgodset IF",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "trabzonspor": {
+  "name": "Trabzonspor",
+  "qid": "Q192641",
+  "label": "Trabzonspor",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "angers": {
+  "name": "Angers",
+  "qid": "Q845137",
+  "label": "Angers SCO",
+  "votes": 0,
+  "players": 4,
+  "via": "search"
+ },
+ "panathinaikos": {
+  "name": "Panathinaikos",
+  "qid": "Q4122219",
+  "label": "Panathinaikos F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "gremio": {
+  "name": "Grêmio",
+  "qid": "Q221695",
+  "label": "Grêmio FBPA",
+  "votes": 0,
+  "players": 2,
+  "via": "search"
+ },
+ "atletico-mineiro": {
+  "name": "Atlético Mineiro",
+  "qid": "Q270995",
+  "label": "Clube Atlético Mineiro",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "san-jose-earthquakes": {
+  "name": "San Jose Earthquakes",
+  "qid": "Q1095113",
+  "label": "San Jose Earthquakes",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "blackpool": {
+  "name": "Blackpool",
+  "qid": "Q19449",
+  "label": "Blackpool F.C.",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "northampton-town": {
+  "name": "Northampton Town",
+  "qid": "Q48945",
+  "label": "Northampton Town F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "rotherham-united": {
+  "name": "Rotherham United",
+  "qid": "Q48950",
+  "label": "Rotherham United F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "bristol-city": {
+  "name": "Bristol City",
+  "qid": "Q19456",
+  "label": "Bristol City F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "southend-united": {
+  "name": "Southend United",
+  "qid": "Q48951",
+  "label": "Southend United F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "omonia": {
+  "name": "Omonia",
+  "qid": "Q240783",
+  "label": "AC Omonia",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "cork-celtic": {
+  "name": "Cork Celtic",
+  "qid": "Q2254157",
+  "label": "Cork Celtic F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "luton-town": {
+  "name": "Luton Town",
+  "qid": "Q18520",
+  "label": "Luton Town F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "millwall": {
+  "name": "Millwall",
+  "qid": "Q19487",
+  "label": "Millwall F.C.",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "grimsby-town": {
+  "name": "Grimsby Town",
+  "qid": "Q18515",
+  "label": "Grimsby Town F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "airdrieonians": {
+  "name": "Airdrieonians",
+  "qid": "Q1345161",
+  "label": "Airdrieonians F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "anzhi-makhachkala": {
+  "name": "Anzhi Makhachkala",
+  "qid": "Q19353",
+  "label": "FC Anzhi Makhachkala",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "guingamp": {
+  "name": "Guingamp",
+  "qid": "Q459148",
+  "label": "En Avant de Guingamp",
+  "votes": 0,
+  "players": 2,
+  "via": "search"
+ },
+ "chateauroux": {
+  "name": "Châteauroux",
+  "qid": "Q845067",
+  "label": "LB Châteauroux",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "metz": {
+  "name": "Metz",
+  "qid": "Q221525",
+  "label": "FC Metz",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "delhi-dynamos": {
+  "name": "Delhi Dynamos",
+  "qid": "Q24909704",
+  "label": "2016 Delhi Dynamos FC season",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "vitoria": {
+  "name": "Vitória",
+  "qid": "Q274465",
+  "label": "E.C. Vitória",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "twente": {
+  "name": "Twente",
+  "qid": "Q19603",
+  "label": "FC Twente",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "dynamo-moscow": {
+  "name": "Dynamo Moscow",
+  "qid": "Q1269117",
+  "label": "Dynamo Moscow",
+  "votes": 0,
+  "players": 5,
+  "via": "search"
+ },
+ "kosice": {
+  "name": "Košice",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "tianjin-teda": {
+  "name": "Tianjin TEDA",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "lyn": {
+  "name": "Lyn",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "grasshoppers": {
+  "name": "Grasshoppers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 6
+ },
+ "winterthur": {
+  "name": "Winterthur",
+  "qid": "Q201969",
+  "label": "FC Winterthur",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "msv-duisburg": {
+  "name": "MSV Duisburg",
+  "qid": "Q154293",
+  "label": "MSV Duisburg",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "vfl-bochum": {
+  "name": "VfL Bochum",
+  "qid": "Q105861",
+  "label": "VfL Bochum",
+  "votes": 0,
+  "players": 7,
+  "via": "label"
+ },
+ "vfr-aalen": {
+  "name": "VfR Aalen",
+  "qid": "Q692586",
+  "label": "VfR Aalen",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "1-fc-nurnberg": {
+  "name": "1. FC Nürnberg",
+  "qid": "Q15786",
+  "label": "1. FC Nürnberg",
+  "votes": 0,
+  "players": 10,
+  "via": "label"
+ },
+ "metrostars": {
+  "name": "MetroStars",
+  "qid": "Q60743577",
+  "label": "Mississauga MetroStars",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "1-fc-herzogenaurach": {
+  "name": "1. FC Herzogenaurach",
+  "qid": "Q162245",
+  "label": "FC Herzogenaurach",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "toulouse": {
+  "name": "Toulouse",
+  "qid": "Q19518",
+  "label": "Toulouse FC",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "sedan": {
+  "name": "Sedan",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "ajaccio": {
+  "name": "Ajaccio",
+  "qid": "Q270051",
+  "label": "A.C. Ajaccio",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "lens": {
+  "name": "Lens",
+  "qid": "Q191843",
+  "label": "R.C. Lens",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "fk-sarajevo": {
+  "name": "FK Sarajevo",
+  "qid": "Q239663",
+  "label": "FK Sarajevo",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "red-star": {
+  "name": "Red Star",
+  "qid": "Q522283",
+  "label": "Red Star F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "botafogo-sp": {
+  "name": "Botafogo-SP",
+  "qid": "Q2332493",
+  "label": "Botafogo Futebol Clube",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "velez-sarsfield": {
+  "name": "Vélez Sarsfield",
+  "qid": "Q215163",
+  "label": "Club Atlético Vélez Sarsfield",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "le-havre": {
+  "name": "Le Havre",
+  "qid": "Q328658",
+  "label": "Le Havre AC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "young-boys": {
+  "name": "Young Boys",
+  "qid": "Q190526",
+  "label": "BSC Young Boys",
+  "votes": 0,
+  "players": 4,
+  "via": "search"
+ },
+ "dalian-aerbin": {
+  "name": "Dalian Aerbin",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "san-lorenzo": {
+  "name": "San Lorenzo",
+  "qid": "Q218282",
+  "label": "San Lorenzo de Almagro",
+  "votes": 0,
+  "players": 5,
+  "via": "search"
+ },
+ "estudiantes": {
+  "name": "Estudiantes",
+  "qid": "Q214940",
+  "label": "Estudiantes de La Plata",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "hebei-china-fortune": {
+  "name": "Hebei China Fortune",
+  "qid": "Q402038",
+  "label": "Hebei F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "al-ahli": {
+  "name": "Al-Ahli",
+  "qid": "Q44441",
+  "label": "Al Ahli FC",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "bastia": {
+  "name": "Bastia",
+  "qid": "Q208399",
+  "label": "SC Bastia",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "pescara": {
+  "name": "Pescara",
+  "qid": "Q2710",
+  "label": "Delfino Pescara 1936",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "al-arabi": {
+  "name": "Al-Arabi",
+  "qid": "Q283760",
+  "label": "Al-Arabi SC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "varese": {
+  "name": "Varese",
+  "qid": "Q8633",
+  "label": "Varese Calcio",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "toronto-blizzard": {
+  "name": "Toronto Blizzard",
+  "qid": "Q13404889",
+  "label": "Toronto Blizzard",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "alessandria": {
+  "name": "Alessandria",
+  "qid": "Q16348",
+  "label": "US Alessandria Calcio 1912",
+  "votes": 0,
+  "players": 2,
+  "via": "search"
+ },
+ "ascoli": {
+  "name": "Ascoli",
+  "qid": "Q6630",
+  "label": "Ascoli Calcio 1898 FC",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "lugano": {
+  "name": "Lugano",
+  "qid": "Q633521",
+  "label": "FC Lugano",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "frem": {
+  "name": "Frem",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sampierdarenese": {
+  "name": "Sampierdarenese",
+  "qid": "Q2311455",
+  "label": "Associazione Calcio Sampierdarenese",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "pistoiese": {
+  "name": "Pistoiese",
+  "qid": "Q1279917",
+  "label": "Pistoiese FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cesena": {
+  "name": "Cesena",
+  "qid": "Q6664",
+  "label": "AC Cesena",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "castel-di-sangro": {
+  "name": "Castel di Sangro",
+  "qid": "Q297431",
+  "label": "A.S.D. Castel di Sangro Calcio",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "independiente-medellin": {
+  "name": "Independiente Medellín",
+  "qid": "Q332527",
+  "label": "Deportivo Independiente Medellín",
+  "votes": 0,
+  "players": 2,
+  "via": "search"
+ },
+ "atletico-paranaense": {
+  "name": "Atlético Paranaense",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sassuolo": {
+  "name": "Sassuolo",
+  "qid": "Q8603",
+  "label": "US Sassuolo Calcio",
+  "votes": 0,
+  "players": 6,
+  "via": "label"
+ },
+ "seregno": {
+  "name": "Seregno",
+  "qid": "Q1637277",
+  "label": "U.S.D. 1913 Seregno Calcio",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "catanzaro": {
+  "name": "Catanzaro",
+  "qid": "Q501372",
+  "label": "Unione Sportiva Catanzaro",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "padova": {
+  "name": "Padova",
+  "qid": "Q8428",
+  "label": "Calcio Padova",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "spal": {
+  "name": "SPAL",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "foggia": {
+  "name": "Foggia",
+  "qid": "Q139399",
+  "label": "Calcio Foggia 1920",
+  "votes": 0,
+  "players": 2,
+  "via": "search"
+ },
+ "vicenza": {
+  "name": "Vicenza",
+  "qid": "Q8643",
+  "label": "Vicenza Calcio",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "ifk-norrkoping": {
+  "name": "IFK Norrköping",
+  "qid": "Q108001798",
+  "label": "IFK Norrköping FK",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "ik-sleipner": {
+  "name": "IK Sleipner",
+  "qid": "Q772310",
+  "label": "IK Sleipner",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "stella-club": {
+  "name": "Stella Club",
+  "qid": "Q1897533",
+  "label": "Stella Club d'Adjamé",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "red-star-belgrade": {
+  "name": "Red Star Belgrade",
+  "qid": "Q5866170",
+  "label": "history of Red Star Belgrade",
+  "votes": 0,
+  "players": 3,
+  "via": "search"
+ },
+ "rapid-wien": {
+  "name": "Rapid Wien",
+  "qid": "Q131215",
+  "label": "SK Rapid Wien",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "buducnost-podgorica": {
+  "name": "Budućnost Podgorica",
+  "qid": "Q219264",
+  "label": "FK Budućnost Podgorica",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "shanghai-shenhua": {
+  "name": "Shanghai Shenhua",
+  "qid": "Q725367",
+  "label": "Shanghai Shenhua F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "novese": {
+  "name": "Novese",
+  "qid": "Q16339",
+  "label": "U.S.D. Novese",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "venezia": {
+  "name": "Venezia",
+  "qid": "Q501245",
+  "label": "Venezia F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "panionios": {
+  "name": "Panionios",
+  "qid": "Q460494",
+  "label": "Panionios F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "nacional": {
+  "name": "Nacional",
+  "qid": "Q499616",
+  "label": "Club Nacional de Football",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "danubio": {
+  "name": "Danubio",
+  "qid": "Q584316",
+  "label": "Danubio F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lokomotiva": {
+  "name": "Lokomotiva",
+  "qid": "Q6715606",
+  "label": "MFK Lokomotíva Zvolen",
+  "votes": 0,
+  "players": 1,
+  "via": "search"
+ },
+ "monza": {
+  "name": "Monza",
+  "qid": "Q289482",
+  "label": "AC Monza",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "rio-ave": {
+  "name": "Rio Ave",
+  "qid": "Q622432",
+  "label": "Rio Ave F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "persepolis": {
+  "name": "Persepolis",
+  "qid": "Q242260",
+  "label": "Persepolis F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "al-gharafa": {
+  "name": "Al-Gharafa",
+  "qid": "Q428211",
+  "label": "Al-Gharafa SC",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "rot-weiss-ahlen": {
+  "name": "Rot Weiss Ahlen",
+  "qid": "Q170125",
+  "label": "Rot Weiss Ahlen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "rot-weiss-essen": {
+  "name": "Rot-Weiss Essen",
+  "qid": "Q155218",
+  "label": "Rot-Weiss Essen",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "bayer-uerdingen": {
+  "name": "Bayer Uerdingen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "1860-munich": {
+  "name": "1860 Munich",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "wurzburger-kickers": {
+  "name": "Würzburger Kickers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "lausanne-sport": {
+  "name": "Lausanne-Sport",
+  "qid": "Q309456",
+  "label": "FC Lausanne-Sport",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "paok": {
+  "name": "PAOK",
+  "qid": "Q204888",
+  "label": "PAOK FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sint-truiden": {
+  "name": "Sint-Truiden",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "cerezo-osaka": {
+  "name": "Cerezo Osaka",
+  "qid": "Q855809",
+  "label": "Cerezo Osaka",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "wisa-krakow": {
+  "name": "Wisła Kraków",
+  "qid": "Q190943",
+  "label": "Wisła Kraków",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "zulte-waregem": {
+  "name": "Zulte Waregem",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "eskisehirspor": {
+  "name": "Eskişehirspor",
+  "qid": "Q748445",
+  "label": "Eskişehirspor",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "real-oviedo": {
+  "name": "Real Oviedo",
+  "qid": "Q271574",
+  "label": "Real Oviedo",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "plus-ultra": {
+  "name": "Plus Ultra",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sporting-gijon": {
+  "name": "Sporting Gijón",
+  "qid": "Q12278",
+  "label": "Sporting de Gijón",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "eibar": {
+  "name": "Eibar",
+  "qid": "Q770740",
+  "label": "SD Eibar",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "indautxu": {
+  "name": "Indautxu",
+  "qid": "Q912844",
+  "label": "SD Indautxu",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "badajoz": {
+  "name": "Badajoz",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "cadiz": {
+  "name": "Cádiz",
+  "qid": "Q460448",
+  "label": "Cádiz Club de Fútbol",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "real-murcia": {
+  "name": "Real Murcia",
+  "qid": "Q12230",
+  "label": "Real Murcia",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "merida": {
+  "name": "Mérida",
+  "qid": "Q856416",
+  "label": "CP Mérida",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "millonarios": {
+  "name": "Millonarios",
+  "qid": "Q391984",
+  "label": "Millonarios",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "extremadura": {
+  "name": "Extremadura",
+  "qid": "Q994224",
+  "label": "Extremadura UD",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dalian-professional": {
+  "name": "Dalian Professional",
+  "qid": "Q1157920",
+  "label": "Dalian Professional F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "al-shabab": {
+  "name": "Al-Shabab",
+  "qid": "Q2636005",
+  "label": "Al-Shabab Football Club",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "gent": {
+  "name": "Gent",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "midtjylland": {
+  "name": "Midtjylland",
+  "qid": "Q618520",
+  "label": "FC Midtjylland",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "groningen": {
+  "name": "Groningen",
+  "qid": "Q24711",
+  "label": "FC Groningen",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "bodglimt": {
+  "name": "Bodø/Glimt",
+  "qid": "Q478167",
+  "label": "FK Bodø/Glimt",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "rosenborg": {
+  "name": "Rosenborg",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "servette": {
+  "name": "Servette",
+  "qid": "Q219235",
+  "label": "Servette FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "sheffield-wednesday": {
+  "name": "Sheffield Wednesday",
+  "qid": "Q19498",
+  "label": "Sheffield Wednesday F.C.",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "bedford-town": {
+  "name": "Bedford Town",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "hastings-united": {
+  "name": "Hastings United",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "dundee": {
+  "name": "Dundee",
+  "qid": "Q335483",
+  "label": "Dundee F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "aberdeen": {
+  "name": "Aberdeen",
+  "qid": "Q187326",
+  "label": "Aberdeen F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hibernian": {
+  "name": "Hibernian",
+  "qid": "Q192597",
+  "label": "Hibernian F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "clyde": {
+  "name": "Clyde",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "lokomotiv-moscow": {
+  "name": "Lokomotiv Moscow",
+  "qid": "Q29115",
+  "label": "FC Lokomotiv Moscow",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "kuban-krasnodar": {
+  "name": "Kuban Krasnodar",
+  "qid": "Q29103",
+  "label": "FC Kuban Krasnodar",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "ural": {
+  "name": "Ural",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "rotor-volgograd": {
+  "name": "Rotor Volgograd",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "pisa": {
+  "name": "Pisa",
+  "qid": "Q289613",
+  "label": "Pisa SC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "triestina": {
+  "name": "Triestina",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "racing-club": {
+  "name": "Racing Club",
+  "qid": "Q276533",
+  "label": "Racing Club",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "verona": {
+  "name": "Verona",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "botafogo": {
+  "name": "Botafogo",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "dnipro-1": {
+  "name": "Dnipro-1",
+  "qid": "Q175687",
+  "label": "FC Dnipro",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "snderjyske": {
+  "name": "SønderjyskE",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "siena": {
+  "name": "Siena",
+  "qid": "Q2756",
+  "label": "Siena FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "perugia": {
+  "name": "Perugia",
+  "qid": "Q16344",
+  "label": "A.C. Perugia Calcio",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "utrecht": {
+  "name": "Utrecht",
+  "qid": "Q24680",
+  "label": "FC Utrecht",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "agovv": {
+  "name": "AGOVV",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "toronto-fc": {
+  "name": "Toronto FC",
+  "qid": "Q327238",
+  "label": "Toronto FC",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "cavese": {
+  "name": "Cavese",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "salernitana": {
+  "name": "Salernitana",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "lucchese": {
+  "name": "Lucchese",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "charleroi": {
+  "name": "Charleroi",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "gornik-zabrze": {
+  "name": "Górnik Zabrze",
+  "qid": "Q134255",
+  "label": "Górnik Zabrze",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hatayspor": {
+  "name": "Hatayspor",
+  "qid": "Q1110567",
+  "label": "Hatayspor",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "uvv-utrecht": {
+  "name": "UVV Utrecht",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "zaandijk": {
+  "name": "Zaandijk",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "zfc": {
+  "name": "ZFC",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "vojvodina": {
+  "name": "Vojvodina",
+  "qid": "Q207501",
+  "label": "FK Vojvodina",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "ifk-goteborg": {
+  "name": "IFK Göteborg",
+  "qid": "Q201567",
+  "label": "IFK Göteborg",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "leganes": {
+  "name": "Leganés",
+  "qid": "Q856119",
+  "label": "CD Leganés",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "vvv-venlo": {
+  "name": "VVV-Venlo",
+  "qid": "Q24689",
+  "label": "VVV-Venlo",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "atletico-baleares": {
+  "name": "Atlético Baleares",
+  "qid": "Q855199",
+  "label": "CD Atlético Baleares",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "beijing-guoan": {
+  "name": "Beijing Guoan",
+  "qid": "Q814738",
+  "label": "Beijing Guoan F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "gimnasia-la-plata": {
+  "name": "Gimnasia La Plata",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "monterrey": {
+  "name": "Monterrey",
+  "qid": "Q768253",
+  "label": "Club de Fútbol Monterrey",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "las-palmas": {
+  "name": "Las Palmas",
+  "qid": "Q11979",
+  "label": "UD Las Palmas",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "austria-wien": {
+  "name": "Austria Wien",
+  "qid": "Q131209",
+  "label": "FK Austria Wien",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "vitoria-de-setubal": {
+  "name": "Vitória de Setúbal",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "estoril": {
+  "name": "Estoril",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "barreirense": {
+  "name": "Barreirense",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "cuf-barreiro": {
+  "name": "CUF Barreiro",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "belenenses": {
+  "name": "Belenenses",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "lanus": {
+  "name": "Lanús",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "unam": {
+  "name": "UNAM",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "al-rayyan": {
+  "name": "Al-Rayyan",
+  "qid": "Q311268",
+  "label": "Al-Rayyan",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dalian-yifang": {
+  "name": "Dalian Yifang",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "chicago-fire": {
+  "name": "Chicago Fire",
+  "qid": "Q308683",
+  "label": "Chicago Fire FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "pacos-de-ferreira": {
+  "name": "Paços de Ferreira",
+  "qid": "Q371136",
+  "label": "F.C. Paços de Ferreira",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "agueda": {
+  "name": "Águeda",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "maritimo": {
+  "name": "Marítimo",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "tenerife": {
+  "name": "Tenerife",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "shanghai-sipg": {
+  "name": "Shanghai SIPG",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "kawasaki-frontale": {
+  "name": "Kawasaki Frontale",
+  "qid": "Q874016",
+  "label": "Kawasaki Frontale",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "tokyo-verdy": {
+  "name": "Tokyo Verdy",
+  "qid": "Q620499",
+  "label": "Tokyo Verdy",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "consadole-sapporo": {
+  "name": "Consadole Sapporo",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "vitoria-de-guimaraes": {
+  "name": "Vitória de Guimarães",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 4
+ },
+ "sharjah": {
+  "name": "Sharjah",
+  "qid": "Q286801",
+  "label": "Sharjah FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "amiens": {
+  "name": "Amiens",
+  "qid": "Q866884",
+  "label": "Amiens SC",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "esperance": {
+  "name": "Espérance",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "racing-paris": {
+  "name": "Racing Paris",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "tours": {
+  "name": "Tours",
+  "qid": "Q822021",
+  "label": "Tours FC.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "qatar-sc": {
+  "name": "Qatar SC",
+  "qid": "Q1051203",
+  "label": "Qatar SC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "na-hussein-dey": {
+  "name": "NA Hussein Dey",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "internacional": {
+  "name": "Internacional",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "atlanta-united": {
+  "name": "Atlanta United",
+  "qid": "Q16836317",
+  "label": "Atlanta United FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "sarmiento": {
+  "name": "Sarmiento",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "afc-bournemouth": {
+  "name": "AFC Bournemouth",
+  "qid": "Q19568",
+  "label": "AFC Bournemouth",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "tombense": {
+  "name": "Tombense",
+  "qid": "Q1138634",
+  "label": "Tombense Futebol Clube",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lorient": {
+  "name": "Lorient",
+  "qid": "Q48911",
+  "label": "F.C. Lorient",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "valenciennes": {
+  "name": "Valenciennes",
+  "qid": "Q212269",
+  "label": "Valenciennes F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "coton-sport": {
+  "name": "Coton Sport",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "uniao-de-leiria": {
+  "name": "União de Leiria",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "portimonense": {
+  "name": "Portimonense",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "gremio-anapolis": {
+  "name": "Grêmio Anápolis",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "atletico-cp": {
+  "name": "Atlético CP",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "famalicao": {
+  "name": "Famalicão",
+  "qid": "Q1387105",
+  "label": "FC Famalicão",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "gil-vicente": {
+  "name": "Gil Vicente",
+  "qid": "Q926438",
+  "label": "Gil Vicente F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "toluca": {
+  "name": "Toluca",
+  "qid": "Q670186",
+  "label": "Toluca FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "trofense": {
+  "name": "Trofense",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "seattle-sounders": {
+  "name": "Seattle Sounders",
+  "qid": "Q632511",
+  "label": "Seattle Sounders FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "vancouver-whitecaps": {
+  "name": "Vancouver Whitecaps",
+  "qid": "Q196107",
+  "label": "Vancouver Whitecaps FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "deportivo-cali": {
+  "name": "Deportivo Cali",
+  "qid": "Q663400",
+  "label": "Deportivo Cali",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "excelsior": {
+  "name": "Excelsior",
+  "qid": "Q370712",
+  "label": "Excelsior Rotterdam",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "clermont": {
+  "name": "Clermont",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "vasco-da-gama": {
+  "name": "Vasco da Gama",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "sport-recife": {
+  "name": "Sport Recife",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "new-york-red-bulls": {
+  "name": "New York Red Bulls",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "evian": {
+  "name": "Evian",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "al-jazira": {
+  "name": "Al-Jazira",
+  "qid": "Q429630",
+  "label": "Al Jazira Club",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "cruzeiro": {
+  "name": "Cruzeiro",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "america-mineiro": {
+  "name": "América Mineiro",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "al-ittihad": {
+  "name": "Al-Ittihad",
+  "qid": "Q309480",
+  "label": "Al Ittihad FC",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "sochaux": {
+  "name": "Sochaux",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "abha": {
+  "name": "Abha",
+  "qid": "Q2620016",
+  "label": "Abha",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "seraing": {
+  "name": "Seraing",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "aix": {
+  "name": "Aix",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "kjbenhavns-boldklub": {
+  "name": "Kjøbenhavns Boldklub",
+  "qid": "Q1359341",
+  "label": "Kjøbenhavns Boldklub",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "ofk-beograd": {
+  "name": "OFK Beograd",
+  "qid": "Q209619",
+  "label": "OFK Beograd",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "rijeka": {
+  "name": "Rijeka",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "casg-paris": {
+  "name": "CASG Paris",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "cholet": {
+  "name": "Cholet",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "toulon": {
+  "name": "Toulon",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 4
+ },
+ "arles-avignon": {
+  "name": "Arles-Avignon",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "tigres-uanl": {
+  "name": "Tigres UANL",
+  "qid": "Q849823",
+  "label": "Tigres UANL",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "pau": {
+  "name": "Pau",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "apollon-limassol": {
+  "name": "Apollon Limassol",
+  "qid": "Q428047",
+  "label": "Apollon Limassol FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "libourne": {
+  "name": "Libourne",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "standard-liege": {
+  "name": "Standard Liège",
+  "qid": "Q190561",
+  "label": "Standard Liège",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "macarthur-fc": {
+  "name": "Macarthur FC",
+  "qid": "Q59773416",
+  "label": "Macarthur FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "istanbul-basaksehir": {
+  "name": "İstanbul Başakşehir",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "altnordu": {
+  "name": "Altınordu",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "lyon": {
+  "name": "Lyon",
+  "qid": "Q16636629",
+  "label": "FC Lyon",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cannes": {
+  "name": "Cannes",
+  "qid": "Q298267",
+  "label": "AS Cannes",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "caen": {
+  "name": "Caen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "basel": {
+  "name": "Basel",
+  "qid": "Q189671",
+  "label": "FC Basel",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "braga": {
+  "name": "Braga",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "alanyaspor": {
+  "name": "Alanyaspor",
+  "qid": "Q1636019",
+  "label": "Alanyaspor",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "mvv-maastricht": {
+  "name": "MVV Maastricht",
+  "qid": "Q876568",
+  "label": "MVV Maastricht",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "willem-ii": {
+  "name": "Willem II",
+  "qid": "Q332664",
+  "label": "Willem II",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "helmondia": {
+  "name": "Helmondia",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "frigg": {
+  "name": "Frigg",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "gvav": {
+  "name": "GVAV",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "alianza-lima": {
+  "name": "Alianza Lima",
+  "qid": "Q572957",
+  "label": "Club Alianza Lima",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "bursaspor": {
+  "name": "Bursaspor",
+  "qid": "Q203573",
+  "label": "Bursaspor",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "debrecen": {
+  "name": "Debrecen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "al-wahda": {
+  "name": "Al-Wahda",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "al-ain": {
+  "name": "Al-Ain",
+  "qid": "Q812720",
+  "label": "Al Ain FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "pachuca": {
+  "name": "Pachuca",
+  "qid": "Q736937",
+  "label": "CF Pachuca",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "san-diego-fc": {
+  "name": "San Diego FC",
+  "qid": "Q118945347",
+  "label": "San Diego FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dynamo-dresden": {
+  "name": "Dynamo Dresden",
+  "qid": "Q141931",
+  "label": "Dynamo Dresden",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "fc-zurich": {
+  "name": "FC Zürich",
+  "qid": "Q206692",
+  "label": "FC Zürich",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "fortuna-dusseldorf": {
+  "name": "Fortuna Düsseldorf",
+  "qid": "Q151747",
+  "label": "Fortuna Düsseldorf",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "fc-wegberg-beeck": {
+  "name": "FC Wegberg-Beeck",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "colon": {
+  "name": "Colón",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "eintracht-braunschweig": {
+  "name": "Eintracht Braunschweig",
+  "qid": "Q154053",
+  "label": "Eintracht Braunschweig",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hansa-rostock": {
+  "name": "Hansa Rostock",
+  "qid": "Q142005",
+  "label": "F.C. Hansa Rostock",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "arminia-bielefeld": {
+  "name": "Arminia Bielefeld",
+  "qid": "Q105844",
+  "label": "Arminia Bielefeld",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "carl-zeiss-jena": {
+  "name": "Carl Zeiss Jena",
+  "qid": "Q155186",
+  "label": "FC Carl Zeiss Jena",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "crotone": {
+  "name": "Crotone",
+  "qid": "Q6690",
+  "label": "F.C. Crotone",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "alemannia-aachen": {
+  "name": "Alemannia Aachen",
+  "qid": "Q153535",
+  "label": "Alemannia Aachen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "st-gallen": {
+  "name": "St. Gallen",
+  "qid": "Q659212",
+  "label": "FC St. Gallen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "philadelphia-union": {
+  "name": "Philadelphia Union",
+  "qid": "Q689874",
+  "label": "Philadelphia Union",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lyngby": {
+  "name": "Lyngby",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 3
+ },
+ "sv-babelsberg": {
+  "name": "SV Babelsberg",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "chemnitzer-fc": {
+  "name": "Chemnitzer FC",
+  "qid": "Q161554",
+  "label": "Chemnitzer FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "energie-cottbus": {
+  "name": "Energie Cottbus",
+  "qid": "Q107818",
+  "label": "FC Energie Cottbus",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "malmo-ff": {
+  "name": "Malmö FF",
+  "qid": "Q204881",
+  "label": "Malmö FF",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "gif-sundsvall": {
+  "name": "GIF Sundsvall",
+  "qid": "Q725332",
+  "label": "GIF Sundsvall",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "1899-hoffenheim": {
+  "name": "1899 Hoffenheim",
+  "qid": "Q22707",
+  "label": "TSG 1899 Hoffenheim",
+  "votes": 0,
+  "players": 8,
+  "via": "label"
+ },
+ "brndby": {
+  "name": "Brøndby",
+  "qid": "Q211906",
+  "label": "Brøndby IF",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "nantes": {
+  "name": "Nantes",
+  "qid": "Q192071",
+  "label": "FC Nantes",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "istres": {
+  "name": "Istres",
+  "qid": "Q797530",
+  "label": "FC Istres",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "horoya": {
+  "name": "Horoya",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "fc-st-pauli": {
+  "name": "FC St. Pauli",
+  "qid": "Q6463",
+  "label": "FC St. Pauli",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "liefering": {
+  "name": "Liefering",
+  "qid": "Q1387293",
+  "label": "FC Liefering",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "greuther-furth": {
+  "name": "Greuther Fürth",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 5
+ },
+ "vfl-osnabruck": {
+  "name": "VfL Osnabrück",
+  "qid": "Q160530",
+  "label": "VfL Osnabrück",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "laval": {
+  "name": "Laval",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "new-york-cosmos": {
+  "name": "New York Cosmos",
+  "qid": "Q646135",
+  "label": "New York Cosmos",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "internapoli": {
+  "name": "Internapoli",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "massese": {
+  "name": "Massese",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "pavia": {
+  "name": "Pavia",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "america": {
+  "name": "América",
+  "qid": "Q459090",
+  "label": "Club América",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "kansas-city-wizards": {
+  "name": "Kansas City Wizards",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "colorado-rapids": {
+  "name": "Colorado Rapids",
+  "qid": "Q642408",
+  "label": "Colorado Rapids",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "bellinzona": {
+  "name": "Bellinzona",
+  "qid": "Q289112",
+  "label": "AC Bellinzona",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "chur-97": {
+  "name": "Chur 97",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "cittadella": {
+  "name": "Cittadella",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "nec-nijmegen": {
+  "name": "NEC Nijmegen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "barakaldo": {
+  "name": "Barakaldo",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 4
+ },
+ "erandio": {
+  "name": "Erandio",
+  "qid": "Q910711",
+  "label": "SD Erandio Club",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "real-espana": {
+  "name": "Real España",
+  "qid": "Q1102998",
+  "label": "Real Club España",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "al-wasl": {
+  "name": "Al Wasl",
+  "qid": "Q520066",
+  "label": "Al Wasl FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "baniyas": {
+  "name": "Baniyas",
+  "qid": "Q1344302",
+  "label": "Baniyas SC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "gamba-osaka": {
+  "name": "Gamba Osaka",
+  "qid": "Q738423",
+  "label": "Gamba Osaka",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "melbourne-city": {
+  "name": "Melbourne City",
+  "qid": "Q748725",
+  "label": "Melbourne City FC",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "sabadell": {
+  "name": "Sabadell",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "amorebieta": {
+  "name": "Amorebieta",
+  "qid": "Q515516",
+  "label": "SD Amorebieta",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "york-city": {
+  "name": "York City",
+  "qid": "Q48954",
+  "label": "York City F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "raith-rovers": {
+  "name": "Raith Rovers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "chester": {
+  "name": "Chester",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "doncaster-rovers": {
+  "name": "Doncaster Rovers",
+  "qid": "Q19589",
+  "label": "Doncaster Rovers F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "bradford-city": {
+  "name": "Bradford City",
+  "qid": "Q48879",
+  "label": "Bradford City A.F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "preston-north-end": {
+  "name": "Preston North End",
+  "qid": "Q19612",
+  "label": "Preston North End F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "ipswich-town": {
+  "name": "Ipswich Town",
+  "qid": "Q9653",
+  "label": "Ipswich Town F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "gillingham": {
+  "name": "Gillingham",
+  "qid": "Q48943",
+  "label": "Gillingham F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "central-coast-mariners": {
+  "name": "Central Coast Mariners",
+  "qid": "Q762294",
+  "label": "Central Coast Mariners FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "1-fc-saarbrucken": {
+  "name": "1. FC Saarbrücken",
+  "qid": "Q157463",
+  "label": "1. FC Saarbrücken",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "asante-kotoko": {
+  "name": "Asante Kotoko",
+  "qid": "Q578491",
+  "label": "Asante Kotoko F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "alcoyano": {
+  "name": "Alcoyano",
+  "qid": "Q837238",
+  "label": "CD Alcoyano",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hercules": {
+  "name": "Hércules",
+  "qid": "Q11963",
+  "label": "Hércules CF",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "castellon": {
+  "name": "Castellón",
+  "qid": "Q743557",
+  "label": "CD Castellón",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "compostela": {
+  "name": "Compostela",
+  "qid": "Q929753",
+  "label": "SD Compostela",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cska-sofia": {
+  "name": "CSKA Sofia",
+  "qid": "Q136433",
+  "label": "PFC CSKA Sofia",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lokomotiv-plovdiv": {
+  "name": "Lokomotiv Plovdiv",
+  "qid": "Q1124841",
+  "label": "PFC Lokomotiv Plovdiv",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "linfield": {
+  "name": "Linfield",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "djurgarden": {
+  "name": "Djurgården",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "third-lanark": {
+  "name": "Third Lanark",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "berwick-rangers": {
+  "name": "Berwick Rangers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "notts-county": {
+  "name": "Notts County",
+  "qid": "Q19598",
+  "label": "Notts County F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "partick-thistle": {
+  "name": "Partick Thistle",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 6
+ },
+ "shandong-luneng": {
+  "name": "Shandong Luneng",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "cerro-porteno": {
+  "name": "Cerro Porteño",
+  "qid": "Q914086",
+  "label": "Cerro Porteño",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "milton-keynes-dons": {
+  "name": "Milton Keynes Dons",
+  "qid": "Q248188",
+  "label": "Milton Keynes Dons F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "colchester-united": {
+  "name": "Colchester United",
+  "qid": "Q19578",
+  "label": "Colchester United F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "scunthorpe-united": {
+  "name": "Scunthorpe United",
+  "qid": "Q19615",
+  "label": "Scunthorpe United F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "swindon-town": {
+  "name": "Swindon Town",
+  "qid": "Q19634",
+  "label": "Swindon Town F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "universidad-catolica": {
+  "name": "Universidad Católica",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "asti": {
+  "name": "Asti",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "messina": {
+  "name": "Messina",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "ternana": {
+  "name": "Ternana",
+  "qid": "Q8623",
+  "label": "Ternana Calcio",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "taranto": {
+  "name": "Taranto",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "modena": {
+  "name": "Modena",
+  "qid": "Q8408",
+  "label": "Modena F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "maribor": {
+  "name": "Maribor",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "interblock": {
+  "name": "Interblock",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "clydebank": {
+  "name": "Clydebank",
+  "qid": "Q955789",
+  "label": "Clydebank F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "houston-hurricane": {
+  "name": "Houston Hurricane",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "morton": {
+  "name": "Morton",
+  "qid": "Q867876",
+  "label": "Greenock Morton F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "falkirk": {
+  "name": "Falkirk",
+  "qid": "Q219241",
+  "label": "Falkirk F.C.",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "livingston": {
+  "name": "Livingston",
+  "qid": "Q867921",
+  "label": "Livingston F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "fc-gifu": {
+  "name": "FC Gifu",
+  "qid": "Q778887",
+  "label": "FC Gifu",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "wellington-phoenix": {
+  "name": "Wellington Phoenix",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "kerala-blasters": {
+  "name": "Kerala Blasters",
+  "qid": "Q16842784",
+  "label": "Kerala Blasters FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "samsunspor": {
+  "name": "Samsunspor",
+  "qid": "Q430107",
+  "label": "Samsunspor FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "western-united": {
+  "name": "Western United",
+  "qid": "Q59773336",
+  "label": "Western United FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "brisbane-roar": {
+  "name": "Brisbane Roar",
+  "qid": "Q839997",
+  "label": "Brisbane Roar FC",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "aldershot": {
+  "name": "Aldershot",
+  "qid": "Q2300305",
+  "label": "Aldershot F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "barnet": {
+  "name": "Barnet",
+  "qid": "Q9408",
+  "label": "Barnet F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "durban-city": {
+  "name": "Durban City",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "newcastle-blue-star": {
+  "name": "Newcastle Blue Star",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "cork-city": {
+  "name": "Cork City",
+  "qid": "Q932284",
+  "label": "Cork City F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "leyton-orient": {
+  "name": "Leyton Orient",
+  "qid": "Q19595",
+  "label": "Leyton Orient F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "st-mirren": {
+  "name": "St Mirren",
+  "qid": "Q319136",
+  "label": "St. Mirren F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "slavia-prague": {
+  "name": "Slavia Prague",
+  "qid": "Q194393",
+  "label": "SK Slavia Prague",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "slovan-liberec": {
+  "name": "Slovan Liberec",
+  "qid": "Q221671",
+  "label": "FC Slovan Liberec",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "viktoria-zizkov": {
+  "name": "Viktoria Žižkov",
+  "qid": "Q512476",
+  "label": "FK Viktoria Žižkov",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "shanghai-port": {
+  "name": "Shanghai Port",
+  "qid": "Q564216",
+  "label": "Shanghai Port F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "tranmere-rovers": {
+  "name": "Tranmere Rovers",
+  "qid": "Q19637",
+  "label": "Tranmere Rovers F.C.",
+  "votes": 0,
+  "players": 5,
+  "via": "label"
+ },
+ "sligo-rovers": {
+  "name": "Sligo Rovers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "dumbarton": {
+  "name": "Dumbarton",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "oldham-athletic": {
+  "name": "Oldham Athletic",
+  "qid": "Q19601",
+  "label": "Oldham Athletic A.F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "nac-breda": {
+  "name": "NAC Breda",
+  "qid": "Q332642",
+  "label": "NAC Breda",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "hearts": {
+  "name": "Hearts",
+  "qid": "Q202093",
+  "label": "Heart of Midlothian F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "glentoran": {
+  "name": "Glentoran",
+  "qid": "Q249533",
+  "label": "Glentoran F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "halifax-town": {
+  "name": "Halifax Town",
+  "qid": "Q5214935",
+  "label": "FC Halifax Town",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dundee-united": {
+  "name": "Dundee United",
+  "qid": "Q192873",
+  "label": "Dundee United F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "carlisle-united": {
+  "name": "Carlisle United",
+  "qid": "Q19575",
+  "label": "Carlisle United F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "valur": {
+  "name": "Valur",
+  "qid": "Q597715",
+  "label": "Valur",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "kilmarnock": {
+  "name": "Kilmarnock",
+  "qid": "Q210961",
+  "label": "Kilmarnock F.C.",
+  "votes": 0,
+  "players": 4,
+  "via": "label"
+ },
+ "newport-county": {
+  "name": "Newport County",
+  "qid": "Q18523",
+  "label": "Newport County A.F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "mid-rhondda": {
+  "name": "Mid Rhondda",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "accrington-stanley": {
+  "name": "Accrington Stanley",
+  "qid": "Q48843",
+  "label": "Accrington Stanley F.C.",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "small-heath": {
+  "name": "Small Heath",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "atletico-nacional": {
+  "name": "Atlético Nacional",
+  "qid": "Q332605",
+  "label": "Atlético Nacional",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "chivas-usa": {
+  "name": "Chivas USA",
+  "qid": "Q642433",
+  "label": "Chivas USA",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dc-united": {
+  "name": "D.C. United",
+  "qid": "Q238593",
+  "label": "D.C. United",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "kortrijk": {
+  "name": "Kortrijk",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "mechelen": {
+  "name": "Mechelen",
+  "qid": "Q113000",
+  "label": "KV Mechelen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "envigado": {
+  "name": "Envigado",
+  "qid": "Q332636",
+  "label": "Envigado Fútbol Club",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "st-johnstone": {
+  "name": "St Johnstone",
+  "qid": "Q268776",
+  "label": "St Johnstone F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "east-stirlingshire": {
+  "name": "East Stirlingshire",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "hamilton-academical": {
+  "name": "Hamilton Academical",
+  "qid": "Q498473",
+  "label": "Hamilton Academical F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "portland-timbers": {
+  "name": "Portland Timbers",
+  "qid": "Q1031200",
+  "label": "Portland Timbers",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hjk-helsinki": {
+  "name": "HJK Helsinki",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "ross-county": {
+  "name": "Ross County",
+  "qid": "Q180420",
+  "label": "Ross County F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dinamo-tbilisi": {
+  "name": "Dinamo Tbilisi",
+  "qid": "Q201006",
+  "label": "FC Dinamo Tbilisi",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "legia-warsaw": {
+  "name": "Legia Warsaw",
+  "qid": "Q193749",
+  "label": "Legia Warsaw",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "huesca": {
+  "name": "Huesca",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "greenock-morton": {
+  "name": "Greenock Morton",
+  "qid": "Q867876",
+  "label": "Greenock Morton F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "carolina-railhawks": {
+  "name": "Carolina RailHawks",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "fleetwood-town": {
+  "name": "Fleetwood Town",
+  "qid": "Q48941",
+  "label": "Fleetwood Town F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "oxford-united": {
+  "name": "Oxford United",
+  "qid": "Q48946",
+  "label": "Oxford United F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cheltenham-town": {
+  "name": "Cheltenham Town",
+  "qid": "Q48932",
+  "label": "Cheltenham Town F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cremonese": {
+  "name": "Cremonese",
+  "qid": "Q759482",
+  "label": "US Cremonese",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "heracles-almelo": {
+  "name": "Heracles Almelo",
+  "qid": "Q11961",
+  "label": "Heracles Almelo",
+  "votes": 0,
+  "players": 3,
+  "via": "label"
+ },
+ "oh-leuven": {
+  "name": "OH Leuven",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "lokeren": {
+  "name": "Lokeren",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "freiburg": {
+  "name": "Freiburg",
+  "qid": "Q106394",
+  "label": "SC Freiburg",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "kv-oostende": {
+  "name": "KV Oostende",
+  "qid": "Q370206",
+  "label": "KV Oostende",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "al-fayha": {
+  "name": "Al-Fayha",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "zanaco": {
+  "name": "Zanaco",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sc-emma": {
+  "name": "SC Emma",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "blauw-wit": {
+  "name": "Blauw-Wit",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "holland-sport": {
+  "name": "Holland Sport",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sparta-rotterdam": {
+  "name": "Sparta Rotterdam",
+  "qid": "Q209895",
+  "label": "Sparta Rotterdam",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "den-haag": {
+  "name": "Den Haag",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "ado-den-haag": {
+  "name": "ADO Den Haag",
+  "qid": "Q24904",
+  "label": "ADO Den Haag",
+  "votes": 0,
+  "players": 2,
+  "via": "label"
+ },
+ "cruz-azul": {
+  "name": "Cruz Azul",
+  "qid": "Q845859",
+  "label": "Cruz Azul",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "kasmpasa": {
+  "name": "Kasımpaşa",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 2
+ },
+ "asec-mimosas": {
+  "name": "ASEC Mimosas",
+  "qid": "Q852266",
+  "label": "ASEC Mimosas",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "once-caldas": {
+  "name": "Once Caldas",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "fortuna-sittard": {
+  "name": "Fortuna Sittard",
+  "qid": "Q854167",
+  "label": "Fortuna Sittard",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "urawa-red-diamonds": {
+  "name": "Urawa Red Diamonds",
+  "qid": "Q218883",
+  "label": "Urawa Red Diamonds",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "antalyaspor": {
+  "name": "Antalyaspor",
+  "qid": "Q43710",
+  "label": "Antalyaspor",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sportfreunde-siegen": {
+  "name": "Sportfreunde Siegen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "kv-mechelen": {
+  "name": "KV Mechelen",
+  "qid": "Q113000",
+  "label": "KV Mechelen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "wiener-neustadt": {
+  "name": "Wiener Neustadt",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "karnten": {
+  "name": "Kärnten",
+  "qid": "Q383196",
+  "label": "FC Kärnten",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "1-fc-magdeburg": {
+  "name": "1. FC Magdeburg",
+  "qid": "Q155730",
+  "label": "1. FC Magdeburg",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sv-rodinghausen": {
+  "name": "SV Rödinghausen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "juventude": {
+  "name": "Juventude",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "kickers-offenbach": {
+  "name": "Kickers Offenbach",
+  "qid": "Q159936",
+  "label": "Kickers Offenbach",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "concordia-hamburg": {
+  "name": "Concordia Hamburg",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "guarani": {
+  "name": "Guarani",
+  "qid": "Q1133475",
+  "label": "Guarani Futebol Clube",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "aarau": {
+  "name": "Aarau",
+  "qid": "Q603271",
+  "label": "FC Aarau",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "central-united": {
+  "name": "Central United",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "halmstads-bk": {
+  "name": "Halmstads BK",
+  "qid": "Q584858",
+  "label": "Halmstads BK",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "vushtrria": {
+  "name": "Vushtrria",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "holstein-kiel": {
+  "name": "Holstein Kiel",
+  "qid": "Q157828",
+  "label": "Holstein Kiel",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "austria-karnten": {
+  "name": "Austria Kärnten",
+  "qid": "Q749113",
+  "label": "SK Austria Kärnten",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "grazer-ak": {
+  "name": "Grazer AK",
+  "qid": "Q659780",
+  "label": "Grazer AK",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "waldhof-mannheim": {
+  "name": "Waldhof Mannheim",
+  "qid": "Q170134",
+  "label": "SV Waldhof Mannheim",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "ssv-ulm": {
+  "name": "SSV Ulm",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "stuttgarter-kickers": {
+  "name": "Stuttgarter Kickers",
+  "qid": "Q170105",
+  "label": "Stuttgarter Kickers",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "nacional-sp": {
+  "name": "Nacional-SP",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "etar-veliko-tarnovo": {
+  "name": "Etar Veliko Tarnovo",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "fc-luzern": {
+  "name": "FC Luzern",
+  "qid": "Q223262",
+  "label": "FC Luzern",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "dinamo-bucuresti": {
+  "name": "Dinamo București",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "steaua-bucuresti": {
+  "name": "Steaua București",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "union-saint-gilloise": {
+  "name": "Union Saint-Gilloise",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "sv-meppen": {
+  "name": "SV Meppen",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "tsv-havelse": {
+  "name": "TSV Havelse",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "admira-wacker": {
+  "name": "Admira Wacker",
+  "qid": "Q698702",
+  "label": "Admira Wacker",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "sc-paderborn": {
+  "name": "SC Paderborn",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "inter-zapresic": {
+  "name": "Inter Zaprešić",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "zadar": {
+  "name": "Zadar",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "le-mans": {
+  "name": "Le Mans",
+  "qid": "Q210864",
+  "label": "Le Mans F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "santa-cruz": {
+  "name": "Santa Cruz",
+  "qid": "Q508440",
+  "label": "Santa Cruz Futebol Clube",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "goias": {
+  "name": "Goiás",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "instituto": {
+  "name": "Instituto",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "fc-emmen": {
+  "name": "FC Emmen",
+  "qid": "Q1061627",
+  "label": "FC Emmen",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "lech-poznan": {
+  "name": "Lech Poznań",
+  "qid": "Q52942",
+  "label": "Lech Poznań",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "hajduk-split": {
+  "name": "Hajduk Split",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "thun": {
+  "name": "Thun",
+  "qid": "Q464775",
+  "label": "FC Thun",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "mansfield-town": {
+  "name": "Mansfield Town",
+  "qid": "Q18522",
+  "label": "Mansfield Town F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "cambridge-united": {
+  "name": "Cambridge United",
+  "qid": "Q18509",
+  "label": "Cambridge United F.C.",
+  "votes": 0,
+  "players": 1,
+  "via": "label"
+ },
+ "power-dynamos": {
+  "name": "Power Dynamos",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "nchanga-rangers": {
+  "name": "Nchanga Rangers",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "albacete": {
+  "name": "Albacete",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ },
+ "estoril-praia": {
+  "name": "Estoril Praia",
+  "qid": null,
+  "label": null,
+  "votes": 0,
+  "players": 1
+ }
+}

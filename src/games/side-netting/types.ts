@@ -75,7 +75,7 @@ export interface SideNettingAnswer {
   rarityScore: number; // 5, 30, 50, 85, 100
   tier: SideNettingRarityTier;
   pickRatePct: number; // e.g., 85% down to 0.5%
-  commentary: string; // e.g., "Tap-in!" vs "BALLON D'OR KNOWLEDGE! Frightening recall!"
+  commentary?: string; // e.g., "Tap-in!" vs "BALLON D'OR KNOWLEDGE! Frightening recall!" (optional for generated answers)
 }
 
 export interface SideNettingPrompt {
@@ -84,6 +84,8 @@ export interface SideNettingPrompt {
   category?: string;
   difficulty?: 'Easy' | 'Medium' | 'Hard';
   description?: string;
+  /** Broad prompt with a big answer pool (e.g. "any Premier League player"); 2–3 per 10-round match. */
+  broad?: boolean;
   answers: SideNettingAnswer[];
 }
 
@@ -92,6 +94,8 @@ export interface SideNettingMatchConfig {
   timerSeconds: 30 | 45 | 60 | 0; // 0 = Relaxed / No timer
   isMultiplayer?: boolean;
   lobbyMode?: 'solo' | 'host' | 'join';
+  /** Public Quick Match: prompts drawn Easy → Medium → Hard. */
+  difficultyCurve?: 'rising';
 }
 
 export interface SideNettingRoundSubmission {

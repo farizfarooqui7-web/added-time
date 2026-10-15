@@ -5,6 +5,7 @@ import {
   Layers,
   Sparkles,
   Trophy,
+  FlaskConical,
   Users,
   X,
   Zap,
@@ -15,6 +16,7 @@ import type {
   ImposterCategory,
   ImposterLobbyMode,
   ImposterMatchConfig,
+  ImposterRolePreference,
 } from './types';
 
 interface ImposterSetupModalProps {
@@ -64,6 +66,11 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
   const [category, setCategory] = useState<ImposterCategory>('All Players');
   const [imposterClueEnabled, setImposterClueEnabled] = useState<boolean>(true);
 
+  // TEMPORARY DEV SANDBOX: solo test match against bots. Remove before release.
+  const [sandboxBots, setSandboxBots] = useState<3 | 4 | 5>(4);
+  const [sandboxRole, setSandboxRole] = useState<ImposterRolePreference>('random');
+  const [sandboxRounds, setSandboxRounds] = useState<1 | 2>(2);
+
   const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
   const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
@@ -96,6 +103,24 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
     if (party.isActive && party.isCurrentUserHost) {
       syncSetupSettings('football-imposter', { category, imposterClueEnabled: nextVal });
     }
+  };
+
+  // TEMPORARY DEV SANDBOX: launches a local bot match (no party / matchmaking involved).
+  const isSandboxBlocked = party.isActive && party.members.length > 1;
+  const handleLaunchSandbox = () => {
+    if (isSandboxBlocked) return;
+    soundFX.playHammer();
+    onLaunchArena({
+      lobbyMode: 'sandbox',
+      roomCode: 'SANDBOX',
+      isRoomCodeMasked: false,
+      category,
+      clueRounds: sandboxRounds,
+      botCount: sandboxBots,
+      rolePreference: sandboxRole,
+      imposterClueEnabled,
+      isMultiplayer: false,
+    });
   };
 
   const handleFindPublicGame = () => {
@@ -305,7 +330,7 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Drop into public matchmaking staging to play with online ballers or bots.
+                2 clue rounds • imposter hint on • random roles. Well-known secret player, random category. Starts at 3 players.
               </p>
             </button>
 
@@ -360,6 +385,97 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
               </button>
             )}
           </div>
+        </div>
+
+        {/* TEMPORARY DEV SANDBOX — remove before release */}
+        <div className="relative z-10 mt-3 p-3 rounded-xl border border-dashed border-[#ccff00]/45 bg-[#ccff00]/[0.04] space-y-2.5 shrink-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <FlaskConical className="w-4 h-4 text-[#ccff00]" />
+              <span className="font-sans font-black text-xs text-[#ccff00] uppercase tracking-wide">DEV SANDBOX</span>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#ccff00]/15 text-[#ccff00]">TEMPORARY</span>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400">Solo test vs bots</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <div className="space-y-1">
+              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider block">BOTS</span>
+              <div className="flex gap-1">
+                {([3, 4, 5] as const).map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick(650);
+                      setSandboxBots(n);
+                    }}
+                    className={`flex-1 py-1.5 rounded-md text-[11px] font-mono font-black border cursor-pointer transition-colors ${
+                      sandboxBots === n ? 'bg-[#ccff00] text-black border-[#ccff00]' : 'bg-white/[0.03] text-slate-300 border-white/10 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider block">YOUR ROLE</span>
+              <div className="flex gap-1">
+                {([
+                  ['random', 'RND'],
+                  ['crew', 'CREW'],
+                  ['imposter', 'IMP'],
+                ] as Array<[ImposterRolePreference, string]>).map(([r, label]) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick(650);
+                      setSandboxRole(r);
+                    }}
+                    className={`flex-1 py-1.5 rounded-md text-[10px] font-mono font-black border cursor-pointer transition-colors ${
+                      sandboxRole === r ? 'bg-[#ccff00] text-black border-[#ccff00]' : 'bg-white/[0.03] text-slate-300 border-white/10 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider block">CLUE ROUNDS</span>
+              <div className="flex gap-1">
+                {([1, 2] as const).map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick(650);
+                      setSandboxRounds(n);
+                    }}
+                    className={`flex-1 py-1.5 rounded-md text-[11px] font-mono font-black border cursor-pointer transition-colors ${
+                      sandboxRounds === n ? 'bg-[#ccff00] text-black border-[#ccff00]' : 'bg-white/[0.03] text-slate-300 border-white/10 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLaunchSandbox}
+            disabled={isSandboxBlocked}
+            className="w-full py-2.5 rounded-lg bg-[#ccff00] hover:bg-[#d8ff33] disabled:opacity-40 disabled:cursor-not-allowed text-black font-sans font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-colors"
+          >
+            <FlaskConical className="w-3.5 h-3.5" />
+            {isSandboxBlocked ? 'LEAVE YOUR SQUAD TO USE SANDBOX' : `LAUNCH SANDBOX • YOU + ${sandboxBots} BOTS`}
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 export type RecordBooksDifficulty = 'Easy' | 'Medium' | 'Hard';
 
-export type RecordBooksMetric = 'Goals' | 'Assists';
+/** League goals for the club (English Wikipedia infoboxes). Assists were removed: no reliable source. */
+export type RecordBooksMetric = 'Goals';
 
 export type RecordBooksLobbyMode = 'solo' | 'host' | 'join';
 
@@ -16,7 +17,6 @@ export interface RecordBooksClubRecord {
   badgeUrl: string;
   difficulty: RecordBooksDifficulty;
   topGoals: RecordBooksPlayerStat[];
-  topAssists: RecordBooksPlayerStat[];
 }
 
 export interface RecordBooksMatchConfig {
@@ -27,6 +27,8 @@ export interface RecordBooksMatchConfig {
   difficulty: RecordBooksDifficulty;
   totalRounds: 5 | 10;
   isMultiplayer?: boolean;
+  /** Public Quick Match: clubs drawn Easy → Medium → Hard. */
+  difficultyCurve?: 'rising';
 }
 
 export interface RecordBooksSubmissionEval {

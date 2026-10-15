@@ -37,3 +37,7 @@ Desktop.ini
 *.njsproj
 *.sln
 *.sw?
+
+# Cloudflare & Claude local caches
+.wrangler/
+.claude/

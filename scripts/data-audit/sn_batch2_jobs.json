@@ -1,0 +1,2480 @@
+[
+{
+"id": "both_inter_milan_juventus",
+"kind": "pair",
+"clubs": [
+"inter-milan",
+"juventus"
+],
+"known": 51,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P54=Q1422"
+]
+},
+{
+"id": "both_as_roma_inter_milan",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"inter-milan"
+],
+"known": 48,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "both_ac_milan_as_roma",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"as-roma"
+],
+"known": 45,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q2739"
+]
+},
+{
+"id": "both_fiorentina_inter_milan",
+"kind": "pair",
+"clubs": [
+"fiorentina",
+"inter-milan"
+],
+"known": 42,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "both_ac_milan_fiorentina",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"fiorentina"
+],
+"known": 42,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q2052"
+]
+},
+{
+"id": "both_as_roma_fiorentina",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"fiorentina"
+],
+"known": 40,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q2052"
+]
+},
+{
+"id": "both_as_monaco_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"olympique-marseille"
+],
+"known": 35,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "both_juventus_lazio",
+"kind": "pair",
+"clubs": [
+"juventus",
+"lazio"
+],
+"known": 34,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P54=Q2609"
+]
+},
+{
+"id": "both_juventus_napoli",
+"kind": "pair",
+"clubs": [
+"juventus",
+"napoli"
+],
+"known": 32,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_ac_milan_chelsea",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"chelsea"
+],
+"known": 31,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "both_olympique_marseille_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"olympique-marseille",
+"paris-saint-germain"
+],
+"known": 27,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q132885 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_ajax_psv_eindhoven",
+"kind": "pair",
+"clubs": [
+"ajax",
+"psv-eindhoven"
+],
+"known": 26,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q81888 haswbstatement:P54=Q11938"
+]
+},
+{
+"id": "both_ac_milan_napoli",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"napoli"
+],
+"known": 26,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_ac_milan_lazio",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"lazio"
+],
+"known": 24,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q2609"
+]
+},
+{
+"id": "both_fiorentina_napoli",
+"kind": "pair",
+"clubs": [
+"fiorentina",
+"napoli"
+],
+"known": 23,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_aston_villa_manchester_united",
+"kind": "pair",
+"clubs": [
+"aston-villa",
+"manchester-united"
+],
+"known": 23,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P54=Q18656"
+]
+},
+{
+"id": "both_atletico_madrid_real_madrid",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"real-madrid"
+],
+"known": 22,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q8682"
+]
+},
+{
+"id": "both_as_monaco_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"paris-saint-germain"
+],
+"known": 22,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_inter_milan_napoli",
+"kind": "pair",
+"clubs": [
+"inter-milan",
+"napoli"
+],
+"known": 21,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_fiorentina_lazio",
+"kind": "pair",
+"clubs": [
+"fiorentina",
+"lazio"
+],
+"known": 21,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P54=Q2609"
+]
+},
+{
+"id": "both_ac_milan_fc_barcelona",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"fc-barcelona"
+],
+"known": 21,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q7156"
+]
+},
+{
+"id": "both_benfica_valencia",
+"kind": "pair",
+"clubs": [
+"benfica",
+"valencia"
+],
+"known": 20,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "both_liverpool_newcastle_united",
+"kind": "pair",
+"clubs": [
+"liverpool",
+"newcastle-united"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P54=Q18716"
+]
+},
+{
+"id": "both_benfica_fc_porto",
+"kind": "pair",
+"clubs": [
+"benfica",
+"fc-porto"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P54=Q128446"
+]
+},
+{
+"id": "both_atletico_madrid_valencia",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"valencia"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "both_aston_villa_newcastle_united",
+"kind": "pair",
+"clubs": [
+"aston-villa",
+"newcastle-united"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P54=Q18716"
+]
+},
+{
+"id": "both_aston_villa_chelsea",
+"kind": "pair",
+"clubs": [
+"aston-villa",
+"chelsea"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "both_arsenal_fc_barcelona",
+"kind": "pair",
+"clubs": [
+"arsenal",
+"fc-barcelona"
+],
+"known": 19,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P54=Q7156"
+]
+},
+{
+"id": "both_newcastle_united_tottenham_hotspur",
+"kind": "pair",
+"clubs": [
+"newcastle-united",
+"tottenham-hotspur"
+],
+"known": 18,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "both_everton_manchester_city",
+"kind": "pair",
+"clubs": [
+"everton",
+"manchester-city"
+],
+"known": 18,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q5794 haswbstatement:P54=Q50602"
+]
+},
+{
+"id": "both_atletico_madrid_sevilla",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"sevilla"
+],
+"known": 18,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q10329"
+]
+},
+{
+"id": "both_atletico_madrid_benfica",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"benfica"
+],
+"known": 18,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q131499"
+]
+},
+{
+"id": "both_aston_villa_everton",
+"kind": "pair",
+"clubs": [
+"aston-villa",
+"everton"
+],
+"known": 18,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P54=Q5794"
+]
+},
+{
+"id": "both_sevilla_valencia",
+"kind": "pair",
+"clubs": [
+"sevilla",
+"valencia"
+],
+"known": 17,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10329 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "both_ac_milan_atletico_madrid",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"atletico-madrid"
+],
+"known": 17,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q8701"
+]
+},
+{
+"id": "both_paris_saint_germain_real_madrid",
+"kind": "pair",
+"clubs": [
+"paris-saint-germain",
+"real-madrid"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P54=Q8682"
+]
+},
+{
+"id": "both_liverpool_tottenham_hotspur",
+"kind": "pair",
+"clubs": [
+"liverpool",
+"tottenham-hotspur"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "both_chelsea_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"chelsea",
+"olympique-marseille"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "both_chelsea_manchester_united",
+"kind": "pair",
+"clubs": [
+"chelsea",
+"manchester-united"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P54=Q18656"
+]
+},
+{
+"id": "both_atletico_madrid_fc_porto",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"fc-porto"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q128446"
+]
+},
+{
+"id": "both_aston_villa_tottenham_hotspur",
+"kind": "pair",
+"clubs": [
+"aston-villa",
+"tottenham-hotspur"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "both_ac_milan_as_monaco",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"as-monaco"
+],
+"known": 16,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q180305"
+]
+},
+{
+"id": "both_manchester_city_newcastle_united",
+"kind": "pair",
+"clubs": [
+"manchester-city",
+"newcastle-united"
+],
+"known": 15,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P54=Q18716"
+]
+},
+{
+"id": "both_bayern_munich_inter_milan",
+"kind": "pair",
+"clubs": [
+"bayern-munich",
+"inter-milan"
+],
+"known": 15,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "both_inter_milan_manchester_city",
+"kind": "pair",
+"clubs": [
+"inter-milan",
+"manchester-city"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P54=Q50602"
+]
+},
+{
+"id": "both_fc_barcelona_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"fc-barcelona",
+"paris-saint-germain"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_everton_tottenham_hotspur",
+"kind": "pair",
+"clubs": [
+"everton",
+"tottenham-hotspur"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q5794 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "both_chelsea_everton",
+"kind": "pair",
+"clubs": [
+"chelsea",
+"everton"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P54=Q5794"
+]
+},
+{
+"id": "both_atletico_madrid_chelsea",
+"kind": "pair",
+"clubs": [
+"atletico-madrid",
+"chelsea"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "both_as_roma_napoli",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"napoli"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_as_monaco_inter_milan",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"inter-milan"
+],
+"known": 14,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "both_lazio_napoli",
+"kind": "pair",
+"clubs": [
+"lazio",
+"napoli"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "both_juventus_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"juventus",
+"paris-saint-germain"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_juventus_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"juventus",
+"olympique-marseille"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "both_fc_barcelona_psv_eindhoven",
+"kind": "pair",
+"clubs": [
+"fc-barcelona",
+"psv-eindhoven"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P54=Q11938"
+]
+},
+{
+"id": "both_fc_barcelona_manchester_city",
+"kind": "pair",
+"clubs": [
+"fc-barcelona",
+"manchester-city"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P54=Q50602"
+]
+},
+{
+"id": "both_as_roma_real_madrid",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"real-madrid"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q8682"
+]
+},
+{
+"id": "both_as_monaco_real_madrid",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"real-madrid"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q8682"
+]
+},
+{
+"id": "both_arsenal_everton",
+"kind": "pair",
+"clubs": [
+"arsenal",
+"everton"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P54=Q5794"
+]
+},
+{
+"id": "both_ajax_manchester_united",
+"kind": "pair",
+"clubs": [
+"ajax",
+"manchester-united"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q81888 haswbstatement:P54=Q18656"
+]
+},
+{
+"id": "both_ac_milan_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"olympique-marseille"
+],
+"known": 13,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "both_inter_milan_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"inter-milan",
+"paris-saint-germain"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_fiorentina_valencia",
+"kind": "pair",
+"clubs": [
+"fiorentina",
+"valencia"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "both_everton_newcastle_united",
+"kind": "pair",
+"clubs": [
+"everton",
+"newcastle-united"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q5794 haswbstatement:P54=Q18716"
+]
+},
+{
+"id": "both_benfica_paris_saint_germain",
+"kind": "pair",
+"clubs": [
+"benfica",
+"paris-saint-germain"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "both_benfica_inter_milan",
+"kind": "pair",
+"clubs": [
+"benfica",
+"inter-milan"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "both_as_roma_fc_barcelona",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"fc-barcelona"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q7156"
+]
+},
+{
+"id": "both_as_roma_chelsea",
+"kind": "pair",
+"clubs": [
+"as-roma",
+"chelsea"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "both_as_monaco_juventus",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"juventus"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q1422"
+]
+},
+{
+"id": "both_as_monaco_chelsea",
+"kind": "pair",
+"clubs": [
+"as-monaco",
+"chelsea"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "both_arsenal_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"arsenal",
+"olympique-marseille"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "both_arsenal_aston_villa",
+"kind": "pair",
+"clubs": [
+"arsenal",
+"aston-villa"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P54=Q18711"
+]
+},
+{
+"id": "both_ac_milan_psv_eindhoven",
+"kind": "pair",
+"clubs": [
+"ac-milan",
+"psv-eindhoven"
+],
+"known": 12,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P54=Q11938"
+]
+},
+{
+"id": "both_paris_saint_germain_valencia",
+"kind": "pair",
+"clubs": [
+"paris-saint-germain",
+"valencia"
+],
+"known": 11,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "both_fc_barcelona_olympique_marseille",
+"kind": "pair",
+"clubs": [
+"fc-barcelona",
+"olympique-marseille"
+],
+"known": 11,
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "brazilian_played_for_juventus",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_as_roma",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"as-roma"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_lazio",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"lazio"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_napoli",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_fc_porto",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"fc-porto"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q128446 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q128446 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_benfica",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"benfica"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_bayern_munich",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"bayern-munich"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_psv_eindhoven",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"psv-eindhoven"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q11938 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q11938 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_as_monaco",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"as-monaco"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_valencia",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"valencia"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "brazilian_played_for_sevilla",
+"kind": "nat",
+"dem": "Brazilian",
+"clubs": [
+"sevilla"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10329 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10329 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_real_madrid",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"real-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_juventus",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_napoli",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_as_roma",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"as-roma"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_lazio",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"lazio"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_valencia",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"valencia"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_benfica",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"benfica"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q131499 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_fc_porto",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"fc-porto"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q128446 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q128446 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_ac_milan",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"ac-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_sevilla",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"sevilla"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10329 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10329 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "argentine_played_for_fiorentina",
+"kind": "nat",
+"dem": "Argentine",
+"clubs": [
+"fiorentina"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2052 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_manchester_city",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"manchester-city"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_liverpool",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"liverpool"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_newcastle_united",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"newcastle-united"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_tottenham_hotspur",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_inter_milan",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_ac_milan",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"ac-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "french_played_for_bayern_munich",
+"kind": "nat",
+"dem": "French",
+"clubs": [
+"bayern-munich"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "dutch_played_for_ac_milan",
+"kind": "nat",
+"dem": "Dutch",
+"clubs": [
+"ac-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "dutch_played_for_arsenal",
+"kind": "nat",
+"dem": "Dutch",
+"clubs": [
+"arsenal"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "dutch_played_for_newcastle_united",
+"kind": "nat",
+"dem": "Dutch",
+"clubs": [
+"newcastle-united"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18716 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "dutch_played_for_inter_milan",
+"kind": "nat",
+"dem": "Dutch",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "dutch_played_for_chelsea",
+"kind": "nat",
+"dem": "Dutch",
+"clubs": [
+"chelsea"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_chelsea",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"chelsea"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_inter_milan",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_valencia",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"valencia"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q10333 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_fc_barcelona",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"fc-barcelona"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_paris_saint_germain",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"paris-saint-germain"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_as_monaco",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"as-monaco"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q180305 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "portuguese_played_for_atletico_madrid",
+"kind": "nat",
+"dem": "Portuguese",
+"clubs": [
+"atletico-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_manchester_united",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"manchester-united"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_tottenham_hotspur",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_everton",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"everton"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q5794 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q5794 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_aston_villa",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"aston-villa"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18711 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_napoli",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "spanish_played_for_juventus",
+"kind": "nat",
+"dem": "Spanish",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "italian_played_for_paris_saint_germain",
+"kind": "nat",
+"dem": "Italian",
+"clubs": [
+"paris-saint-germain"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P1532=Q38",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020 haswbstatement:P27=Q38 -haswbstatement:P1532"
+]
+},
+{
+"id": "italian_played_for_real_madrid",
+"kind": "nat",
+"dem": "Italian",
+"clubs": [
+"real-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P1532=Q38",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P27=Q38 -haswbstatement:P1532"
+]
+},
+{
+"id": "italian_played_for_manchester_city",
+"kind": "nat",
+"dem": "Italian",
+"clubs": [
+"manchester-city"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q38",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q38 -haswbstatement:P1532"
+]
+},
+{
+"id": "german_played_for_inter_milan",
+"kind": "nat",
+"dem": "German",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q713750 -haswbstatement:P1532"
+]
+},
+{
+"id": "german_played_for_juventus",
+"kind": "nat",
+"dem": "German",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q713750 -haswbstatement:P1532"
+]
+},
+{
+"id": "croatian_played_for_juventus",
+"kind": "nat",
+"dem": "Croatian",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q224",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q224 -haswbstatement:P1532"
+]
+},
+{
+"id": "croatian_played_for_inter_milan",
+"kind": "nat",
+"dem": "Croatian",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q224",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q224 -haswbstatement:P1532"
+]
+},
+{
+"id": "belgian_played_for_manchester_united",
+"kind": "nat",
+"dem": "Belgian",
+"clubs": [
+"manchester-united"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q31",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q31 -haswbstatement:P1532"
+]
+},
+{
+"id": "belgian_played_for_ajax",
+"kind": "nat",
+"dem": "Belgian",
+"clubs": [
+"ajax"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q81888 haswbstatement:P1532=Q31",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q81888 haswbstatement:P27=Q31 -haswbstatement:P1532"
+]
+},
+{
+"id": "belgian_played_for_psv_eindhoven",
+"kind": "nat",
+"dem": "Belgian",
+"clubs": [
+"psv-eindhoven"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q11938 haswbstatement:P1532=Q31",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q11938 haswbstatement:P27=Q31 -haswbstatement:P1532"
+]
+},
+{
+"id": "uruguayan_played_for_fc_barcelona",
+"kind": "nat",
+"dem": "Uruguayan",
+"clubs": [
+"fc-barcelona"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P1532=Q77",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P27=Q77 -haswbstatement:P1532"
+]
+},
+{
+"id": "uruguayan_played_for_napoli",
+"kind": "nat",
+"dem": "Uruguayan",
+"clubs": [
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q77",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q77 -haswbstatement:P1532"
+]
+},
+{
+"id": "uruguayan_played_for_juventus",
+"kind": "nat",
+"dem": "Uruguayan",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q77",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q77 -haswbstatement:P1532"
+]
+},
+{
+"id": "uruguayan_played_for_liverpool",
+"kind": "nat",
+"dem": "Uruguayan",
+"clubs": [
+"liverpool"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q77",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q77 -haswbstatement:P1532"
+]
+},
+{
+"id": "goalkeepers_atletico_madrid",
+"kind": "gk",
+"clubs": [
+"atletico-madrid"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q8701"
+]
+},
+{
+"id": "goalkeepers_sevilla",
+"kind": "gk",
+"clubs": [
+"sevilla"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q10329"
+]
+},
+{
+"id": "goalkeepers_valencia",
+"kind": "gk",
+"clubs": [
+"valencia"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q10333"
+]
+},
+{
+"id": "goalkeepers_manchester_city",
+"kind": "gk",
+"clubs": [
+"manchester-city"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q50602"
+]
+},
+{
+"id": "goalkeepers_tottenham_hotspur",
+"kind": "gk",
+"clubs": [
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "goalkeepers_newcastle_united",
+"kind": "gk",
+"clubs": [
+"newcastle-united"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q18716"
+]
+},
+{
+"id": "goalkeepers_everton",
+"kind": "gk",
+"clubs": [
+"everton"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q5794"
+]
+},
+{
+"id": "goalkeepers_aston_villa",
+"kind": "gk",
+"clubs": [
+"aston-villa"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q18711"
+]
+},
+{
+"id": "goalkeepers_juventus",
+"kind": "gk",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q1422"
+]
+},
+{
+"id": "goalkeepers_inter_milan",
+"kind": "gk",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "goalkeepers_ac_milan",
+"kind": "gk",
+"clubs": [
+"ac-milan"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q1543"
+]
+},
+{
+"id": "goalkeepers_as_roma",
+"kind": "gk",
+"clubs": [
+"as-roma"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2739"
+]
+},
+{
+"id": "goalkeepers_lazio",
+"kind": "gk",
+"clubs": [
+"lazio"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2609"
+]
+},
+{
+"id": "goalkeepers_napoli",
+"kind": "gk",
+"clubs": [
+"napoli"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2641"
+]
+},
+{
+"id": "goalkeepers_fiorentina",
+"kind": "gk",
+"clubs": [
+"fiorentina"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2052"
+]
+},
+{
+"id": "goalkeepers_bayern_munich",
+"kind": "gk",
+"clubs": [
+"bayern-munich"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q15789"
+]
+},
+{
+"id": "goalkeepers_borussia_dortmund",
+"kind": "gk",
+"clubs": [
+"borussia-dortmund"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q41420"
+]
+},
+{
+"id": "goalkeepers_paris_saint_germain",
+"kind": "gk",
+"clubs": [
+"paris-saint-germain"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "goalkeepers_as_monaco",
+"kind": "gk",
+"clubs": [
+"as-monaco"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q180305"
+]
+},
+{
+"id": "goalkeepers_olympique_marseille",
+"kind": "gk",
+"clubs": [
+"olympique-marseille"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q132885"
+]
+},
+{
+"id": "goalkeepers_ajax",
+"kind": "gk",
+"clubs": [
+"ajax"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q81888"
+]
+},
+{
+"id": "goalkeepers_psv_eindhoven",
+"kind": "gk",
+"clubs": [
+"psv-eindhoven"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q11938"
+]
+},
+{
+"id": "goalkeepers_benfica",
+"kind": "gk",
+"clubs": [
+"benfica"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q131499"
+]
+},
+{
+"id": "goalkeepers_fc_porto",
+"kind": "gk",
+"clubs": [
+"fc-porto"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q128446"
+]
+},
+{
+"id": "broad_any_manchester_united",
+"kind": "broad_club",
+"clubs": [
+"manchester-united"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656"
+]
+},
+{
+"id": "broad_any_liverpool",
+"kind": "broad_club",
+"clubs": [
+"liverpool"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849"
+]
+},
+{
+"id": "broad_any_chelsea",
+"kind": "broad_club",
+"clubs": [
+"chelsea"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616"
+]
+},
+{
+"id": "broad_any_arsenal",
+"kind": "broad_club",
+"clubs": [
+"arsenal"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617"
+]
+},
+{
+"id": "broad_any_real_madrid",
+"kind": "broad_club",
+"clubs": [
+"real-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682"
+]
+},
+{
+"id": "broad_any_fc_barcelona",
+"kind": "broad_club",
+"clubs": [
+"fc-barcelona"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156"
+]
+},
+{
+"id": "broad_any_juventus",
+"kind": "broad_club",
+"clubs": [
+"juventus"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422"
+]
+},
+{
+"id": "broad_any_ac_milan",
+"kind": "broad_club",
+"clubs": [
+"ac-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543"
+]
+},
+{
+"id": "broad_any_inter_milan",
+"kind": "broad_club",
+"clubs": [
+"inter-milan"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631"
+]
+},
+{
+"id": "broad_any_bayern_munich",
+"kind": "broad_club",
+"clubs": [
+"bayern-munich"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789"
+]
+},
+{
+"id": "broad_any_ajax",
+"kind": "broad_club",
+"clubs": [
+"ajax"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q81888"
+]
+},
+{
+"id": "broad_any_paris_saint_germain",
+"kind": "broad_club",
+"clubs": [
+"paris-saint-germain"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q483020"
+]
+},
+{
+"id": "broad_any_borussia_dortmund",
+"kind": "broad_club",
+"clubs": [
+"borussia-dortmund"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q41420"
+]
+},
+{
+"id": "broad_brazilian_pl6",
+"kind": "broad_nat",
+"dem": "Brazilian",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_french_pl6",
+"kind": "broad_nat",
+"dem": "French",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_spanish_pl6",
+"kind": "broad_nat",
+"dem": "Spanish",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q29 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q29 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q29 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q29 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q29 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q29",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q29 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_dutch_pl6",
+"kind": "broad_nat",
+"dem": "Dutch",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_portuguese_pl6",
+"kind": "broad_nat",
+"dem": "Portuguese",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q45 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q45 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q45 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q45 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q45 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q45",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q45 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_argentine_pl6",
+"kind": "broad_nat",
+"dem": "Argentine",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_german_pl6",
+"kind": "broad_nat",
+"dem": "German",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18656 haswbstatement:P27=Q713750 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q50602 haswbstatement:P27=Q713750 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1130849 haswbstatement:P27=Q713750 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9616 haswbstatement:P27=Q713750 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q9617 haswbstatement:P27=Q713750 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q183",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P1532=Q713750",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q183 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q18741 haswbstatement:P27=Q713750 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_brazilian_sa6",
+"kind": "broad_nat",
+"dem": "Brazilian",
+"group": "sa6",
+"clubs": [
+"juventus",
+"inter-milan",
+"ac-milan",
+"as-roma",
+"lazio",
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_argentine_sa6",
+"kind": "broad_nat",
+"dem": "Argentine",
+"group": "sa6",
+"clubs": [
+"juventus",
+"inter-milan",
+"ac-milan",
+"as-roma",
+"lazio",
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_french_sa6",
+"kind": "broad_nat",
+"dem": "French",
+"group": "sa6",
+"clubs": [
+"juventus",
+"inter-milan",
+"ac-milan",
+"as-roma",
+"lazio",
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_dutch_sa6",
+"kind": "broad_nat",
+"dem": "Dutch",
+"group": "sa6",
+"clubs": [
+"juventus",
+"inter-milan",
+"ac-milan",
+"as-roma",
+"lazio",
+"napoli"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1422 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q631 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q1543 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2739 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2609 haswbstatement:P27=Q29999 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q55",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P1532=Q29999",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q55 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q2641 haswbstatement:P27=Q29999 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_brazilian_ll3",
+"kind": "broad_nat",
+"dem": "Brazilian",
+"group": "ll3",
+"clubs": [
+"real-madrid",
+"fc-barcelona",
+"atletico-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_argentine_ll3",
+"kind": "broad_nat",
+"dem": "Argentine",
+"group": "ll3",
+"clubs": [
+"real-madrid",
+"fc-barcelona",
+"atletico-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P27=Q414 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P1532=Q414",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P27=Q414 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_french_ll3",
+"kind": "broad_nat",
+"dem": "French",
+"group": "ll3",
+"clubs": [
+"real-madrid",
+"fc-barcelona",
+"atletico-madrid"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8682 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q7156 haswbstatement:P27=Q142 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P1532=Q142",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q8701 haswbstatement:P27=Q142 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_brazilian_bl3",
+"kind": "broad_nat",
+"dem": "Brazilian",
+"group": "bl3",
+"clubs": [
+"bayern-munich",
+"borussia-dortmund",
+"bayer-leverkusen"
+],
+"queries": [
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q15789 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q41420 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q41420 haswbstatement:P27=Q155 -haswbstatement:P1532",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q104761 haswbstatement:P1532=Q155",
+"haswbstatement:P106=Q937857 haswbstatement:P54=Q104761 haswbstatement:P27=Q155 -haswbstatement:P1532"
+]
+},
+{
+"id": "broad_goalkeepers_pl6",
+"kind": "broad_gk",
+"group": "pl6",
+"clubs": [
+"manchester-united",
+"manchester-city",
+"liverpool",
+"chelsea",
+"arsenal",
+"tottenham-hotspur"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q18656",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q50602",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q1130849",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q9616",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q9617",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q18741"
+]
+},
+{
+"id": "broad_goalkeepers_sa6",
+"kind": "broad_gk",
+"group": "sa6",
+"clubs": [
+"juventus",
+"inter-milan",
+"ac-milan",
+"as-roma",
+"lazio",
+"napoli"
+],
+"queries": [
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q1422",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q631",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q1543",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2739",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2609",
+"haswbstatement:P413=Q201330 haswbstatement:P54=Q2641"
+]
+}
+]

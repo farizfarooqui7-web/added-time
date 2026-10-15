@@ -1,0 +1,647 @@
+[
+ [
+  "Real Madrid",
+  "topGoals",
+  "alias \"ronaldo\" shared by ['Cristiano Ronaldo', 'Ronaldo']"
+ ],
+ [
+  "Real Madrid",
+  "topGoals",
+  "alias \"sanchez\" shared by ['Hugo Sánchez', 'Víctor Sánchez']"
+ ],
+ [
+  "Real Madrid",
+  "topGoals",
+  "alias \"diarra\" shared by ['Lassana Diarra', 'Mahamadou Diarra']"
+ ],
+ [
+  "Real Madrid",
+  "info",
+  "goals 138 assists 0 assists-only 0"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"alcantara\" shared by ['Paulino Alcántara', 'Thiago Alcântara']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"suarez\" shared by ['Jeffrén Suárez', 'Luis Suárez']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"cruyff\" shared by ['Johan Cruyff', 'Jordi Cruyff']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"fernandez\" shared by ['Abelardo Fernández', 'Robert Fernández']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"dejong\" shared by ['Frenkie de Jong', 'Luuk de Jong']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"vidal\" shared by ['Aleix Vidal', 'Arturo Vidal']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"boer\" shared by ['Frank de Boer', 'Ronald de Boer']"
+ ],
+ [
+  "Barcelona",
+  "topGoals",
+  "alias \"garcia\" shared by ['Eric Garcia', 'Luis García']"
+ ],
+ [
+  "Barcelona",
+  "info",
+  "goals 167 assists 0 assists-only 0"
+ ],
+ [
+  "Manchester United",
+  "topGoals",
+  "alias \"anderson\" shared by ['Anderson', 'Viv Anderson']"
+ ],
+ [
+  "Manchester United",
+  "topGoals",
+  "alias \"neville\" shared by ['Gary Neville', 'Phil Neville']"
+ ],
+ [
+  "Manchester United",
+  "info",
+  "goals 132 assists 0 assists-only 0"
+ ],
+ [
+  "Liverpool",
+  "topGoals",
+  "alias \"kennedy\" shared by ['Alan Kennedy', 'Ray Kennedy']"
+ ],
+ [
+  "Liverpool",
+  "topGoals",
+  "alias \"jones\" shared by ['Curtis Jones', 'Joey Jones']"
+ ],
+ [
+  "Liverpool",
+  "info",
+  "goals 139 assists 0 assists-only 0"
+ ],
+ [
+  "Arsenal",
+  "topGoals",
+  "alias \"campbell\" shared by ['Joel Campbell', 'Sol Campbell']"
+ ],
+ [
+  "Arsenal",
+  "info",
+  "goals 133 assists 0 assists-only 0"
+ ],
+ [
+  "Manchester City",
+  "topGoals",
+  "alias \"johnson\" shared by ['Adam Johnson', 'Michael Johnson', 'Tommy Johnson']"
+ ],
+ [
+  "Manchester City",
+  "topGoals",
+  "alias \"haaland\" shared by ['Alf-Inge Haaland', 'Erling Haaland']"
+ ],
+ [
+  "Manchester City",
+  "topGoals",
+  "alias \"toure\" shared by ['Kolo Touré', 'Yaya Touré']"
+ ],
+ [
+  "Manchester City",
+  "topGoals",
+  "alias \"silva\" shared by ['Bernardo Silva', 'David Silva']"
+ ],
+ [
+  "Manchester City",
+  "info",
+  "goals 118 assists 0 assists-only 0"
+ ],
+ [
+  "Chelsea",
+  "topGoals",
+  "alias \"costa\" shared by ['Alex', 'Diego Costa']"
+ ],
+ [
+  "Chelsea",
+  "topGoals",
+  "alias \"cole\" shared by ['Ashley Cole', 'Carlton Cole', 'Joe Cole']"
+ ],
+ [
+  "Chelsea",
+  "topGoals",
+  "alias \"jones\" shared by ['Joey Jones', 'Vinnie Jones']"
+ ],
+ [
+  "Chelsea",
+  "info",
+  "goals 143 assists 0 assists-only 0"
+ ],
+ [
+  "Bayern Munich",
+  "topGoals",
+  "alias \"muller\" shared by ['Gerd Müller', 'Thomas Müller']"
+ ],
+ [
+  "Bayern Munich",
+  "topGoals",
+  "alias \"rummenigge\" shared by ['Karl-Heinz Rummenigge', 'Michael Rummenigge']"
+ ],
+ [
+  "Bayern Munich",
+  "topGoals",
+  "alias \"hoeness\" shared by ['Dieter Hoeneß', 'Uli Hoeneß']"
+ ],
+ [
+  "Bayern Munich",
+  "topGoals",
+  "alias \"kovac\" shared by ['Niko Kovač', 'Robert Kovač']"
+ ],
+ [
+  "Bayern Munich",
+  "info",
+  "goals 119 assists 0 assists-only 0"
+ ],
+ [
+  "Paris Saint-Germain",
+  "info",
+  "goals 52 assists 0 assists-only 0"
+ ],
+ [
+  "Juventus",
+  "topGoals",
+  "alias \"baggio\" shared by ['Dino Baggio', 'Roberto Baggio']"
+ ],
+ [
+  "Juventus",
+  "topGoals",
+  "alias \"locatelli\" shared by ['Manuel Locatelli', 'Ugo Locatelli']"
+ ],
+ [
+  "Juventus",
+  "info",
+  "goals 170 assists 0 assists-only 0"
+ ],
+ [
+  "AC Milan",
+  "topGoals",
+  "alias \"costa\" shared by ['Alex', 'Rui Costa']"
+ ],
+ [
+  "AC Milan",
+  "info",
+  "goals 165 assists 0 assists-only 0"
+ ],
+ [
+  "Inter Milan",
+  "topGoals",
+  "alias \"zanetti\" shared by ['Cristiano Zanetti', 'Javier Zanetti']"
+ ],
+ [
+  "Inter Milan",
+  "topGoals",
+  "alias \"baggio\" shared by ['Dino Baggio', 'Roberto Baggio']"
+ ],
+ [
+  "Inter Milan",
+  "info",
+  "goals 164 assists 0 assists-only 0"
+ ],
+ [
+  "Borussia Dortmund",
+  "info",
+  "goals 95 assists 0 assists-only 0"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"suarez\" shared by ['Luis Aragonés', 'Mario Suárez']"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"torres\" shared by ['Fernando Torres', 'Juanfran', 'Óliver Torres']"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"rodriguez\" shared by ['Adelardo Rodríguez', 'Cristian Rodríguez', 'Maxi Rodríguez']"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"garcia\" shared by ['Luis García', 'Pablo Ibáñez', 'Raúl García']"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"alvarez\" shared by ['Adrián López', 'Julián Alvarez']"
+ ],
+ [
+  "Atletico Madrid",
+  "topGoals",
+  "alias \"cunha\" shared by ['Diego', 'Matheus Cunha']"
+ ],
+ [
+  "Atletico Madrid",
+  "info",
+  "goals 110 assists 0 assists-only 0"
+ ],
+ [
+  "Tottenham Hotspur",
+  "topGoals",
+  "alias \"davies\" shared by ['Ben Davies', 'Simon Davies']"
+ ],
+ [
+  "Tottenham Hotspur",
+  "topGoals",
+  "alias \"campbell\" shared by ['Fraizer Campbell', 'Sol Campbell']"
+ ],
+ [
+  "Tottenham Hotspur",
+  "info",
+  "goals 122 assists 0 assists-only 0"
+ ],
+ [
+  "AS Roma",
+  "topGoals",
+  "alias \"costa\" shared by ['Dino da Costa', 'Jair da Costa']"
+ ],
+ [
+  "AS Roma",
+  "info",
+  "goals 141 assists 0 assists-only 0"
+ ],
+ [
+  "Napoli",
+  "topGoals",
+  "alias \"cannavaro\" shared by ['Fabio Cannavaro', 'Paolo Cannavaro']"
+ ],
+ [
+  "Napoli",
+  "info",
+  "goals 87 assists 0 assists-only 0"
+ ],
+ [
+  "Ajax",
+  "topGoals",
+  "alias \"groot\" shared by ['Cees Groot', 'Henk Groot']"
+ ],
+ [
+  "Ajax",
+  "topGoals",
+  "alias \"jong\" shared by ['Nigel de Jong', 'Siem de Jong']"
+ ],
+ [
+  "Ajax",
+  "topGoals",
+  "alias \"boer\" shared by ['Frank de Boer', 'Ronald de Boer']"
+ ],
+ [
+  "Ajax",
+  "topGoals",
+  "alias \"laudrup\" shared by ['Brian Laudrup', 'Michael Laudrup']"
+ ],
+ [
+  "Ajax",
+  "info",
+  "goals 111 assists 0 assists-only 0"
+ ],
+ [
+  "Sevilla",
+  "info",
+  "goals 96 assists 0 assists-only 0"
+ ],
+ [
+  "Benfica",
+  "topGoals",
+  "alias \"pereira\" shared by ['João Pereira', 'Maxi Pereira']"
+ ],
+ [
+  "Benfica",
+  "info",
+  "goals 83 assists 0 assists-only 0"
+ ],
+ [
+  "FC Porto",
+  "topGoals",
+  "alias \"gonzalez\" shared by ['Lucho González', 'Nico González']"
+ ],
+ [
+  "FC Porto",
+  "topGoals",
+  "alias \"rodriguez\" shared by ['Cristian Rodríguez', 'James Rodríguez']"
+ ],
+ [
+  "FC Porto",
+  "topGoals",
+  "alias \"pereira\" shared by ['Maxi Pereira', 'Álvaro Pereira']"
+ ],
+ [
+  "FC Porto",
+  "info",
+  "goals 82 assists 0 assists-only 0"
+ ],
+ [
+  "Sporting CP",
+  "topGoals",
+  "alias \"fernandes\" shared by ['Bruno Fernandes', 'Manuel Fernandes']"
+ ],
+ [
+  "Sporting CP",
+  "topGoals",
+  "alias \"silva\" shared by ['Adrien Silva', 'Elpídio Silva']"
+ ],
+ [
+  "Sporting CP",
+  "info",
+  "goals 86 assists 0 assists-only 0"
+ ],
+ [
+  "Olympique Lyonnais",
+  "info",
+  "goals 33 assists 0 assists-only 0"
+ ],
+ [
+  "Olympique de Marseille",
+  "info",
+  "goals 35 assists 0 assists-only 0"
+ ],
+ [
+  "AS Monaco",
+  "topGoals",
+  "alias \"petit\" shared by ['Emmanuel Petit', 'Jean Petit']"
+ ],
+ [
+  "AS Monaco",
+  "info",
+  "goals 92 assists 0 assists-only 0"
+ ],
+ [
+  "PSV Eindhoven",
+  "topGoals",
+  "alias \"jong\" shared by ['Luuk de Jong', 'Siem de Jong']"
+ ],
+ [
+  "PSV Eindhoven",
+  "topGoals",
+  "alias \"costa\" shared by ['Alex', 'Manuel da Costa']"
+ ],
+ [
+  "PSV Eindhoven",
+  "topGoals",
+  "alias \"bruma\" shared by ['Bruma', 'Jeffrey Bruma']"
+ ],
+ [
+  "PSV Eindhoven",
+  "info",
+  "goals 100 assists 0 assists-only 0"
+ ],
+ [
+  "Bayer Leverkusen",
+  "info",
+  "goals 39 assists 0 assists-only 0"
+ ],
+ [
+  "RB Leipzig",
+  "info",
+  "goals 34 assists 0 assists-only 0"
+ ],
+ [
+  "Lazio",
+  "info",
+  "goals 94 assists 0 assists-only 0"
+ ],
+ [
+  "Villarreal",
+  "topGoals",
+  "alias \"soriano\" shared by ['Bruno Soriano', 'Roberto Soriano']"
+ ],
+ [
+  "Villarreal",
+  "topGoals",
+  "alias \"perez\" shared by ['Ayoze Pérez', 'Hernán Pérez']"
+ ],
+ [
+  "Villarreal",
+  "topGoals",
+  "alias \"gracia\" shared by ['Cani', 'Javi Gracia']"
+ ],
+ [
+  "Villarreal",
+  "topGoals",
+  "alias \"santos\" shared by ['Giovani dos Santos', 'Jonathan dos Santos']"
+ ],
+ [
+  "Villarreal",
+  "topGoals",
+  "alias \"fernandez\" shared by ['Matías Fernández', 'Robert Fernández']"
+ ],
+ [
+  "Villarreal",
+  "info",
+  "goals 81 assists 0 assists-only 0"
+ ],
+ [
+  "Athletic Bilbao",
+  "topGoals",
+  "alias \"williams\" shared by ['Iñaki Williams', 'Nico Williams']"
+ ],
+ [
+  "Athletic Bilbao",
+  "topGoals",
+  "alias \"martinez\" shared by ['Iñigo Martínez', 'Javi Martínez']"
+ ],
+ [
+  "Athletic Bilbao",
+  "info",
+  "goals 49 assists 0 assists-only 0"
+ ],
+ [
+  "Leeds United",
+  "topGoals",
+  "alias \"jones\" shared by ['Mick Jones', 'Vinnie Jones']"
+ ],
+ [
+  "Leeds United",
+  "info",
+  "goals 74 assists 0 assists-only 0"
+ ],
+ [
+  "Valencia",
+  "topGoals",
+  "alias \"suarez\" shared by ['Edmundo Suárez', 'Mario Suárez']"
+ ],
+ [
+  "Valencia",
+  "topGoals",
+  "alias \"keita\" shared by ['Salif Keïta', 'Seydou Keita']"
+ ],
+ [
+  "Valencia",
+  "topGoals",
+  "alias \"costa\" shared by ['Ricardo Costa', 'Tino Costa']"
+ ],
+ [
+  "Valencia",
+  "topGoals",
+  "alias \"gonzalez\" shared by ['Kily González', 'Nico González']"
+ ],
+ [
+  "Valencia",
+  "info",
+  "goals 127 assists 0 assists-only 0"
+ ],
+ [
+  "Newcastle United",
+  "topGoals",
+  "alias \"murphy\" shared by ['Daryl Murphy', 'Jacob Murphy']"
+ ],
+ [
+  "Newcastle United",
+  "info",
+  "goals 107 assists 0 assists-only 0"
+ ],
+ [
+  "Fiorentina",
+  "topGoals",
+  "alias \"costa\" shared by ['Alberto Gilardino', 'Rui Costa']"
+ ],
+ [
+  "Fiorentina",
+  "topGoals",
+  "alias \"chiesa\" shared by ['Enrico Chiesa', 'Federico Chiesa']"
+ ],
+ [
+  "Fiorentina",
+  "info",
+  "goals 115 assists 0 assists-only 0"
+ ],
+ [
+  "Celtic",
+  "topGoals",
+  "alias \"keane\" shared by ['Robbie Keane', 'Roy Keane']"
+ ],
+ [
+  "Celtic",
+  "topGoals",
+  "alias \"miller\" shared by ['Kenny Miller', 'Liam Miller']"
+ ],
+ [
+  "Celtic",
+  "info",
+  "goals 81 assists 0 assists-only 0"
+ ],
+ [
+  "West Ham United",
+  "topGoals",
+  "alias \"cole\" shared by ['Carlton Cole', 'Joe Cole']"
+ ],
+ [
+  "West Ham United",
+  "info",
+  "goals 37 assists 0 assists-only 0"
+ ],
+ [
+  "Everton",
+  "topGoals",
+  "alias \"johnson\" shared by ['Andrew Johnson', 'Michael Keane']"
+ ],
+ [
+  "Everton",
+  "topGoals",
+  "alias \"young\" shared by ['Alex Iwobi', 'Ashley Young']"
+ ],
+ [
+  "Everton",
+  "info",
+  "goals 99 assists 0 assists-only 0"
+ ],
+ [
+  "Aston Villa",
+  "topGoals",
+  "alias \"walker\" shared by ['Billy Walker', 'Kyle Walker']"
+ ],
+ [
+  "Aston Villa",
+  "topGoals",
+  "alias \"houghton\" shared by ['Eric Houghton', 'Ray Houghton']"
+ ],
+ [
+  "Aston Villa",
+  "topGoals",
+  "alias \"young\" shared by ['Ashley Young', 'Luke Young']"
+ ],
+ [
+  "Aston Villa",
+  "topGoals",
+  "alias \"cole\" shared by ['Carlton Cole', 'Joe Cole']"
+ ],
+ [
+  "Aston Villa",
+  "info",
+  "goals 125 assists 0 assists-only 0"
+ ],
+ [
+  "Rangers",
+  "info",
+  "goals 36 assists 0 assists-only 0"
+ ],
+ [
+  "Feyenoord",
+  "topGoals",
+  "alias \"larsson\" shared by ['Henrik Larsson', 'Sam Larsson']"
+ ],
+ [
+  "Feyenoord",
+  "info",
+  "goals 67 assists 0 assists-only 0"
+ ],
+ [
+  "Schalke 04",
+  "info",
+  "goals 30 assists 0 assists-only 0"
+ ],
+ [
+  "Werder Bremen",
+  "info",
+  "goals 31 assists 0 assists-only 0"
+ ],
+ [
+  "VfB Stuttgart",
+  "info",
+  "goals 38 assists 0 assists-only 0"
+ ],
+ [
+  "Wolfsburg",
+  "info",
+  "goals 31 assists 0 assists-only 0"
+ ],
+ [
+  "Leicester City",
+  "info",
+  "goals 75 assists 0 assists-only 0"
+ ],
+ [
+  "Real Sociedad",
+  "topGoals",
+  "alias \"alonso\" shared by ['Mikel Alonso', 'Xabi Alonso']"
+ ],
+ [
+  "Real Sociedad",
+  "info",
+  "goals 64 assists 0 assists-only 0"
+ ]
+]

@@ -1,3 +1,15 @@
+/**
+ * LEGACY / UNMAINTAINED - do not use for development or production.
+ *
+ * This standalone Node WebSocket server predates the Cloudflare PartyServer in party/main.ts
+ * and no longer speaks the current protocol (stable player ids, rejoin_party, match rosters,
+ * one authoritative game_init per match room, server-ruled Football Imposter verdicts,
+ * server-seeded rematches, event replay). Clients connected to it will desync.
+ *
+ * Run the real server instead:  npm run server:dev   (wrangler dev on :8787)
+ * Kept only for reference; safe to delete.
+ */
+
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
@@ -446,6 +458,10 @@ function handleBotFallback(session: ClientSession, modeId: string, queueType: 'd
   launchEphemeralMatch(session, { id: botId, name: botName, isBot: true }, normMode, queueType);
 }
 
+// Unique id stamp for relayed game events (nonce changes per server boot)
+const SERVER_EVENT_NONCE = Math.random().toString(36).slice(2, 10);
+let serverEventSeq = 0;
+
 wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
   const playerId = 'player_' + Math.random().toString(36).substring(2, 9);
   const session: ClientSession = {
@@ -813,6 +829,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
       if (!room) return;
 
       const { modeId, action, data } = msg.payload;
+      const eventId = `${SERVER_EVENT_NONCE}-${++serverEventSeq}`;
 
       for (const client of clients.values()) {
         if (client.roomId === session.roomId && client.socket.readyState === WebSocket.OPEN) {
@@ -824,6 +841,7 @@ function handleMessage(session: ClientSession, msg: ClientToServerMessage) {
               data,
               senderId: session.playerId,
               senderName: session.name,
+              _eventId: eventId,
             },
           });
         }

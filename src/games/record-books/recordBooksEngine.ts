@@ -24,7 +24,7 @@ const SEARCH_INDEX: GlobalPlayerSearchItem[] = (() => {
   const map = new Map<string, { name: string; position?: string; aliases: Set<string> }>();
 
   for (const club of CLUBS_DB) {
-    for (const entry of [...club.topGoals, ...club.topAssists]) {
+    for (const entry of club.topGoals) {
       const key = normalizeSearchText(entry.name);
       if (!key) continue;
       if (!map.has(key)) {
@@ -93,6 +93,27 @@ export function generateClubSequence(
 }
 
 /**
+ * One club per round at that round's tier (e.g. Quick Match's rising schedule), no repeats.
+ */
+export function generateClubSequenceForSchedule(schedule: RecordBooksDifficulty[]): RecordBooksClubRecord[] {
+  const pool = [...CLUBS_DB];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const used = new Set<string>();
+  const sequence: RecordBooksClubRecord[] = [];
+  for (const difficulty of schedule) {
+    const club =
+      pool.find((c) => !used.has(c.slug) && c.difficulty === difficulty) || pool.find((c) => !used.has(c.slug));
+    if (!club) break;
+    used.add(club.slug);
+    sequence.push(club);
+  }
+  return sequence;
+}
+
+/**
  * Instant fuzzy autocomplete across all footballers in the database.
  */
 export function searchRecordBooksPlayers(
@@ -150,12 +171,12 @@ export function searchRecordBooksPlayers(
 }
 
 /**
- * Evaluates a player submission against the current club's selected metric (Goals or Assists).
+ * Evaluates a player submission against the current club's league-goal records.
  */
 export function evaluateRecordBooksSubmission(
   rawInput: string,
   club: RecordBooksClubRecord,
-  metric: RecordBooksMetric
+  _metric: RecordBooksMetric
 ): RecordBooksSubmissionEval {
   const cleanInput = normalizeSearchText(rawInput);
   if (!cleanInput) {
@@ -167,8 +188,7 @@ export function evaluateRecordBooksSubmission(
     };
   }
 
-  const list: RecordBooksPlayerStat[] =
-    metric === 'Goals' ? club.topGoals : club.topAssists;
+  const list: RecordBooksPlayerStat[] = club.topGoals;
 
   // 1. Check exact match on full name or alias in the club's record list
   for (let idx = 0; idx < list.length; idx++) {
@@ -262,11 +282,10 @@ export function isSameRecordBooksPlayer(
  */
 export function generateRecordBooksOpponentSubmission(
   club: RecordBooksClubRecord,
-  metric: RecordBooksMetric,
+  _metric: RecordBooksMetric,
   excludedPlayerName?: string | null
 ): RecordBooksSubmissionEval {
-  const list: RecordBooksPlayerStat[] =
-    metric === 'Goals' ? club.topGoals : club.topAssists;
+  const list: RecordBooksPlayerStat[] = club.topGoals;
 
   if (list.length === 0) {
     return {

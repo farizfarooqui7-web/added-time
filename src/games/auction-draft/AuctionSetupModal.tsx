@@ -58,20 +58,22 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
   const [selectedFormation, setSelectedFormation] = useState<FormationId>('balanced-1-1-2-1');
   const [selectedDeck, setSelectedDeck] = useState<LeagueDeckId>('global');
 
-  const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
+  const { party, syncSetupSettings, setMemberPrefs, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
   const isHostWithMembers = party.isActive && party.isCurrentUserHost && party.members.length > 1;
   const shouldWarnPartyLeave = isGuestInParty || isHostWithMembers;
   const isSquadReady = party.isActive && party.members.length === 2;
 
-  // Real-time synchronization of setup settings from host
+  // Real-time synchronization of setup settings from host (the deck only: every player keeps their own formation)
   useEffect(() => {
     const pending = party.pendingSetup?.['auction-draft'];
-    if (pending) {
-      if (pending.formationId) setSelectedFormation(pending.formationId);
-      if (pending.deckId) setSelectedDeck(pending.deckId);
-    }
+    if (pending?.deckId) setSelectedDeck(pending.deckId);
   }, [party.pendingSetup?.['auction-draft']]);
+
+  // Guests tell the host room which formation they draft into
+  useEffect(() => {
+    if (isOpen && isGuestInParty) setMemberPrefs({ formationId: selectedFormation });
+  }, [isOpen, isGuestInParty, selectedFormation]);
 
   if (!isOpen) return null;
 
@@ -81,6 +83,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
     if (party.isActive && party.isCurrentUserHost) {
       syncSetupSettings('auction-draft', { formationId: f, deckId: selectedDeck });
     }
+    // Guests sync their own formation through the effect above
   };
 
   const handleDeckChange = (d: LeagueDeckId) => {
@@ -114,7 +117,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
     soundFX.playClick(850);
     const start = () => {
       onClose();
-      joinQueue('auction-draft', 'duel');
+      joinQueue('auction-draft', 'duel', { formationId: selectedFormation });
     };
     if (shouldWarnPartyLeave) {
       triggerSoloEscapeHatch(start, 'matchmaking');
@@ -186,7 +189,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
         {/* Guest Read-Only Advisory Banner */}
         {isGuestInParty && (
           <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center justify-between shrink-0">
-            <span>Host is configuring match...</span>
+            <span>Host is configuring match... pick your own formation.</span>
             <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
           </div>
         )}
@@ -202,16 +205,9 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
               return (
                 <div
                   key={formation.id}
-                  onClick={() => {
-                    if (isGuestInParty) return;
-                    handleFormationChange(formation.id);
-                  }}
+                  onClick={() => handleFormationChange(formation.id)}
                   className={`p-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
-                    isGuestInParty
-                      ? isSelected
-                        ? 'bg-[#181e2b] border-[#ccff00]/60 opacity-80 cursor-not-allowed'
-                        : 'bg-[#12151e] border-white/5 opacity-50 cursor-not-allowed'
-                      : isSelected
+                    isSelected
                       ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.2)] cursor-pointer'
                       : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
                   }`}
@@ -320,7 +316,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Online drop-in queue. Pairs with active ballers or automated bot at 10s.
+                Your formation vs theirs • random league deck. Pairs with a live baller or a bot at 10s.
               </p>
             </button>
 

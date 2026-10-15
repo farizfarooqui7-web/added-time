@@ -60,6 +60,8 @@ export type LeagueDeckId =
 export interface MatchConfig {
   formationId: FormationId;
   deckId?: LeagueDeckId;
+  /** Multiplayer: each player's own formation, keyed by player id (formations may differ). */
+  formationsByPlayer?: Record<string, FormationId>;
   mode: 'solo' | 'host' | 'join';
   roomCode: string;
   isRoomCodeMasked: boolean;

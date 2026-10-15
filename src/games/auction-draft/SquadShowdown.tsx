@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { ManagerState } from './types';
+import type { PositionCategory } from '../../types';
 import { getSquadAverageOvr } from './formations';
 import { soundFX } from '../../utils/audio';
 import { RotateCcw, Home, ChevronRight, Zap, User } from 'lucide-react';
@@ -13,6 +14,8 @@ interface SquadShowdownProps {
   isHost?: boolean;
   isOpponentRematchReady?: boolean;
   hasRequestedRematch?: boolean;
+  /** Asymmetric formations: per-position OVR offsets applied to scoring (server-computed). */
+  positionOffsets?: Partial<Record<PositionCategory, number>>;
 }
 
 export const SquadShowdown: React.FC<SquadShowdownProps> = ({
@@ -24,13 +27,15 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
   isHost = false,
   isOpponentRematchReady = false,
   hasRequestedRematch = false,
+  positionOffsets,
 }) => {
   // Step-by-step reveal: 0 = start, 1 = slot 1, 2 = slot 2, 3 = slot 3, 4 = slot 4, 5 = all 5 revealed
   const [revealedSlotCount, setRevealedSlotCount] = useState<number>(0);
 
   // Final Squad Average OVR (pure rating metric)
-  const userAvgOvr = getSquadAverageOvr(userState.slots);
-  const botAvgOvr = getSquadAverageOvr(botState.slots);
+  const userAvgOvr = getSquadAverageOvr(userState.slots, positionOffsets);
+  const botAvgOvr = getSquadAverageOvr(botState.slots, positionOffsets);
+  const adjust = (slot?: { position: PositionCategory }) => (slot ? positionOffsets?.[slot.position] ?? 0 : 0);
 
   const isUserWinner = userAvgOvr > botAvgOvr;
   const isBotWinner = botAvgOvr > userAvgOvr;
@@ -102,6 +107,7 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
                 : isBotWinner
                 ? `The Gaffer assembled a higher overall rating (${botAvgOvr} vs ${userAvgOvr}). Regroup and draft again.`
                 : `Both squads deadlocked at identical ${userAvgOvr} Squad Average OVR.`}
+              {positionOffsets && ' Different formations: averages are position-adjusted.'}
             </p>
           </div>
         ) : (
@@ -171,8 +177,10 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
             const uOvr = uPlayer?.ovr ?? 80;
             const bOvr = bPlayer?.ovr ?? 80;
 
-            const userWonDuel = isRevealed && uOvr > bOvr;
-            const botWonDuel = isRevealed && bOvr > uOvr;
+            const uScore = uOvr + adjust(uSlot);
+            const bScore = bOvr + adjust(bSlot);
+            const userWonDuel = isRevealed && uScore > bScore;
+            const botWonDuel = isRevealed && bScore > uScore;
 
             return (
               <div

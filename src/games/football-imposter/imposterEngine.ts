@@ -303,7 +303,8 @@ const MODERN_SUPERSTAR_NAMES = new Set([
 
 export function pickSecretPlayer(
   category: ImposterCategory,
-  excludeIds: string[] = []
+  excludeIds: string[] = [],
+  options: { wellKnownOnly?: boolean } = {}
 ): ImposterSecretPlayer {
   const excluded = new Set(excludeIds);
   let candidates: RawLinkUpPlayer[] = [];
@@ -344,6 +345,18 @@ export function pickSecretPlayer(
         (p) => p.difficulty === 'Easy' && !MODERN_SUPERSTAR_NAMES.has(p.name)
       );
     }
+  }
+
+  // Quick Match: keep the secret footballer recognisable (Easy/Medium Link-Up tier or a named superstar)
+  if (options.wellKnownOnly) {
+    const wellKnown = candidates.filter(
+      (p) =>
+        p.difficulty === 'Easy' ||
+        p.difficulty === 'Medium' ||
+        MODERN_SUPERSTAR_NAMES.has(p.name) ||
+        (p.aliases && p.aliases.some((a) => MODERN_SUPERSTAR_NAMES.has(a)))
+    );
+    if (wellKnown.length > 0) candidates = wellKnown;
   }
 
   const fresh = candidates.filter((p) => !excluded.has(p.id || p.name));

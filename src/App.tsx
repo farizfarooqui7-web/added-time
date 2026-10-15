@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BroadcastHeader } from './components/BroadcastHeader';
 import { BentoGrid } from './components/BentoGrid';
 import { GameModeModal } from './components/GameModeModal';
 import type { LaunchFlowTab } from './components/GameModeModal';
-import { AuctionSetupModal, AuctionArena } from './games/auction-draft';
+import { AuctionSetupModal } from './games/auction-draft/AuctionSetupModal';
 import type { MatchConfig } from './games/auction-draft';
-import { LinkUpSetupModal, LinkUpArena } from './games/link-up';
+import { LinkUpSetupModal } from './games/link-up/LinkUpSetupModal';
 import type { LinkUpMatchConfig, LinkUpLobbyMode } from './games/link-up';
-import { RecordBooksSetupModal, RecordBooksArena } from './games/record-books';
+import { RecordBooksSetupModal } from './games/record-books/RecordBooksSetupModal';
 import type { RecordBooksMatchConfig, RecordBooksLobbyMode } from './games/record-books';
-import { ImposterSetupModal, ImposterArena } from './games/football-imposter';
+import { ImposterSetupModal } from './games/football-imposter/ImposterSetupModal';
 import type { ImposterMatchConfig, ImposterLobbyMode } from './games/football-imposter';
-import { SideNettingSetupModal, SideNettingArena } from './games/side-netting';
+import { SideNettingSetupModal } from './games/side-netting/SideNettingSetupModal';
 import type { SideNettingMatchConfig } from './games/side-netting';
 import { PartyDrawer } from './components/PartyDrawer';
 import { SoloEscapeHatchModal } from './components/SoloEscapeHatchModal';
@@ -20,6 +20,25 @@ import { FeedbackWidget } from './components/FeedbackWidget';
 import { useParty } from './context/PartyContext';
 import { GAME_MODES } from './data/gameModes';
 import type { GameModeInfo } from './types';
+
+// Each arena (and the game data its engine imports) is a separate chunk, fetched when that game opens
+const AuctionArena = lazy(() => import('./games/auction-draft/AuctionArena').then((m) => ({ default: m.AuctionArena })));
+const LinkUpArena = lazy(() => import('./games/link-up/LinkUpArena').then((m) => ({ default: m.LinkUpArena })));
+const RecordBooksArena = lazy(() =>
+  import('./games/record-books/RecordBooksArena').then((m) => ({ default: m.RecordBooksArena }))
+);
+const ImposterArena = lazy(() =>
+  import('./games/football-imposter/ImposterArena').then((m) => ({ default: m.ImposterArena }))
+);
+const SideNettingArena = lazy(() =>
+  import('./games/side-netting/SideNettingArena').then((m) => ({ default: m.SideNettingArena }))
+);
+
+const ArenaLoading = () => (
+  <div className="min-h-screen w-full bg-[#080a0f] flex items-center justify-center">
+    <span className="font-mono text-xs tracking-[0.3em] text-slate-400 uppercase animate-pulse">Loading match...</span>
+  </div>
+);
 
 export function App() {
   const [viewMode, setViewMode] = useState<
@@ -114,11 +133,11 @@ export function App() {
         lobbyMode: cfg.lobbyMode || (party.isCurrentUserHost ? 'host' : 'join'),
         roomCode: cfg.roomCode || party.roomCode || 'MATCH',
         isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
-        metric: cfg.metric || 'Goals',
         difficulty: cfg.difficulty || 'Medium',
         totalRounds: cfg.totalRounds || 10,
         isMultiplayer: true,
         ...cfg,
+        metric: 'Goals', // league goals only; ignores a stale 'Assists' setting from an older client
       };
       setActiveRecordBooksConfig(fullConfig);
       setIsRecordBooksSetupOpen(false);
@@ -128,7 +147,7 @@ export function App() {
         lobbyMode: cfg.lobbyMode || (party.isCurrentUserHost ? 'host' : 'sandbox'),
         roomCode: cfg.roomCode || party.roomCode || 'MATCH',
         isRoomCodeMasked: cfg.isRoomCodeMasked ?? party.isCodeMasked ?? true,
-        category: cfg.category || 'Global Icons',
+        category: cfg.category || 'All-Time Legends',
         clueRounds: cfg.clueRounds || 2,
         botCount: cfg.botCount || 4,
         rolePreference: cfg.rolePreference || 'random',
@@ -153,9 +172,14 @@ export function App() {
     clearRemoteMatch();
   }, [lastRemoteMatch, party.members.length, party.isCurrentUserHost, party.roomCode, party.isCodeMasked, clearRemoteMatch, clearForfeit]);
 
-  // Safety net: Always disband/leave ephemeral drop-in match rooms when returning to hub
+  // Safety net: Always disband/leave ephemeral drop-in match rooms when returning to hub.
+  // Only on the way back from an arena: a fresh matchmaking result lands (party_created) one
+  // message before match_launched switches the view, and must not be torn down meanwhile.
+  const prevViewModeRef = useRef(viewMode);
   useEffect(() => {
-    if (viewMode === 'hub' && party.isActive && party.roomCode?.startsWith('match_')) {
+    const returnedToHub = viewMode === 'hub' && prevViewModeRef.current !== 'hub';
+    prevViewModeRef.current = viewMode;
+    if (returnedToHub && party.isActive && party.roomCode?.startsWith('match_')) {
       leaveParty();
     }
   }, [viewMode, party.isActive, party.roomCode, leaveParty]);
@@ -347,11 +371,13 @@ export function App() {
   if (viewMode === 'side-netting-arena' && activeSideNettingConfig) {
     return (
       <>
-        <SideNettingArena
-          key={matchSessionId}
-          config={activeSideNettingConfig}
-          onExitArena={handleExitSideNettingArena}
-        />
+        <Suspense fallback={<ArenaLoading />}>
+          <SideNettingArena
+            key={matchSessionId}
+            config={activeSideNettingConfig}
+            onExitArena={handleExitSideNettingArena}
+          />
+        </Suspense>
         <FeedbackWidget currentView={viewMode} />
       </>
     );
@@ -360,11 +386,13 @@ export function App() {
   if (viewMode === 'auction-arena' && activeMatchConfig) {
     return (
       <>
-        <AuctionArena
-          key={matchSessionId}
-          config={activeMatchConfig}
-          onExitMatch={handleExitAuctionArena}
-        />
+        <Suspense fallback={<ArenaLoading />}>
+          <AuctionArena
+            key={matchSessionId}
+            config={activeMatchConfig}
+            onExitMatch={handleExitAuctionArena}
+          />
+        </Suspense>
         <FeedbackWidget currentView={viewMode} />
       </>
     );
@@ -373,11 +401,13 @@ export function App() {
   if (viewMode === 'link-up-arena' && activeLinkUpConfig) {
     return (
       <>
-        <LinkUpArena
-          key={matchSessionId}
-          config={activeLinkUpConfig}
-          onExitArena={handleExitLinkUpArena}
-        />
+        <Suspense fallback={<ArenaLoading />}>
+          <LinkUpArena
+            key={matchSessionId}
+            config={activeLinkUpConfig}
+            onExitArena={handleExitLinkUpArena}
+          />
+        </Suspense>
         <FeedbackWidget currentView={viewMode} />
       </>
     );
@@ -386,11 +416,13 @@ export function App() {
   if (viewMode === 'record-books-arena' && activeRecordBooksConfig) {
     return (
       <>
-        <RecordBooksArena
-          key={matchSessionId}
-          config={activeRecordBooksConfig}
-          onExitArena={handleExitRecordBooksArena}
-        />
+        <Suspense fallback={<ArenaLoading />}>
+          <RecordBooksArena
+            key={matchSessionId}
+            config={activeRecordBooksConfig}
+            onExitArena={handleExitRecordBooksArena}
+          />
+        </Suspense>
         <FeedbackWidget currentView={viewMode} />
       </>
     );
@@ -399,11 +431,13 @@ export function App() {
   if (viewMode === 'imposter-arena' && activeImposterConfig) {
     return (
       <>
-        <ImposterArena
-          key={matchSessionId}
-          config={activeImposterConfig}
-          onExitArena={handleExitImposterArena}
-        />
+        <Suspense fallback={<ArenaLoading />}>
+          <ImposterArena
+            key={matchSessionId}
+            config={activeImposterConfig}
+            onExitArena={handleExitImposterArena}
+          />
+        </Suspense>
         <FeedbackWidget currentView={viewMode} />
       </>
     );

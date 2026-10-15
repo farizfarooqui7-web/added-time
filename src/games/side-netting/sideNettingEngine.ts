@@ -460,9 +460,30 @@ export function evaluateAnswer(
  * Draws a randomized batch of prompts using Fisher-Yates shuffle, excluding recently played questions
  * to guarantee zero repeats across matches until the entire 225+ question bank is cycled.
  */
+type PromptDifficulty = NonNullable<SideNettingPrompt['difficulty']>;
+
+// Nearest tiers first when a round's own tier has run out
+const DIFFICULTY_FALLBACKS: Record<PromptDifficulty, PromptDifficulty[]> = {
+  Easy: ['Easy', 'Medium', 'Hard'],
+  Medium: ['Medium', 'Easy', 'Hard'],
+  Hard: ['Hard', 'Medium', 'Easy'],
+};
+
+/** How many broad prompts a match mixes in: 2–3 per 10 rounds. */
+function broadPromptCount(count: number): number {
+  const perTen = Math.random() < 0.5 ? 2 : 3;
+  return Math.max(1, Math.round((count / 10) * perTen));
+}
+
+/**
+ * Draws a match's prompts. With `difficulties` (one per round, e.g. Quick Match's rising
+ * schedule) each round takes a prompt of that tier, in round order. Every match mixes in a
+ * few broad prompts, in random rounds.
+ */
 export function drawMatchPrompts(
   count: number,
-  excludeIds: string[] = []
+  excludeIds: string[] = [],
+  options: { difficulties?: PromptDifficulty[] } = {}
 ): { prompts: SideNettingPrompt[]; updatedExcludedIds: string[] } {
   let available = SIDE_NETTING_PROMPTS.filter((p) => !excludeIds.includes(p.id));
 
@@ -477,7 +498,32 @@ export function drawMatchPrompts(
     [available[i], available[j]] = [available[j], available[i]];
   }
 
-  const selected = available.slice(0, Math.min(count, available.length));
+  const rounds = Math.min(count, available.length);
+  const broadPool = available.filter((p) => p.broad);
+  const specificPool = available.filter((p) => !p.broad);
+  const broadRounds = new Set<number>();
+  const broadTarget = broadPool.length > 0 ? Math.min(broadPool.length, broadPromptCount(rounds)) : 0;
+  while (broadRounds.size < broadTarget) broadRounds.add(Math.floor(Math.random() * rounds));
+
+  const used = new Set<string>();
+  const take = (pool: SideNettingPrompt[], difficulty?: PromptDifficulty): SideNettingPrompt | undefined => {
+    const tiers = difficulty ? DIFFICULTY_FALLBACKS[difficulty] : [undefined];
+    for (const tier of tiers) {
+      const hit = pool.find((p) => !used.has(p.id) && (!tier || (p.difficulty || 'Medium') === tier));
+      if (hit) return hit;
+    }
+    return undefined;
+  };
+
+  const selected: SideNettingPrompt[] = [];
+  for (let i = 0; i < rounds; i++) {
+    const difficulty = options.difficulties?.[i];
+    const [first, second] = broadRounds.has(i) ? [broadPool, specificPool] : [specificPool, broadPool];
+    const pick = take(first, difficulty) || take(second, difficulty);
+    if (!pick) break;
+    used.add(pick.id);
+    selected.push(pick);
+  }
   const newExcluded = [...currentExcluded, ...selected.map((p) => p.id)];
 
   return { prompts: selected, updatedExcludedIds: newExcluded };

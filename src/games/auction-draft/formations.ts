@@ -1,6 +1,5 @@
 import type { PlayerEraCardExtended, PositionCategory } from '../../types';
 import type { FormationConfig, FormationId, SquadSlot, LeagueDeckId } from './types';
-export { PREMIER_LEAGUE_DECK } from '../../data/decks/premierLeague';
 
 export function cardMatchesLeagueDeck(card: PlayerEraCardExtended, deckId?: LeagueDeckId): boolean {
   if (!deckId || deckId === 'global') return true;
@@ -155,12 +154,19 @@ export function getSquadFilledCount(slots: SquadSlot[]): number {
 
 /**
  * Calculate Squad Average OVR (0-100 scale, 1 decimal place, e.g. 94.2 OVR).
+ * Asymmetric multiplayer formations pass per-position offsets so e.g. a two-striker
+ * squad gains nothing just because strikers carry higher ratings in the deck.
  */
-export function getSquadAverageOvr(slots: SquadSlot[]): number {
+export function getSquadAverageOvr(
+  slots: SquadSlot[],
+  positionOffsets?: Partial<Record<PositionCategory, number>>
+): number {
   const filled = slots.filter((slot) => Boolean(slot.filledPlayer));
   if (filled.length === 0) return 0;
-  const total = filled.reduce((acc, slot) => acc + (slot.filledPlayer?.ovr ?? 85), 0);
+  const total = filled.reduce(
+    (acc, slot) => acc + (slot.filledPlayer?.ovr ?? 85) + (positionOffsets?.[slot.position] ?? 0),
+    0
+  );
   return parseFloat((total / filled.length).toFixed(1));
 }
 
-export { drawNextWeightedCard, ACTIVE_DRAFT_DECK, getActiveDeck } from './draftEngine';

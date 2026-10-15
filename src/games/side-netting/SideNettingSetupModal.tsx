@@ -120,7 +120,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
                   OBSCURITY DUEL
                 </span>
               </div>
-              <p className="text-xs font-mono text-neutral-400 mt-0.5 truncate">
+              <p className="text-xs font-mono text-neutral-400 mt-0.5 leading-relaxed">
                 Hit the tightest angle. The more obscure your answer, the deeper it bends.
               </p>
             </div>
@@ -150,7 +150,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
             <span>THE PRECISION OBSCURITY ENGINE</span>
           </div>
           <p className="text-xs font-mono text-neutral-300 leading-relaxed">
-            Obvious answers land harmlessly in the middle of the net for 5 points. Niche, cult-hero answers bend directly into the side netting postage-stamp for up to 100 points!
+            Obvious answers land harmlessly in the middle of the pitch for minimal points. Niche, cult-hero answers bend directly into the side netting for up to 100 points!
           </p>
         </div>
 
@@ -228,11 +228,11 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <Zap className="w-4 h-4 text-cyan-400 fill-current shrink-0" />
-              <span className="truncate">1v1 OBSCURITY DUEL</span>
+              <span className="truncate" title="Ranked: 10 rounds, rising difficulty">1v1 OBSCURITY DUEL</span>
             </div>
             <span className="text-[10px] font-mono font-bold bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 px-2 py-0.5 rounded shrink-0">
-              <span className="hidden sm:inline">QUICK MATCH (DROP-IN)</span>
-              <span className="sm:hidden">QUICK MATCH</span>
+              <span className="hidden sm:inline">RANKED • RISING</span>
+              <span className="sm:hidden">RANKED</span>
             </span>
           </button>
 

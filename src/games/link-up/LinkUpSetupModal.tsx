@@ -8,7 +8,7 @@ import type {
 import {
   randomizeSlotConfiguration,
   updateSlotConfiguration,
-} from './puzzleEngine';
+} from './slotConfig';
 import { soundFX } from '../../utils/audio';
 import {
   Bot,
@@ -468,7 +468,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Drop-in duel queue. Pairs with online ballers or automated bot at 10s.
+                Ranked: 10 rounds, rising difficulty. Pairs with a live baller or a bot at 10s.
               </p>
             </button>
 
@@ -490,7 +490,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Drop into an 8-player public speed trivia room with live players.
+                Ranked: 10 rounds, rising difficulty. Public speed trivia room with live players.
               </p>
             </button>
 
