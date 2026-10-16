@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bug, Sparkles, HelpCircle, X, Send, CheckCircle2, MessageSquare } from 'lucide-react';
 import { soundFX } from '../utils/audio';
 
@@ -20,6 +20,13 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
     soundFX.playClick(650);
     setIsOpen(true);
   };
+
+  // Phones open the sheet from the hub's bottom tab bar instead of a floating pill
+  useEffect(() => {
+    const open = () => handleOpen();
+    window.addEventListener('topbins:open-feedback', open);
+    return () => window.removeEventListener('topbins:open-feedback', open);
+  }, []);
 
   const handleClose = () => {
     soundFX.playClick(500);
@@ -93,7 +100,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
   return (
     <>
       {/* Floating trigger, bottom-left */}
-      <div className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-40 select-none">
+      <div className="hidden sm:block fixed bottom-4 left-4 z-40 select-none">
         <button
           type="button"
           onClick={handleOpen}
@@ -108,7 +115,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
 
       {/* Success toast */}
       {toastMessage && (
-        <div className="bc-overlay fixed bottom-14 left-3 sm:left-4 z-50 select-none">
+        <div className="bc-overlay fixed bottom-24 sm:bottom-14 left-3 sm:left-4 z-50 select-none">
           <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/40 bg-[#0b0e14] px-3.5 py-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] text-[12px] text-emerald-200">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{toastMessage}</span>
@@ -125,12 +132,12 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
           onKeyDown={(e) => {
             if (e.key === 'Escape') handleClose();
           }}
-          className="bc-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-5 bg-black/80 backdrop-blur-md select-none"
+          className="bc-overlay fixed inset-0 max-sm:bottom-auto max-sm:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] z-50 flex items-end sm:items-center justify-center sm:p-5 bg-black/80 backdrop-blur-md select-none"
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{ ['--acc' as string]: '#fbbf24' } as React.CSSProperties}
-            className="bc-scope bc-panel relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[94dvh]"
+            className="bc-scope bc-panel relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[calc(94dvh/var(--zoom,1))]"
           >
             <div className="bc-rail absolute inset-x-0 top-0 h-[2px]" />
             <div className="bc-sheen absolute inset-x-0 top-0 h-32 pointer-events-none" />
@@ -218,10 +225,6 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
                     className={`${fieldClass} h-11 px-3 select-text`}
                   />
                 </label>
-
-                <span className="font-mono text-[10px] tracking-[0.12em] text-slate-500 uppercase">
-                  Attaches: {currentView || 'hub'} · device info
-                </span>
               </div>
 
               <div className="shrink-0 grid grid-cols-2 gap-2 px-6 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] border-t border-white/[0.07] bg-black/30">

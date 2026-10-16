@@ -45,7 +45,8 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
 
   const iconBtn =
     'bc-btn bc-btn-ghost w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-white cursor-pointer';
-  const hasSquad = party.isActive && !party.roomCode?.startsWith('match_') && party.visibility !== 'public';
+  // Matchmaking rooms are named match_*; any real squad, private or public, shows its chip
+  const hasSquad = party.isActive && !party.roomCode?.startsWith('match_');
 
   return (
     <header
@@ -65,7 +66,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
             </span>
           </div>
           <span className="hidden sm:block mt-1 font-mono text-[9px] tracking-[0.32em] text-slate-500 uppercase">
-            Football trivia · live
+            Football Party Games
           </span>
         </div>
       </div>
@@ -119,7 +120,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
           <button
             type="button"
             onClick={handleOpenActiveParty}
-            className="bc-btn h-9 flex items-center gap-2 px-3 rounded-lg border border-[#ccff00]/50 bg-[#ccff00]/[0.08] hover:bg-[#ccff00]/15 text-white cursor-pointer"
+            className="bc-btn h-9 hidden sm:flex items-center gap-2 px-3 rounded-lg border border-[#ccff00]/50 bg-[#ccff00]/[0.08] hover:bg-[#ccff00]/15 text-white cursor-pointer"
             title="Open Active Squad Lobby Drawer"
           >
             <span className="relative flex h-1.5 w-1.5">
@@ -137,7 +138,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
             )}
           </button>
         ) : (
-          <>
+          <span className="hidden sm:contents">
             <button
               type="button"
               onClick={handleHost}
@@ -156,7 +157,7 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
               <span className="hidden sm:inline">JOIN CODE</span>
               <span className="sm:hidden">JOIN</span>
             </button>
-          </>
+          </span>
         )}
       </div>
     </header>

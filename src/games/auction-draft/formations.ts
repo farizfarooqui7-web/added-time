@@ -55,9 +55,9 @@ export function cardMatchesLeagueDeck(card: PlayerEraCardExtended, deckId?: Leag
 export const FORMATION_PRESETS: Record<FormationId, FormationConfig> = {
   'tactical-1-2-1-1': {
     id: 'tactical-1-2-1-1',
-    name: 'Tactical (1-2-1-1)',
+    name: 'Defensive (1-2-1-1)',
     formula: '1-2-1-1',
-    badge: 'TACTICAL',
+    badge: 'DEFENSIVE',
     description: '1 GK • 2 DEF • 1 MID • 1 ATK. Defensive rigidity with a solitary pivot anchor.',
     slots: ['GK', 'DEF', 'DEF', 'MID', 'ATK'],
   },
@@ -71,9 +71,9 @@ export const FORMATION_PRESETS: Record<FormationId, FormationConfig> = {
   },
   'all-out-attack-1-1-1-2': {
     id: 'all-out-attack-1-1-1-2',
-    name: 'All-Out Attack (1-1-1-2)',
+    name: 'Attacking (1-1-1-2)',
     formula: '1-1-1-2',
-    badge: 'ALL-OUT ATTACK',
+    badge: 'ATTACKING',
     description: '1 GK • 1 DEF • 1 MID • 2 ATK. High-voltage front two designed to break defensive blocks.',
     slots: ['GK', 'DEF', 'MID', 'ATK', 'ATK'],
   },

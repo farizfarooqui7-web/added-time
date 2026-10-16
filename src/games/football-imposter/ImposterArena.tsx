@@ -9,6 +9,7 @@ import {
   Gavel,
   Lock,
   MessageSquare,
+  X as CloseIcon,
   Mic,
   RotateCcw,
   Send,
@@ -41,6 +42,7 @@ import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
+import { useIsPhone } from '../../utils/viewport';
 import { soundFX } from '../../utils/audio';
 
 /* ============================================================================
@@ -698,6 +700,16 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   const [clueInput, setClueInput] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<ImposterChatMessage[]>([]);
   const [chatInput, setChatInput] = useState<string>('');
+  // Phones: the locker-room chat is a slide-up sheet so the clue feed stays on screen
+  const [mobileChatOpen, setMobileChatOpen] = useState(false);
+  const isPhone = useIsPhone();
+  const [chatSeenCount, setChatSeenCount] = useState(0);
+  // Phones: the debate is the chat phase, so the sheet opens itself then and closes after
+  useEffect(() => {
+    const isPhone = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches;
+    if (stage === 'discussion' && isPhone) setMobileChatOpen(true);
+    else if (stage !== 'clue-turn' && stage !== 'discussion') setMobileChatOpen(false);
+  }, [stage]);
 
   // Floating Quick Reactions
   const [floatingReactions, setFloatingReactions] = useState<FloatingReaction[]>([]);
@@ -2026,7 +2038,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
   }
 
   return (
-    <div className="min-h-screen min-h-[100dvh] w-full bg-[#05070b] text-white flex flex-col relative overflow-x-hidden overflow-y-auto select-none">
+    <div className="min-h-screen min-h-[calc(100dvh/var(--zoom,1))] max-md:min-h-0 max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] w-full bg-[#05070b] text-white flex flex-col relative overflow-x-hidden overflow-y-auto select-none">
       <style>{IM_CSS}</style>
 
       {/* ================= CLASSIFIED ROOM BACKDROP ================= */}
@@ -2159,7 +2171,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
 
             {/* HOLD-TO-PEEK SECRET POPOVER */}
             {isPeeking && (
-              <div className="im-pop im-chamfer absolute right-0 top-full mt-2 w-[min(20rem,calc(100vw-1.5rem))] bg-[#0a0d14] border border-white/20 p-4 shadow-[0_28px_70px_rgba(0,0,0,0.95)] z-50 pointer-events-none">
+              <div className="im-pop im-chamfer absolute right-0 top-full mt-2 w-[min(20rem,calc(100vw/var(--zoom,1)-1.5rem))] bg-[#0a0d14] border border-white/20 p-4 shadow-[0_28px_70px_rgba(0,0,0,0.95)] z-50 pointer-events-none">
                 <div
                   className="absolute inset-x-0 top-0 h-[3px]"
                   style={{ background: userParticipant.isImposter ? HAZARD : CLEAR }}
@@ -2392,9 +2404,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
 
           {/* PHASE 2: TURN-BY-TURN CLUES & DEBATE TERMINAL */}
           {(stage === 'clue-turn' || stage === 'discussion') && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 lg:gap-4 items-stretch">
               {/* ROUNDTABLE CLUE FEED */}
-              <div className="im-panel order-2 lg:order-none lg:col-start-1 lg:col-span-5 lg:row-start-1 lg:row-span-3 p-4 sm:p-5 flex flex-col gap-3" style={{ ['--im-accent' as string]: 'rgba(6,182,212,0.7)' } as React.CSSProperties}>
+              <div className="im-panel order-2 lg:order-none lg:col-start-1 lg:col-span-5 lg:row-start-1 lg:row-span-3 p-3 sm:p-5 flex flex-col gap-2 sm:gap-3" style={{ ['--im-accent' as string]: 'rgba(6,182,212,0.7)' } as React.CSSProperties}>
                 <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5">
                   <div className="flex items-center gap-2">
                     <Mic className="w-4 h-4 text-cyan-400" />
@@ -2405,7 +2417,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                   </span>
                 </div>
 
-                <div className="space-y-3 my-auto">
+                <div className="space-y-2 sm:space-y-3 my-auto">
                   {participants.map((p, idx) => {
                     const isSpeaking = stage === 'clue-turn' && idx === activeSpeakerIdx;
                     const playerRoundClue = clues.find((c) => c.participantId === p.id && c.round === currentRound);
@@ -2413,11 +2425,11 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                       currentRound > 1 ? clues.find((c) => c.participantId === p.id && c.round === currentRound - 1) : undefined;
 
                     return (
-                      <div key={p.id} data-clue-owner={p.id} className="flex items-start gap-3">
+                      <div key={p.id} data-clue-owner={p.id} className="flex items-start gap-2.5 sm:gap-3">
                         <div className="relative shrink-0 mt-0.5">
                           <SuspectAvatar
                             p={p}
-                            size={48}
+                            size={isPhone ? 34 : 48}
                             className={`transition-all duration-300 ${isSpeaking ? 'scale-105' : ''}`}
                             style={isSpeaking ? { boxShadow: '0 0 0 2px #06b6d4, 0 0 22px rgba(6,182,212,0.55)' } : undefined}
                           />
@@ -2429,14 +2441,14 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className={`font-athletic italic text-base font-black uppercase tracking-wide truncate ${p.avatarText}`}>
+                          <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                            <span className={`font-athletic italic text-[15px] sm:text-base font-black uppercase tracking-wide truncate leading-none ${p.avatarText}`}>
                               {p.name}
                             </span>
-                            <span className="text-[8px] font-mono uppercase tracking-widest text-neutral-500 truncate">{p.title}</span>
+                            <span className="max-sm:hidden text-[8px] font-mono uppercase tracking-widest text-neutral-500 truncate">{p.title}</span>
                             {isSpeaking && (
                               <span className="px-1.5 py-0.5 bg-cyan-400/15 border border-cyan-400/40 text-cyan-300 text-[8px] font-mono font-black uppercase tracking-widest shrink-0">
-                                SPEAKING NOW
+                                {isPhone ? 'LIVE' : 'SPEAKING NOW'}
                               </span>
                             )}
                           </div>
@@ -2444,9 +2456,9 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                           {playerRoundClue ? (
                             <div
                               key={playerRoundClue.id}
-                              className="im-pop relative im-chamfer bg-gradient-to-r from-cyan-500/[0.12] to-white/[0.04] border border-cyan-400/30 px-3.5 py-2.5 shadow-[0_0_18px_rgba(6,182,212,0.12)]"
+                              className="im-pop relative im-chamfer bg-gradient-to-r from-cyan-500/[0.12] to-white/[0.04] border border-cyan-400/30 px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 shadow-[0_0_18px_rgba(6,182,212,0.12)]"
                             >
-                              <p className="font-sans text-[15px] sm:text-base font-extrabold text-white leading-snug">
+                              <p className="font-sans text-sm sm:text-base font-extrabold text-white leading-snug">
                                 "{playerRoundClue.text}"
                               </p>
                               {prevRoundClue && (
@@ -2454,7 +2466,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                               )}
                             </div>
                           ) : isSpeaking ? (
-                            <div className="im-chamfer bg-cyan-500/[0.08] border border-cyan-400/30 px-3.5 py-2.5 flex items-center gap-2">
+                            <div className="im-chamfer bg-cyan-500/[0.08] border border-cyan-400/30 px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 flex items-center gap-2">
                               <span className="flex gap-1">
                                 <span className="im-dot w-1.5 h-1.5 rounded-full bg-cyan-400" />
                                 <span className="im-dot w-1.5 h-1.5 rounded-full bg-cyan-400" style={{ animationDelay: '0.15s' }} />
@@ -2465,8 +2477,8 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                               </p>
                             </div>
                           ) : (
-                            <div className="im-chamfer bg-white/[0.02] border border-white/[0.07] px-3.5 py-2.5">
-                              <p className="text-xs font-mono text-neutral-500">Waiting for turn...</p>
+                            <div className="im-chamfer max-sm:!bg-transparent max-sm:!border-0 max-sm:p-0 bg-white/[0.02] border border-white/[0.07] px-3.5 py-2.5">
+                              <p className="text-[11px] sm:text-xs font-mono text-neutral-500">Waiting for turn...</p>
                             </div>
                           )}
                         </div>
@@ -2479,7 +2491,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
               {/* ACTIVE TERMINAL: CLUE INPUT OR DEBATE CONTROLS */}
               <div
                 ref={terminalRef}
-                className="im-panel order-1 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-1 p-4 sm:p-5"
+                className="im-panel order-1 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-1 p-3 sm:p-5"
                 style={{ ['--im-accent' as string]: stage === 'clue-turn' ? 'rgba(6,182,212,0.8)' : 'rgba(239,68,68,0.8)' } as React.CSSProperties}
               >
                 {stage === 'clue-turn' ? (
@@ -2670,20 +2682,76 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                 )}
               </div>
 
-              {/* GLOBAL LOCKER ROOM CHAT */}
-              <div className="im-panel order-3 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-2 p-4 sm:p-5 flex flex-col" style={{ ['--im-accent' as string]: 'rgba(6,182,212,0.6)' } as React.CSSProperties}>
+              {/* Phone: chat button with unread count + sheet backdrop */}
+              {(() => {
+                const userMessages = chatMessages.filter((m) => !m.isSystem).length;
+                const unread = mobileChatOpen ? 0 : Math.max(0, userMessages - chatSeenCount);
+                return (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFX.playClick(700);
+                        setChatSeenCount(userMessages);
+                        setMobileChatOpen(true);
+                      }}
+                      aria-label={unread ? `Open chat, ${unread} unread` : 'Open chat'}
+                      className={`md:hidden im-press fixed right-4 bottom-[calc(var(--kb-offset,0px)+max(1rem,env(safe-area-inset-bottom)))] z-40 w-14 h-14 rounded-full bg-cyan-400 text-black flex items-center justify-center shadow-[0_10px_30px_rgba(6,182,212,0.45)] cursor-pointer transition-opacity ${
+                        mobileChatOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                      }`}
+                    >
+                      <MessageSquare className="w-6 h-6" />
+                      {unread > 0 && (
+                        <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white font-mono text-[10px] font-black flex items-center justify-center">
+                          {unread > 9 ? '9+' : unread}
+                        </span>
+                      )}
+                    </button>
+                    <div
+                      onClick={() => {
+                        setChatSeenCount(userMessages);
+                        setMobileChatOpen(false);
+                      }}
+                      className={`md:hidden fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ${
+                        mobileChatOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                      }`}
+                    />
+                  </>
+                );
+              })()}
+
+              {/* GLOBAL LOCKER ROOM CHAT (a bottom sheet on phones) */}
+              <div
+                className={`im-panel order-3 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-2 p-4 sm:p-5 flex flex-col max-md:!fixed max-md:inset-x-0 max-md:bottom-[var(--kb-offset,0px)] max-md:z-50 max-md:!bg-[#080a0f] max-md:pb-[max(1rem,env(safe-area-inset-bottom))] max-md:transition-transform max-md:duration-300 max-md:ease-out ${
+                  mobileChatOpen ? 'max-md:translate-y-0' : 'max-md:translate-y-[110%]'
+                }`}
+                style={{ ['--im-accent' as string]: 'rgba(6,182,212,0.6)' } as React.CSSProperties}
+              >
                 <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5 mb-2.5">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-cyan-400" />
-                    <span className="font-athletic italic text-lg font-black uppercase tracking-wide text-white">GLOBAL LOCKER ROOM CHAT</span>
+                    <span className="font-athletic italic text-lg font-black uppercase tracking-wide text-white">
+                      <span className="max-md:hidden">GLOBAL </span>LOCKER ROOM CHAT
+                    </span>
                   </div>
                   <span className="flex items-center gap-1.5 text-[9px] font-mono uppercase tracking-widest text-neutral-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_#ef4444]" />
-                    LIVE FEED
+                    <span className="max-md:hidden">LIVE FEED</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setChatSeenCount(chatMessages.filter((m) => !m.isSystem).length);
+                        setMobileChatOpen(false);
+                      }}
+                      aria-label="Close chat"
+                      className="md:hidden im-press ml-2 w-9 h-9 flex items-center justify-center border border-white/15 bg-white/[0.04] text-neutral-300 cursor-pointer"
+                    >
+                      <CloseIcon className="w-4 h-4" />
+                    </button>
                   </span>
                 </div>
 
-                <div ref={chatScrollRef} className="space-y-2 h-[200px] sm:h-[240px] overflow-y-auto pr-1.5">
+                <div ref={chatScrollRef} className="space-y-2 h-[calc(var(--app-h,calc(100dvh/var(--zoom,1)))*0.42)] kb:h-[calc(var(--app-h,calc(100dvh/var(--zoom,1)))*0.3)] sm:h-[240px] overflow-y-auto pr-1.5">
                   {chatMessages.map((m) =>
                     m.isSystem ? (
                       <div key={m.id} className="im-pop flex items-center gap-3 py-1">
@@ -2700,6 +2768,20 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                       </div>
                     )
                   )}
+                </div>
+
+                {/* Phone: quick reactions live in the chat sheet */}
+                <div className="md:hidden flex flex-wrap gap-1.5 mt-2.5">
+                  {REACTION_PILLS.map((pill) => (
+                    <button
+                      key={pill}
+                      type="button"
+                      onClick={() => triggerReaction(pill, userParticipant)}
+                      className="im-press im-chamfer px-3 py-2 bg-white/[0.06] border border-white/15 text-xs font-athletic italic font-black text-white cursor-pointer"
+                    >
+                      {pill}
+                    </button>
+                  ))}
                 </div>
 
                 <form onSubmit={handleSendChat} className="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-white/[0.07]">
@@ -2721,7 +2803,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
               </div>
 
               {/* QUICK-ACTION REACTION PILLS BAR */}
-              <div className="im-panel order-4 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-3 px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="im-panel order-4 lg:order-none lg:col-start-6 lg:col-span-7 lg:row-start-3 px-4 py-3 max-md:hidden flex flex-wrap items-center justify-between gap-2">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">QUICK REACTIONS:</span>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {REACTION_PILLS.map((pill) => (
@@ -3116,7 +3198,7 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
           {stage === 'verdict-suspense' && (
             <div className="relative max-w-lg w-full mx-auto flex flex-col items-center justify-center text-center min-h-[420px] px-6">
               <div
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-[30vh] w-[min(560px,120vw)] h-[calc(100%+30vh)]"
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-[calc(30vh/var(--zoom,1))] w-[min(560px,calc(120vw/var(--zoom,1)))] h-[calc(100%+calc(30vh/var(--zoom,1)))]"
                 style={{
                   background: 'linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05) 60%, transparent)',
                   clipPath: 'polygon(42% 0, 58% 0, 88% 100%, 12% 100%)',

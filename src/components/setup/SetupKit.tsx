@@ -12,9 +12,9 @@ interface SetupShellProps {
   accent: string;
   accent2?: string;
   code: string;
-  badge: string;
+  badge?: string;
   title: string;
-  tagline: string;
+  tagline?: string;
   onClose: () => void;
   /** Watermark in the header corner. */
   mark?: string;
@@ -48,7 +48,7 @@ export const SetupShell: React.FC<SetupShellProps> = ({
       aria-modal="true"
       aria-label={`${title} setup`}
       style={{ ['--acc' as string]: accent, ['--acc2' as string]: accent2 || accent } as React.CSSProperties}
-      className="bc-scope bc-panel relative w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[94dvh] sm:max-h-[90dvh]"
+      className="bc-scope bc-panel relative w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[calc(94dvh/var(--zoom,1))] sm:max-h-[calc(90dvh/var(--zoom,1))]"
     >
       <div className="bc-rail absolute inset-x-0 top-0 h-[2px] z-10" />
       <div className="bc-sheen absolute inset-x-0 top-0 h-40 pointer-events-none" />
@@ -68,13 +68,17 @@ export const SetupShell: React.FC<SetupShellProps> = ({
           <div className="min-w-0">
             <div className="flex items-center gap-2.5 font-mono text-[10px] font-bold tracking-[0.22em] uppercase">
               <span className="text-slate-500">{code}</span>
-              <span className="w-px h-3 bg-white/15" />
-              <span style={{ color: accent }}>{badge}</span>
+              {badge && (
+                <>
+                  <span className="w-px h-3 bg-white/15" />
+                  <span style={{ color: accent }}>{badge}</span>
+                </>
+              )}
             </div>
             <h2 className="mt-2 font-athletic italic font-black uppercase text-white text-4xl sm:text-5xl leading-[0.9] tracking-tight">
               {title}
             </h2>
-            <p className="mt-2 text-[13px] text-slate-400 leading-snug max-w-lg">{tagline}</p>
+            {tagline && <p className="mt-2 text-[13px] text-slate-400 leading-snug max-w-lg">{tagline}</p>}
           </div>
           <button
             type="button"
@@ -93,9 +97,6 @@ export const SetupShell: React.FC<SetupShellProps> = ({
       {/* Pathways */}
       {footer && (
         <div className="relative shrink-0 px-5 sm:px-7 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-white/[0.07] bg-black/30">
-          <span className="block mb-2.5 font-mono text-[10px] font-bold tracking-[0.22em] text-slate-500 uppercase">
-            Choose your pathway
-          </span>
           {footer}
         </div>
       )}
@@ -115,9 +116,10 @@ export const SetupSection: React.FC<{
   label: string;
   hint?: string;
   aside?: React.ReactNode;
+  className?: string;
   children: React.ReactNode;
-}> = ({ index, label, hint, aside, children }) => (
-  <section className="flex flex-col gap-2.5">
+}> = ({ index, label, hint, aside, className, children }) => (
+  <section className={`flex flex-col gap-2.5 ${className || ''}`}>
     <div className="flex items-baseline justify-between gap-3">
       <span className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.22em] uppercase">
         <span style={{ color: 'var(--acc)' }}>{index}</span>
@@ -151,7 +153,7 @@ export const OptionTile: React.FC<OptionTileProps> = ({ selected, onClick, title
     <span className="flex items-center justify-between gap-2">
       <span className="flex items-center gap-2 min-w-0">
         {Icon && <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: selected ? 'var(--acc)' : '#94a3b8' }} />}
-        <span className="font-mono text-[11px] font-black uppercase tracking-[0.08em] text-white truncate">{title}</span>
+        <span className="font-mono text-[11px] font-black uppercase tracking-[0.08em] text-white leading-tight break-words">{title}</span>
       </span>
       {tag ? (
         <span className="shrink-0 font-mono text-[9px] font-bold tracking-[0.14em] text-slate-400">{tag}</span>
@@ -208,6 +210,44 @@ export const PathwayGrid: React.FC<{ children: React.ReactNode; cols?: 2 | 3 | 4
   >
     {children}
   </div>
+);
+
+/** A single on/off setting: label + one-line description + switch. */
+export const ToggleRow: React.FC<{
+  label: string;
+  desc?: string;
+  checked: boolean;
+  onChange: () => void;
+  disabled?: boolean;
+}> = ({ label, desc, checked, onChange, disabled }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    disabled={disabled}
+    onClick={onChange}
+    className={`bc-tile ${checked ? 'is-selected' : ''} w-full rounded-lg px-3 py-2.5 flex items-center justify-between gap-4 text-left cursor-pointer`}
+  >
+    <span className="min-w-0">
+      <span className="block font-mono text-[11px] font-black uppercase tracking-[0.08em] text-white">{label}</span>
+      {desc && <span className="block mt-0.5 text-[11px] text-slate-400 leading-snug">{desc}</span>}
+    </span>
+    <span className="shrink-0 flex items-center gap-2">
+      <span className="font-mono text-[10px] font-black tracking-[0.16em]" style={{ color: checked ? 'var(--acc)' : '#64748b' }}>
+        {checked ? 'ON' : 'OFF'}
+      </span>
+      <span
+        aria-hidden
+        className="relative w-10 h-6 rounded-full border transition-colors"
+        style={{ background: checked ? 'var(--acc)' : 'rgba(255,255,255,0.06)', borderColor: checked ? 'var(--acc)' : 'rgba(255,255,255,0.15)' }}
+      >
+        <span
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full transition-all duration-200"
+          style={{ left: checked ? 'calc(100% - 1.25rem)' : '0.2rem', background: checked ? '#06080c' : '#94a3b8' }}
+        />
+      </span>
+    </span>
+  </button>
 );
 
 /** Small toolbar toggle/action used in section headers (shuffle, auto-randomize...). */

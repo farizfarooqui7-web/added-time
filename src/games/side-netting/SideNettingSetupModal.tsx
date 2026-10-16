@@ -92,9 +92,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
     <SetupShell
       accent="#00f0ff"
       code="05"
-      badge="Obscurity trivia · 10 rounds"
       title="Side Netting"
-      tagline="Obvious answers die in the box. The more obscure your pick, the deeper it tucks into the side netting."
       mark="100"
       onClose={onClose}
       footer={
@@ -149,7 +147,7 @@ export const SideNettingSetupModal: React.FC<SideNettingSetupModalProps> = ({
         </div>
       </div>
 
-      <SetupSection index="01" label="Round clock" hint="10 rounds">
+      <SetupSection index="01" label="Timer">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
             { val: 30, label: '30s', sub: 'Blitz' },

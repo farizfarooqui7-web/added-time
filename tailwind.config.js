@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      // Full-height utilities divide by the big-screen UI zoom (src/utils/screenScale.ts) so one-screen layouts still fit
+      height: { screen: 'calc(100vh / var(--zoom, 1))' },
+      minHeight: { screen: 'calc(100vh / var(--zoom, 1))' },
+      maxHeight: { screen: 'calc(100vh / var(--zoom, 1))' },
       colors: {
         carbon: {
           950: '#040508',
@@ -64,6 +68,11 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // `kb:` styles apply while the phone keyboard is open (html.kb-open, see src/utils/viewport.ts)
+    function ({ addVariant }) {
+      addVariant('kb', 'html.kb-open &');
+    },
+  ],
 }
 

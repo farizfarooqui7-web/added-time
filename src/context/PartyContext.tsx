@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { PartySocket } from 'partysocket';
 import { soundFX } from '../utils/audio';
-import type { GlobalPresence, ClientToServerMessage } from '../types/wsProtocol';
+import type { GlobalPresence, ClientToServerMessage, PublicSquadInfo } from '../types/wsProtocol';
 
 export const getPartyKitHost = (): string => {
   const envHost = (import.meta.env.VITE_PARTYKIT_HOST as string | undefined) ||
@@ -11,6 +11,9 @@ export const getPartyKitHost = (): string => {
   }
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname || 'localhost';
+    // Dev: the party server always runs on :8787 next to Vite, also when a phone on the LAN
+    // opens the site by IP (npm run dev:phone)
+    if (import.meta.env.DEV) return `${hostname}:8787`;
     if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
       return window.location.host;
     }
@@ -122,6 +125,8 @@ interface PartyContextType {
   clearRemoteMatch: () => void;
   // Matchmaking & Live Presence
   presence: GlobalPresence;
+  /** Public squads open to join from the hub (private squads are code-only and never listed). */
+  publicSquads: PublicSquadInfo[];
   queueState: MatchmakingQueueState;
   joinQueue: (modeId: string, queueType?: 'duel' | 'ffa', options?: { formationId?: string }) => void;
   /** Per-member preferences the host's launch picks up (Auction: own formation). */
@@ -266,6 +271,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [playerForfeitEvent, setPlayerForfeitEvent] = useState<PlayerForfeitPayload | null>(null);
 
   // Matchmaking & Live Presence state
+  const [publicSquads, setPublicSquads] = useState<PublicSquadInfo[]>([]);
   const [presence, setPresence] = useState<GlobalPresence>({
     'auction-draft': { searching: 0, inGame: 0 },
     'criteria-rush': { searching: 0, inGame: 0 },
@@ -499,6 +505,13 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       case 'presence_update': {
         if (msg.payload?.presence) {
           setPresence(msg.payload.presence);
+        }
+        break;
+      }
+
+      case 'public_squads': {
+        if (Array.isArray(msg.payload?.squads)) {
+          setPublicSquads(msg.payload.squads);
         }
         break;
       }
@@ -1165,6 +1178,7 @@ export const PartyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         confirmSoloEscapeHatch,
         wsConnected,
         presence,
+        publicSquads,
         queueState,
         joinQueue,
         setMemberPrefs,

@@ -17,6 +17,7 @@ import { PartyDrawer } from './components/PartyDrawer';
 import { SoloEscapeHatchModal } from './components/SoloEscapeHatchModal';
 import { MatchmakingOverlay } from './components/MatchmakingOverlay';
 import { FeedbackWidget } from './components/FeedbackWidget';
+import { MobileTabBar } from './components/MobileTabBar';
 import { useParty } from './context/PartyContext';
 import { GAME_MODES } from './data/gameModes';
 import type { GameModeInfo } from './types';
@@ -447,9 +448,9 @@ export function App() {
     <div className="min-h-screen w-full bg-[#080a0f] text-neutral-100 flex flex-col selection:bg-[#ccff00] selection:text-black overflow-x-hidden">
       {/* Centered Constrained Container with Generous Breathing Room and Dynamic Drawer Spacing */}
       <div
-        className={`w-full min-h-screen px-4 sm:px-6 py-3 sm:py-4 flex flex-col gap-3 sm:gap-4 transition-all duration-300 ease-out ${
+        className={`w-full min-h-screen px-4 sm:px-6 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:py-4 flex flex-col gap-2 sm:gap-4 transition-all duration-300 ease-out ${
           isDrawerOpen
-            ? 'w-full md:max-w-[calc(100vw-380px)] lg:max-w-[calc(100vw-400px)] xl:max-w-6xl md:mr-[360px] lg:mr-[380px] xl:mr-auto ml-auto'
+            ? 'w-full md:max-w-[calc(100vw/var(--zoom,1)-380px)] lg:max-w-[calc(100vw/var(--zoom,1)-400px)] xl:max-w-6xl md:mr-[360px] lg:mr-[380px] xl:mr-auto ml-auto'
             : 'max-w-6xl mx-auto'
         }`}
       >
@@ -523,6 +524,7 @@ export function App() {
       <SoloEscapeHatchModal />
 
       {/* Persistent Bug Reporting & Feedback Widget */}
+      <MobileTabBar onHostParty={handleHostParty} onJoinCode={handleJoinCode} />
       <FeedbackWidget currentView={viewMode} />
     </div>
   );

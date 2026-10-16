@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Database,
   Flame,
   Layers,
   Sparkles,
   Trophy,
-  FlaskConical,
   Users,
   Zap,
 } from 'lucide-react';
-import { SetupShell, SetupSection, OptionTile, PathwayButton, PathwayGrid, GuestNotice } from '../../components/setup/SetupKit';
+import { SetupShell, SetupSection, OptionTile, PathwayButton, PathwayGrid, GuestNotice, ChipButton } from '../../components/setup/SetupKit';
 import { useParty } from '../../context/PartyContext';
 import { soundFX } from '../../utils/audio';
 import type {
   ImposterCategory,
   ImposterLobbyMode,
   ImposterMatchConfig,
-  ImposterRolePreference,
 } from './types';
 
 interface ImposterSetupModalProps {
@@ -31,11 +28,6 @@ const CATEGORIES: Array<{
   desc: string;
   icon: React.ElementType;
 }> = [
-  {
-    id: 'All Players',
-    desc: 'Every single footballer across the full database',
-    icon: Database,
-  },
   {
     id: 'All-Time Legends',
     desc: 'Iconic legends and historic world-class greats',
@@ -63,13 +55,10 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
   onClose,
   onLaunchArena,
 }) => {
-  const [category, setCategory] = useState<ImposterCategory>('All Players');
+  const [category, setCategory] = useState<ImposterCategory>('All-Time Legends');
   const [imposterClueEnabled, setImposterClueEnabled] = useState<boolean>(true);
 
   // TEMPORARY DEV SANDBOX: solo test match against bots. Remove before release.
-  const [sandboxBots, setSandboxBots] = useState<3 | 4 | 5>(4);
-  const [sandboxRole, setSandboxRole] = useState<ImposterRolePreference>('random');
-  const [sandboxRounds, setSandboxRounds] = useState<1 | 2>(2);
 
   const { party, syncSetupSettings, triggerSoloEscapeHatch, openDrawer, joinQueue, launchMatch } = useParty();
   const isGuestInParty = party.isActive && !party.isCurrentUserHost;
@@ -105,23 +94,6 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
     }
   };
 
-  // TEMPORARY DEV SANDBOX: launches a local bot match (no party / matchmaking involved).
-  const isSandboxBlocked = party.isActive && party.members.length > 1;
-  const handleLaunchSandbox = () => {
-    if (isSandboxBlocked) return;
-    soundFX.playHammer();
-    onLaunchArena({
-      lobbyMode: 'sandbox',
-      roomCode: 'SANDBOX',
-      isRoomCodeMasked: false,
-      category,
-      clueRounds: sandboxRounds,
-      botCount: sandboxBots,
-      rolePreference: sandboxRole,
-      imposterClueEnabled,
-      isMultiplayer: false,
-    });
-  };
 
   const handleFindPublicGame = () => {
     soundFX.playClick(850);
@@ -164,9 +136,7 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
       accent="#ef4444"
       accent2="#10b981"
       code="04"
-      badge="Social deduction · 3-8 players"
       title="Football Imposter"
-      tagline="Everyone sees the secret footballer except one. Drop clues, read the room, vote out the imposter."
       mark="??"
       onClose={onClose}
       footer={
@@ -195,108 +165,37 @@ export const ImposterSetupModal: React.FC<ImposterSetupModalProps> = ({
               onClick={handleSquadAction}
             />
           )}
-          <PathwayButton
-            icon={FlaskConical}
-            title="Sandbox vs bots"
-            chip="DEV"
-            locked={isSandboxBlocked}
-            desc={isSandboxBlocked ? 'Leave your squad to use the sandbox.' : `Solo test: you + ${sandboxBots} bots.`}
-            onClick={handleLaunchSandbox}
-          />
         </PathwayGrid>
       }
     >
       {isGuestInParty && <GuestNotice>The host is configuring this match. Settings update live.</GuestNotice>}
 
-      <SetupSection index="01" label="Secret player pool">
+      <SetupSection index="01" label="Player pool">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {CATEGORIES.map((cat, index) => (
+          {CATEGORIES.map((cat) => (
             <OptionTile
               key={cat.id}
-              className={index === 0 ? 'sm:col-span-2' : ''}
               selected={category === cat.id}
               disabled={isGuestInParty}
               onClick={() => handleCategoryChange(cat.id)}
               icon={cat.icon}
               title={cat.id}
-              sub={cat.desc}
             />
           ))}
         </div>
       </SetupSection>
 
       <SetupSection index="02" label="Imposter hint">
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { val: true, label: 'One vague clue', sub: 'A single subtle hint for the imposter.' },
-            { val: false, label: 'No clues', sub: 'Hardcore: the imposter bluffs blind.' },
-          ].map((opt) => (
-            <OptionTile
-              key={String(opt.val)}
-              selected={imposterClueEnabled === opt.val}
+        <div className="flex gap-1.5">
+          {[true, false].map((on) => (
+            <ChipButton
+              key={String(on)}
+              active={imposterClueEnabled === on}
               disabled={isGuestInParty}
-              onClick={() => {
-                if (imposterClueEnabled !== opt.val) handleToggleClue();
-              }}
-              title={opt.label}
-              sub={opt.sub}
-            />
-          ))}
-        </div>
-      </SetupSection>
-
-      {/* TEMPORARY DEV SANDBOX settings: remove before release */}
-      <SetupSection index="03" label="Sandbox settings" hint="Solo test vs bots">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            {
-              label: 'Bots',
-              options: ([3, 4, 5] as const).map((n) => ({
-                key: String(n),
-                text: String(n),
-                active: sandboxBots === n,
-                pick: () => setSandboxBots(n),
-              })),
-            },
-            {
-              label: 'Your role',
-              options: (
-                [
-                  ['random', 'RND'],
-                  ['crew', 'CREW'],
-                  ['imposter', 'IMP'],
-                ] as Array<[ImposterRolePreference, string]>
-              ).map(([r, text]) => ({ key: r, text, active: sandboxRole === r, pick: () => setSandboxRole(r) })),
-            },
-            {
-              label: 'Clue rounds',
-              options: ([1, 2] as const).map((n) => ({
-                key: String(n),
-                text: String(n),
-                active: sandboxRounds === n,
-                pick: () => setSandboxRounds(n),
-              })),
-            },
-          ].map((group) => (
-            <div key={group.label} className="flex flex-col gap-1.5">
-              <span className="font-mono text-[9px] font-bold tracking-[0.2em] text-slate-500 uppercase">{group.label}</span>
-              <div className="flex gap-1">
-                {group.options.map((o) => (
-                  <button
-                    key={o.key}
-                    type="button"
-                    aria-pressed={o.active}
-                    onClick={() => {
-                      soundFX.playClick(650);
-                      o.pick();
-                    }}
-                    className={`bc-tile ${o.active ? 'is-selected' : ''} flex-1 h-9 rounded-md font-mono text-[11px] font-black text-slate-200 cursor-pointer`}
-                  >
-                    {o.text}
-                  </button>
-                ))}
-              </div>
-            </div>
+              onClick={() => imposterClueEnabled !== on && handleToggleClue()}
+            >
+              <span className="w-6 text-center">{on ? 'On' : 'Off'}</span>
+            </ChipButton>
           ))}
         </div>
       </SetupSection>

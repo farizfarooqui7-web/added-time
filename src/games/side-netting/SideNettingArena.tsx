@@ -31,6 +31,7 @@ import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
+import { useKeyboardKeeper, keepTypingFocus } from '../../hooks/useKeyboardKeeper';
 
 /* ============================================================================
  * WORLD CONSTANTS
@@ -155,7 +156,8 @@ interface TelemetryNodes {
 
 interface StadiumEngine {
   setPhase: (phase: DiveState, target: number, tierIdx: number, roundIdx: number) => void;
-  setFlags: (wrong: boolean, urgent: boolean) => void;
+  /** covered: a full-screen overlay hides the stadium, so the engine freezes on its last frame. */
+  setFlags: (wrong: boolean, urgent: boolean, covered?: boolean) => void;
   destroy: () => void;
 }
 
@@ -349,11 +351,14 @@ const FLOODLIGHTS: Array<[number, number]> = [
   [-50, -12], [50, -12], [-50, 42], [50, 42], [-50, Z_GOAL + 16], [50, Z_GOAL + 16],
 ];
 
+
 function createStadiumEngine(
   canvas: HTMLCanvasElement,
   telemetry: React.RefObject<TelemetryNodes>
 ): StadiumEngine {
-  const ctx = canvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+  const mainCtx = canvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+  // Draw helpers paint through `ctx`; it is pointed at the far-layer cache while that layer re-renders.
+  let ctx = mainCtx;
   let alive = true;
   const reduceMotion =
     typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -366,8 +371,15 @@ function createStadiumEngine(
   let F = 800;
   let FZ = 800;
   let dpr = 1;
-  // Cap canvas pixel ratio to 1.0 (or max 1.2) to prevent GPU memory bus saturation on 1440p/4K monitors
-  let dprCap = 1;
+  // Cap canvas pixel ratio to 1.0 to prevent GPU memory bus saturation on 1440p/4K monitors
+  const dprCap = 1;
+  // Adaptive render scale (fix 4): drops toward 0.6 when frames get heavy, recovers when they are cheap
+  let renderScale = 1;
+  // Far-layer cache (fix 2): sky + stands, re-rendered only when the camera moves enough to shift them
+  const farLayer = makeCanvas(2, 2);
+  const farCtx = farLayer.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
+  let farValid = false;
+  const farKey = { x: 0, y: 0, z: 0, fz: 0, rot: 0, shx: 0, shy: 0 };
   let skyGrad: CanvasGradient | string = '#02040a';
   let hazeGrad: CanvasGradient | string = 'rgba(0,0,0,0)';
   let vignette = makeCanvas(2, 2);
@@ -431,17 +443,27 @@ function createStadiumEngine(
   let lastMs = performance.now();
   let raf = 0;
   let frameNo = 0;
-  let perfAcc = 0;
-  let perfFrames = 0;
+  // Frame pacing (fix 1) + work-time sampling (fix 4)
+  let nextDueMs = performance.now();
+  let workAcc = 0;
+  let lateFrames = 0;
+  let sampleFrames = 0;
+  let cheapWindows = 0;
+  // Fix 3: frozen while a full-screen overlay covers the canvas; game-over fireworks are a finite celebration
+  let covered = false;
+  let ambientFireworks = false;
 
   /* ---------------- sizing ---------------- */
   function resize() {
     const rect = canvas.getBoundingClientRect();
     W = Math.max(1, rect.width || window.innerWidth);
     H = Math.max(1, rect.height || window.innerHeight);
-    dpr = Math.min(dprCap, window.devicePixelRatio || 1);
+    dpr = Math.min(dprCap, window.devicePixelRatio || 1) * renderScale;
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
+    farLayer.width = canvas.width;
+    farLayer.height = canvas.height;
+    farValid = false;
     CX = W / 2;
     HZ = H * 0.4;
     F = H * 0.92;
@@ -629,6 +651,7 @@ function createStadiumEngine(
       case 'idle-surface':
         resetShot();
         fireworksUntil = 0;
+        ambientFireworks = false;
         stormUntil = 0;
         celebrateUntil = 0;
         break;
@@ -670,7 +693,9 @@ function createStadiumEngine(
         break;
       case 'game-over':
         resetShot();
-        fireworksUntil = Infinity;
+        // A finite celebration: endless fireworks kept the GPU busy for as long as the results stayed open
+        fireworksUntil = now + 8;
+        ambientFireworks = true;
         stormUntil = now + 3.5;
         celebrateRgb = TIER_RGB[5];
         celebrateUntil = now + 5;
@@ -679,7 +704,13 @@ function createStadiumEngine(
     }
   }
 
-  function setFlags(w: boolean, u: boolean) {
+  function setFlags(w: boolean, u: boolean, c = false) {
+    if (covered && !c) {
+      // Resuming after the overlay closes: restart pacing so the first frame is not a giant time step
+      lastMs = performance.now();
+      nextDueMs = lastMs;
+    }
+    covered = c;
     if (w && !wrong) {
       wrongT0 = performance.now() / 1000;
       addTrauma(0.24);
@@ -963,7 +994,7 @@ function createStadiumEngine(
 
     if (T < fireworksUntil && T > nextFirework) {
       firework();
-      nextFirework = T + (fireworksUntil === Infinity ? 0.8 + Math.random() * 0.9 : 0.3 + Math.random() * 0.45);
+      nextFirework = T + (ambientFireworks ? 0.8 + Math.random() * 0.9 : 0.3 + Math.random() * 0.45);
     }
 
     updateParticles(dt);
@@ -1816,8 +1847,7 @@ function createStadiumEngine(
     ctx.rotate(cam.roll + shr);
     ctx.translate(-CX, -HZ);
 
-    drawSky();
-    drawStands();
+    drawFarLayer(shx, shy, cam.roll + shr);
     drawFlashBulbs();
     drawFloodlights();
     drawGround();
@@ -1864,6 +1894,53 @@ function createStadiumEngine(
     }
   }
 
+  /**
+   * Sky + stands. Everything in them that is visible on screen sits 40+ world units from the camera,
+   * so slow camera drift shifts them far below a pixel per frame: the cached copy is reused until the
+   * camera moves enough to shift them by about half a pixel (or shakes, zooms, resizes, celebrates).
+   */
+  function drawFarLayer(shx: number, shy: number, rot: number) {
+    const celebrating = T < celebrateUntil; // the sky glow pulses while celebrating
+    const k = farKey;
+    const reusable =
+      farValid &&
+      !celebrating &&
+      Math.abs(cam.x - k.x) < 0.02 &&
+      Math.abs(cam.y - k.y) < 0.02 &&
+      Math.abs(cam.z - k.z) < 0.05 &&
+      Math.abs(FZ - k.fz) < k.fz * 0.0015 &&
+      Math.abs(rot - k.rot) < 0.0004 &&
+      Math.abs(shx - k.shx) < 0.5 &&
+      Math.abs(shy - k.shy) < 0.5;
+
+    if (!reusable) {
+      const live = ctx;
+      ctx = farCtx;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, farLayer.width, farLayer.height);
+      ctx.setTransform(live.getTransform());
+      drawSky();
+      drawStands();
+      ctx = live;
+      farValid = !celebrating;
+      k.x = cam.x;
+      k.y = cam.y;
+      k.z = cam.z;
+      k.fz = FZ;
+      k.rot = rot;
+      k.shx = shx;
+      k.shy = shy;
+    }
+
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(farLayer, 0, 0);
+    ctx.restore();
+  }
+
   function writeTelemetry() {
     const tn = telemetry.current;
     if (!tn) return;
@@ -1885,36 +1962,61 @@ function createStadiumEngine(
     }
   }
 
+  /** Target frame rate per phase: never the monitor's 144/240Hz, so other tabs and video keep GPU headroom. */
+  function targetFps() {
+    if (phase === 'idle-surface') return 30;
+    if (phase === 'game-over') return T < fireworksUntil ? 30 : 20;
+    return 60;
+  }
+
   function frame(nowMs: number) {
     if (!alive) return;
     raf = requestAnimationFrame(frame);
+    if (covered) return; // fix 3: a full-screen overlay hides the stadium; keep the last frame
+
+    // Fix 1: pace to the target rate. Advancing the due time by whole intervals keeps the average
+    // on target on any refresh rate (e.g. alternating 2/3 vsyncs at 144Hz for ~60fps).
+    const interval = 1000 / targetFps();
+    if (nowMs < nextDueMs - 1) return;
+    const late = nowMs - nextDueMs > interval * 0.6;
+    nextDueMs += interval;
+    if (nextDueMs < nowMs) nextDueMs = nowMs + interval;
+
     let dtMs = nowMs - lastMs;
-
-    // Power efficiency: When ball is idle, throttle to ~35fps so background video (e.g. Twitch on 2nd monitor) never lags
-    const isIdle = phase === 'idle-surface' || phase === 'game-over';
-    if (isIdle && dtMs < 28) {
-      return;
-    }
-
     lastMs = nowMs;
     if (dtMs > 50) dtMs = 50;
     if (dtMs < 0) dtMs = 0;
     T = nowMs / 1000;
 
-    // adaptive resolution: if we can't hold ~45fps, shed pixels until we can
-    perfAcc += dtMs;
-    perfFrames++;
-    if (perfFrames >= 90) {
-      if (perfAcc / perfFrames > 22 && dprCap > 1) {
-        dprCap = Math.max(1, dprCap - 0.25);
-        resize();
-      }
-      perfAcc = 0;
-      perfFrames = 0;
-    }
-
+    const workStart = performance.now();
     update(dtMs / 1000);
     render();
+    workAcc += performance.now() - workStart;
+    if (late) lateFrames++;
+    sampleFrames++;
+
+    // Fix 4: adaptive render scale from the real drawing cost (and dropped frames), not the frame interval
+    if (sampleFrames >= 60) {
+      const avgWork = workAcc / sampleFrames;
+      const lateShare = lateFrames / sampleFrames;
+      if ((avgWork > 9 || lateShare > 0.25) && renderScale > 0.6) {
+        renderScale = Math.max(0.6, Math.round((renderScale - 0.15) * 100) / 100);
+        cheapWindows = 0;
+        resize();
+      } else if (avgWork < 3.5 && lateShare < 0.05 && renderScale < 1) {
+        if (++cheapWindows >= 3) {
+          renderScale = Math.min(1, Math.round((renderScale + 0.1) * 100) / 100);
+          cheapWindows = 0;
+          resize();
+        }
+      } else {
+        cheapWindows = 0;
+      }
+      workAcc = 0;
+      lateFrames = 0;
+      sampleFrames = 0;
+    }
+
     frameNo++;
     if (frameNo % 3 === 0) writeTelemetry();
   }
@@ -1941,6 +2043,8 @@ interface StadiumCanvasProps {
   roundIdx: number;
   wrongShake: boolean;
   urgent: boolean;
+  /** A full-screen overlay (post-round scoreboard) hides the stadium. */
+  covered: boolean;
   telemetryRef: React.RefObject<TelemetryNodes>;
 }
 
@@ -1951,6 +2055,7 @@ const StadiumCanvas = React.memo(function StadiumCanvas({
   roundIdx,
   wrongShake,
   urgent,
+  covered,
   telemetryRef,
 }: StadiumCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1971,8 +2076,8 @@ const StadiumCanvas = React.memo(function StadiumCanvas({
   }, [phase, targetDepth, tierIdx, roundIdx]);
 
   useEffect(() => {
-    engineRef.current?.setFlags(wrongShake, urgent);
-  }, [wrongShake, urgent]);
+    engineRef.current?.setFlags(wrongShake, urgent, covered);
+  }, [wrongShake, urgent, covered]);
 
   return (
     <canvas
@@ -2036,7 +2141,7 @@ const RangeStrip: React.FC<{ depth: number }> = ({ depth }) => {
 const RangeRail: React.FC<{ depth: number; progress: number }> = ({ depth, progress }) => {
   const zi = zoneIndexForDepth(depth);
   return (
-    <div className="sn-panel w-[184px] h-[min(430px,56vh)] p-4 flex flex-col">
+    <div className="sn-panel w-[184px] h-[min(430px,calc(56vh/var(--zoom,1)))] p-4 flex flex-col">
       <span className="font-mono text-[9px] font-bold tracking-[0.3em] text-slate-400">STRIKE RANGE</span>
       <div className="flex items-baseline gap-1 leading-none mt-1">
         <span
@@ -2200,7 +2305,7 @@ const ARENA_CSS = `
   }
 
   .sn-letterbox {
-    position: fixed; left: 0; right: 0; height: 7vh; background: #000; z-index: 20; pointer-events: none;
+    position: fixed; left: 0; right: 0; height: calc(7vh/var(--zoom,1)); background: #000; z-index: 20; pointer-events: none;
     transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
   }
   .sn-letterbox.sn-top { top: 0; transform: translateY(-100%); }
@@ -2346,6 +2451,8 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
+  // Phones: keep the keyboard up across rounds (see useKeyboardKeeper)
+  const { hold: holdKeyboard, keeper: keyboardKeeper } = useKeyboardKeeper();
   const currentPrompt = prompts[currentRoundIdx] || prompts[0];
 
   // Instant player autocomplete dropdown search (requires at least 3 characters)
@@ -2630,6 +2737,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
     // Valid answer -> Send and Dive!
     soundFX.playClick(900);
+    holdKeyboard();
     triggerSubmission(answerToTest);
   };
 
@@ -2935,11 +3043,12 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
   return (
     <div
-      className={`relative min-h-screen min-h-[100dvh] w-full bg-[#02040a] text-white flex flex-col overflow-x-hidden overflow-y-auto select-none font-sans ${
+      className={`relative min-h-screen min-h-[calc(100dvh/var(--zoom,1))] max-md:min-h-0 max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] w-full bg-[#02040a] text-white flex flex-col overflow-x-hidden overflow-y-auto select-none font-sans ${
         diveState === 'game-over' ? '' : 'md:overflow-hidden'
       } ${isCinematic ? 'sn-cine' : ''}`}
     >
       <style>{ARENA_CSS}</style>
+      {keyboardKeeper}
 
       {/* ================= LIVE CANVAS STADIUM (pitch, crowd, floodlights, ball, net, fx) ================= */}
       <StadiumCanvas
@@ -2949,6 +3058,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
         roundIdx={currentRoundIdx}
         wrongShake={isWrongAnswerShake}
         urgent={isUrgent}
+        covered={isPostRoundModalOpen}
         telemetryRef={telemetryRef}
       />
 
@@ -3122,7 +3232,9 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
             {/* BOTTOM: THE ANSWER DOCK WITH DID-YOU-MEAN & WRONG ANSWER SHAKE */}
             <div
-              className={`relative z-20 w-full max-w-2xl mx-auto px-2.5 sm:px-4 pt-1 pb-[max(66px,env(safe-area-inset-bottom))] md:pb-[max(14px,env(safe-area-inset-bottom))] space-y-2 transition-all duration-500 ${
+              onPointerDown={keepTypingFocus}
+              onMouseDown={keepTypingFocus}
+              className={`relative z-20 w-full max-w-2xl mx-auto px-2.5 sm:px-4 pt-1 pb-[max(12px,env(safe-area-inset-bottom))] kb:pb-1.5 md:pb-[max(14px,env(safe-area-inset-bottom))] space-y-2 transition-all duration-500 ${
                 diveState === 'idle-surface' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
               }`}
             >
@@ -3272,6 +3384,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   disabled={diveState !== 'idle-surface'}
                   onClick={() => {
                     soundFX.playVoltBuzz();
+                    holdKeyboard();
                     triggerSubmission('');
                   }}
                   className="sn-panel px-3 sm:px-4 min-h-[52px] hover:bg-white/[0.06] disabled:opacity-40 disabled:pointer-events-none text-slate-300 hover:text-white font-athletic italic text-base font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
@@ -3480,10 +3593,10 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
           </div>
 
           {/* Shot tag -> tier reveal */}
-          <div className="fixed inset-x-0 top-[max(17vh,134px)] lg:top-[15vh] z-20 flex justify-center px-3 pointer-events-none">
+          <div className="fixed inset-x-0 top-[max(17vh,134px)] lg:top-[calc(15vh/var(--zoom,1))] z-20 flex justify-center px-3 pointer-events-none">
             {(diveState === 'answered-bubble' || diveState === 'diving') && currentSubmission && (
               <div className="flex flex-col items-center gap-2">
-                <div className="sn-tag-in flex items-stretch shadow-[0_12px_40px_rgba(0,0,0,0.65)] max-w-[92vw]">
+                <div className="sn-tag-in flex items-stretch shadow-[0_12px_40px_rgba(0,0,0,0.65)] max-w-[calc(92vw/var(--zoom,1))]">
                   <span className="px-2.5 sm:px-3 flex items-center bg-[#ccff00] text-black font-mono text-[10px] sm:text-[11px] font-black tracking-[0.2em] shrink-0">
                     {diveState === 'answered-bubble' ? 'LOCKED' : 'STRIKE'}
                   </span>
@@ -3504,7 +3617,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
             {diveState === 'at-depth' && currentSubmission && (
               <div
                 key={`reveal-${currentRoundIdx}`}
-                className={`relative flex flex-col items-center text-center max-w-[94vw] ${revealTierIdx >= 4 ? 'sn-kick' : ''}`}
+                className={`relative flex flex-col items-center text-center max-w-[calc(94vw/var(--zoom,1))] ${revealTierIdx >= 4 ? 'sn-kick' : ''}`}
                 style={{ ['--rgb' as string]: revealRgb } as React.CSSProperties}
               >
                 {revealTierIdx >= 4 && <div className="sn-rays" aria-hidden="true" />}
@@ -3530,7 +3643,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   {revealHeadline}
                 </h2>
                 <div className="sn-rise relative mt-2 flex flex-wrap items-stretch justify-center [animation-delay:250ms]">
-                  <span className="px-3 py-1.5 bg-[#050a14]/95 border border-white/15 font-athletic italic font-black text-lg sm:text-2xl uppercase text-white max-w-[70vw] truncate">
+                  <span className="px-3 py-1.5 bg-[#050a14]/95 border border-white/15 font-athletic italic font-black text-lg sm:text-2xl uppercase text-white max-w-[calc(70vw/var(--zoom,1))] truncate">
                     "{currentSubmission.rawInput ? currentSubmission.rawInput : 'NO ANSWER'}"
                   </span>
                   <span
@@ -3571,7 +3684,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
           {/* Hawk-eye style flight telemetry */}
           {(diveState === 'diving' || diveState === 'at-depth') && (
-            <div className="fixed inset-x-0 bottom-[9vh] z-20 flex justify-center px-2 pointer-events-none">
+            <div className="fixed inset-x-0 bottom-[calc(9vh/var(--zoom,1))] z-20 flex justify-center px-2 pointer-events-none">
               <div className="sn-rise sn-panel flex items-stretch divide-x divide-white/10 font-mono">
                 <div className="px-3 sm:px-5 py-2 min-w-[84px] sm:min-w-[118px]">
                   <span className="block text-[8px] sm:text-[9px] tracking-[0.25em] text-slate-400">
@@ -3632,7 +3745,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
           {/* Waiting for Opponent Strike Banner in Multiplayer */}
           {isMultiplayer && userFinishedRound && !isPostRoundModalOpen && diveState === 'at-depth' && (
-            <div className="fixed inset-x-0 bottom-[calc(9vh+68px)] sm:bottom-[calc(9vh+76px)] z-20 flex justify-center px-3 pointer-events-none">
+            <div className="fixed inset-x-0 bottom-[calc(9vh/var(--zoom,1)+68px)] sm:bottom-[calc(9vh/var(--zoom,1)+76px)] z-20 flex justify-center px-3 pointer-events-none">
               <div className="px-5 py-2 bg-black/85 border border-cyan-400/40 shadow-[0_0_25px_rgba(0,240,255,0.25)] flex items-center gap-2.5 animate-pulse">
                 <Clock className="w-4 h-4 animate-spin text-cyan-400 shrink-0" />
                 <span className="font-mono text-[10px] sm:text-xs font-bold text-cyan-300 uppercase tracking-wider">
@@ -3646,7 +3759,7 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
 
       {/* ================= POST-ROUND RESULT BREAKDOWN MODAL ================= */}
       {isPostRoundModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#02040a]/80 flex items-center justify-center p-3 sm:p-4">
+        <div className="fixed inset-0 max-md:bottom-auto max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] z-50 bg-[#02040a]/80 flex items-center justify-center p-3 sm:p-4">
           <div className="sn-rise sn-panel w-full max-w-xl p-5 sm:p-7 flex flex-col gap-4 sm:gap-5 shadow-[0_28px_80px_rgba(0,0,0,0.9)]">
             <div className="absolute inset-x-0 top-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${revealHex}, transparent)` }} />
             {/* Header: Round & Prompt */}

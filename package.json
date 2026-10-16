@@ -11,6 +11,7 @@
     "legacy:node-server": "tsx partyServer.ts",
     "server:start": "wrangler dev",
     "dev:all": "concurrently \"wrangler dev\" \"vite\"",
+    "dev:phone": "concurrently \"wrangler dev --ip 0.0.0.0\" \"vite --host\"",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",

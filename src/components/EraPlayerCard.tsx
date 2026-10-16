@@ -193,7 +193,7 @@ export const EraPlayerCard: React.FC<EraPlayerCardComponentProps> = ({
       onMouseLeave={handleMouseLeave}
       onClick={handleCardClick}
     >
-      {/* Physical Trading Card Aspect Ratio: Fixed aspect-[5/7] with max-height 50vh */}
+      {/* Physical Trading Card Aspect Ratio: Fixed aspect-[5/7] with max-height calc(50vh/var(--zoom,1)) */}
       <div
         className={`relative w-full aspect-[5/7] transition-transform duration-150 ease-out cursor-pointer ${
           interactive ? 'hover:scale-[1.01]' : ''

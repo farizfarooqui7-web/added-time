@@ -151,9 +151,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
     <SetupShell
       accent="#ccff00"
       code="01"
-      badge="1v1 Duel · Salary cap"
       title="$20 Auction Draft"
-      tagline="Twenty dollars, five slots, one rival. Bid live on every lot and build the stronger five-a-side."
       mark="$20"
       onClose={onClose}
       footer={
@@ -189,7 +187,7 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
     >
       {isGuestInParty && <GuestNotice>The host sets the league deck. Your formation is yours to pick.</GuestNotice>}
 
-      <SetupSection index="01" label="Your formation" hint="5 slots · GK always included">
+      <SetupSection index="01" label="Formation">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {Object.values(FORMATION_PRESETS).map((formation) => (
             <OptionTile
@@ -203,11 +201,13 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
         </div>
       </SetupSection>
 
-      <SetupSection index="02" label="League card pool" hint={isGuestInParty ? 'Set by host' : undefined}>
+      <SetupSection index="02" label="Player pool" hint={isGuestInParty ? 'Set by host' : undefined}>
+        {/* One even row on desktop; on phones Global takes the top row so the 2-col grid stays even */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {LEAGUE_DECKS.map((deck) => (
             <OptionTile
               key={deck.id}
+              className={deck.id === 'global' ? 'col-span-2 sm:col-span-1' : ''}
               selected={selectedDeck === deck.id}
               disabled={isGuestInParty}
               onClick={() => handleDeckChange(deck.id)}

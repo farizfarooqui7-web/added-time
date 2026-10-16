@@ -21,6 +21,7 @@ import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
+import { useKeyboardKeeper, keepTypingFocus } from '../../hooks/useKeyboardKeeper';
 import {
   Bot,
   Building2,
@@ -412,7 +413,7 @@ const LuFxCanvas: React.FC<{ engineRef: React.RefObject<LuFxEngine | null> }> = 
       engineRef.current = null;
     };
   }, [engineRef]);
-  return <canvas ref={canvasRef} className="fixed inset-0 z-[45] w-full h-full pointer-events-none" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="hidden fixed inset-0 z-[45] w-full h-full pointer-events-none" aria-hidden="true" />;
 };
 
 /* ============================================================================
@@ -573,6 +574,18 @@ const LU_CSS = `
     100% { transform: translate(-50%, -58%) rotate(-7deg) scale(0.9); opacity: 0; }
   }
   .lu-stamp { animation: luStamp 2.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  /* Verdict pizazz: one-shot only. Text settles in from a soft blur, a single glint crosses the stamp,
+     a miss gives a small nudge, and result-card status pills pop in. */
+  @keyframes luVerdictIn { from { opacity: 0; filter: blur(5px); letter-spacing: 0.22em; } to { opacity: 1; filter: none; letter-spacing: 0.025em; } }
+  .lu-verdict-in { animation: luVerdictIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
+  @keyframes luVerdictGlint { from { transform: translate3d(-130%, 0, 0) skewX(-20deg); } to { transform: translate3d(330%, 0, 0) skewX(-20deg); } }
+  .lu-verdict-glint { position: absolute; top: 0; bottom: 0; left: 0; width: 34%; pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--glint, rgba(255,255,255,0.32)), transparent);
+    animation: luVerdictGlint 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.55s both; }
+  @keyframes luVerdictNudge { 0%, 100% { transform: none; } 30% { transform: translate3d(-5px, 0, 0); } 60% { transform: translate3d(3px, 0, 0); } }
+  .lu-verdict-nudge { animation: luVerdictNudge 0.36s ease-out 0.45s both; }
+  @keyframes luPillPop { 0% { opacity: 0; transform: scale(0.7); } 70% { opacity: 1; transform: scale(1.06); } 100% { transform: none; } }
+  .lu-pill-pop { animation: luPillPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both; }
 
   @keyframes luHolo { 0% { transform: translate3d(-140%, 0, 0) skewX(-18deg); } 100% { transform: translate3d(260%, 0, 0) skewX(-18deg); } }
   .lu-holo { position: absolute; top: 0; bottom: 0; left: 0; width: 45%; pointer-events: none; mix-blend-mode: screen;
@@ -647,7 +660,8 @@ const LU_CSS = `
 
   @media (prefers-reduced-motion: reduce) {
     .lu-spin, .lu-spin-rev, .lu-spin-fast, .lu-scan-y, .lu-radar, .lu-flow, .lu-pressure, .lu-sheen::after, .lu-soft-pulse, .lu-caret { animation: none !important; }
-    .lu-shake { animation: none !important; }
+    .lu-shake, .lu-verdict-nudge, .lu-verdict-glint { animation: none !important; }
+    .lu-verdict-glint { display: none; }
   }
 `;
 
@@ -753,6 +767,8 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  // Phones: keep the keyboard up across rounds (see useKeyboardKeeper)
+  const { hold: holdKeyboard, keeper: keyboardKeeper } = useKeyboardKeeper();
   const opponentLabel = isMultiplayer && opponent?.name ? opponent.name : (config.lobbyMode === 'solo' ? 'AI SCOUT' : 'OPPONENT');
 
   // Slot machine rolling reveal animation: 0 -> 1 -> 2 -> 3
@@ -1041,6 +1057,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
       isLinkVerified: false,
     };
 
+    holdKeyboard();
     submitUserChoice(skippedEval);
   };
 
@@ -1112,6 +1129,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     }
 
     setSearchInput(userEval.playerName);
+    holdKeyboard();
     submitUserChoice(userEval);
   };
 
@@ -1510,7 +1528,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
           </div>
 
           {/* Round-by-Round Head-to-Head Recap */}
-          <div className="grid grid-cols-1 gap-2 max-h-[42vh] overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 gap-2 max-h-[calc(42vh/var(--zoom,1))] overflow-y-auto pr-1">
             {roundHistory.map((item, i) => {
               const wasSkipped = item.userEval.skipped;
               const wasVerified = item.userEval.isLinkVerified;
@@ -1658,7 +1676,8 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   }
 
   return (
-    <div className="relative min-h-screen min-h-[100dvh] w-full bg-[#03050a] text-neutral-100 flex flex-col overflow-x-hidden overflow-y-auto md:overflow-hidden select-none font-sans">
+    <div className="relative min-h-screen min-h-[calc(100dvh/var(--zoom,1))] max-md:min-h-0 max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] w-full bg-[#03050a] text-neutral-100 flex flex-col overflow-x-hidden overflow-y-auto md:overflow-hidden select-none font-sans">
+      {keyboardKeeper}
       <style>{LU_CSS}</style>
       <TerminalBackdrop pressure={underPressure} hot={pressureHot} />
       <LuFxCanvas engineRef={fxRef} />
@@ -1940,7 +1959,9 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                 className="lu-stamp absolute left-1/2 top-[44%] z-30 pointer-events-none"
               >
                 <div
-                  className="px-5 sm:px-8 py-2 sm:py-3 border-[3px] text-center whitespace-nowrap"
+                  className={`relative overflow-hidden px-5 sm:px-8 py-2 sm:py-3 border-[3px] text-center whitespace-nowrap ${
+                    !resultEval.isLinkVerified && !resultEval.skipped && resultEval.criteriaMetCount === 0 ? 'lu-verdict-nudge' : ''
+                  }`}
                   style={{
                     borderColor: resultEval.isLinkVerified
                       ? VOLT
@@ -1955,8 +1976,14 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                       : '0 0 30px rgba(0,0,0,0.8)',
                   }}
                 >
+                  {!resultEval.skipped && (resultEval.isLinkVerified || resultEval.criteriaMetCount > 0) && (
+                    <div
+                      className="lu-verdict-glint"
+                      style={{ ['--glint' as string]: resultEval.isLinkVerified ? 'rgba(204,255,0,0.35)' : 'rgba(0,240,255,0.22)' } as React.CSSProperties}
+                    />
+                  )}
                   <div
-                    className="font-athletic italic font-black text-4xl sm:text-6xl md:text-7xl leading-[0.9] tracking-wide"
+                    className="lu-verdict-in font-athletic italic font-black text-4xl sm:text-6xl md:text-7xl leading-[0.9] tracking-wide"
                     style={{
                       color: resultEval.isLinkVerified
                         ? VOLT
@@ -1988,7 +2015,12 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
           {/* ================= 3. BOTTOM ANSWER CONSOLE OR HEAD-TO-HEAD RESULT BOARD ================= */}
           {phase === 'playing' ? (
-            <div ref={consoleRef} className="w-full max-w-3xl mx-auto flex flex-col gap-2 shrink-0 pb-[max(4px,env(safe-area-inset-bottom))]">
+            <div
+              ref={consoleRef}
+              onPointerDown={keepTypingFocus}
+              onMouseDown={keepTypingFocus}
+              className="w-full max-w-3xl mx-auto flex flex-col gap-2 shrink-0 pb-[max(4px,env(safe-area-inset-bottom))] kb:pb-1"
+            >
               {/* Warning banner when attempting to pick opponent's locked player */}
               {takenWarningMessage && (
                 <div className="lu-rise lu-chamfer px-4 py-2 bg-rose-950/85 border border-rose-500/70 text-rose-300 font-mono text-xs font-bold flex items-center gap-2">
@@ -2280,7 +2312,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
                 {/* Next Round Action */}
                 {isMultiplayer ? (
-                  <div className="lu-chamfer relative overflow-hidden px-5 py-3.5 bg-white/[0.06] text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 border border-white/15">
+                  <div className="lu-chamfer relative overflow-hidden px-5 py-3.5 kb:py-2.5 bg-white/[0.06] kb:bg-[#0b0f17] text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 border border-white/15 kb:!sticky kb:bottom-1 kb:z-20">
                     <div
                       className="absolute left-0 bottom-0 h-[2px] bg-[#ccff00] transition-[width] duration-1000 ease-linear"
                       style={{ width: `${(autoAdvanceSeconds / 5) * 100}%` }}
@@ -2296,7 +2328,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                   <button
                     type="button"
                     onClick={() => handleNextRound()}
-                    className="lu-press lu-sheen lu-chamfer px-6 py-3.5 bg-gradient-to-b from-[#e2ff4d] via-[#ccff00] to-[#9fd400] text-black font-athletic italic font-black text-base uppercase tracking-wider shadow-[0_0_22px_rgba(204,255,0,0.3)] flex items-center justify-center gap-2 shrink-0 cursor-pointer hover:brightness-110"
+                    className="lu-press lu-sheen lu-chamfer px-6 py-3.5 kb:py-2.5 kb:!sticky kb:bottom-1 kb:z-20 bg-gradient-to-b from-[#e2ff4d] via-[#ccff00] to-[#9fd400] text-black font-athletic italic font-black text-base uppercase tracking-wider shadow-[0_0_22px_rgba(204,255,0,0.3)] flex items-center justify-center gap-2 shrink-0 cursor-pointer hover:brightness-110"
                   >
                     <span>{roundNumber >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT ROUND'}</span>
                     <span className="px-1.5 py-0.5 bg-black/20 text-[10px] font-mono font-bold not-italic tracking-tight">
@@ -2467,7 +2499,7 @@ const SubmissionSummaryPill: React.FC<SubmissionSummaryPillProps> = ({
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">{title}</span>
             <span
-              className="px-1.5 py-[1px] border font-mono text-[9px] font-black uppercase tracking-wider flex items-center gap-1"
+              className="lu-pill-pop px-1.5 py-[1px] border font-mono text-[9px] font-black uppercase tracking-wider flex items-center gap-1"
               style={{ color: statusColor, borderColor: `${statusColor}66`, background: `${statusColor}1a` }}
             >
               {evaluation.isLinkVerified ? <CheckCircle2 className="w-2.5 h-2.5" /> : <XCircle className="w-2.5 h-2.5" />}

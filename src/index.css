@@ -15,8 +15,8 @@
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: calc(100vh/var(--zoom,1));
+    min-height: calc(100dvh/var(--zoom,1));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -194,7 +194,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 160ms ease, background-color 160ms ease, box-shadow 200ms ease, transform 300ms cubic-bezier(.34, 1.56, .64, 1);
 }
-.bc-tile:not(:disabled):hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); }
+.bc-tile:not(:disabled):not(.is-selected):hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); }
 .bc-tile:not(:disabled):active { transform: scale(0.98); }
 .bc-tile:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 .bc-tile.is-selected {
@@ -225,4 +225,41 @@
 @media (prefers-reduced-motion: reduce) {
   .hub-card, .bc-btn, .hub-mark, .bc-sheen, .bc-tile, .bc-path, .bc-panel, .bc-overlay { transition: none; animation: none; }
   .bc-radar { animation: none; opacity: 0; }
+}
+
+/* Hub action rows size themselves to their card, not the viewport, so labels never truncate */
+.bc-actions { container-type: inline-size; }
+.bc-actions-grid { display: grid; gap: 0.5rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.bc-act { font-size: 11px; letter-spacing: 0.12em; }
+@container (max-width: 420px) {
+  .bc-act { font-size: 10.5px; letter-spacing: 0.05em; }
+  .bc-act-icon.is-secondary { display: none; }
+}
+@container (max-width: 310px) {
+  .bc-act { font-size: 10px; letter-spacing: 0.02em; }
+  .bc-act-icon { display: none; }
+}
+@container (max-width: 230px) {
+  .bc-actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bc-actions-grid > :first-child { grid-column: span 2; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* =====================================================================
+   Calm arenas (Auction, Link-Up): endless decorative loops stay off;
+   loops that carry meaning stay (caret, time pressure, typing dots).
+   ===================================================================== */
+:is(
+  .ax-flicker, .ax-float, .ax-glow-pulse, .ax-grid-run, .ax-marquee, .ax-ping, .ax-scan, .ax-spin, .ax-spin-rev, .ax-sweep-l, .ax-sweep-r,
+  .lu-flow, .lu-radar, .lu-scan-y, .lu-soft-pulse, .lu-spin, .lu-spin-fast, .lu-spin-rev
+) {
+  animation: none !important;
+}
+:is(.ax-sheen, .lu-sheen)::after {
+  display: none !important;
+}
+:is(.ax-holo, .ax-carbon, .ax-scan, .lu-scan-y) {
+  display: none !important;
 }

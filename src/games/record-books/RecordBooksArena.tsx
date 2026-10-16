@@ -31,6 +31,7 @@ import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
+import { useKeyboardKeeper, keepTypingFocus } from '../../hooks/useKeyboardKeeper';
 import { soundFX } from '../../utils/audio';
 
 /* ============================================================================
@@ -758,6 +759,8 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
+  // Phones: keep the keyboard up across rounds (see useKeyboardKeeper)
+  const { hold: holdKeyboard, keeper: keyboardKeeper } = useKeyboardKeeper();
 
   const currentClub = clubSequence[roundIdx] || clubSequence[0];
   const opponentLabel = isMultiplayer && opponent?.name ? opponent.name : (config.lobbyMode === 'solo' ? 'AI SCOUT' : 'OPPONENT');
@@ -1025,6 +1028,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       soundFX.playLockIn();
     }
 
+    holdKeyboard();
     setUserEval(uEval);
     setUserTickerValue(0);
     setShowDropdown(false);
@@ -1219,8 +1223,6 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       const fx = fxRef.current;
       const c = centerOf(crestRef.current);
       if (!fx || !c) return;
-      fx.flash(c.x, c.y, GOLD_RGB, Math.max(c.w, c.h) * 1.2, 0.5);
-      fx.shockwave(c.x, c.y, GOLD_RGB, Math.max(c.w, c.h) * 1.3, 0.7, 3);
       fx.embers(c.x, c.y + c.h * 0.45, GOLD_RGB, 26, c.w * 1.4);
     }, 260);
   }, [stage, roundIdx]);
@@ -1232,7 +1234,6 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     const c = centerOf(userCardRef.current);
     if (!c || !fxRef.current) return;
     const rgb = userEval.skipped ? ROSE_RGB : BLAZE_RGB;
-    fxRef.current.flash(c.x, c.y, rgb, c.w * 0.45, 0.35);
     if (!userEval.skipped) fxRef.current.burst(c.x, c.y, rgb, 22, 380);
   }, [userEval]);
 
@@ -1240,8 +1241,6 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   useEffect(() => {
     if (!opponentEval) return;
     restartClass(oppCardRef.current, 'rb-slam');
-    const c = centerOf(oppCardRef.current);
-    if (c) fxRef.current?.flash(c.x, c.y, SKY_RGB, c.w * 0.4, 0.35);
   }, [opponentEval]);
 
   // Tally slams: your ticker lands as the stage hands over to the opponent tally,
@@ -1253,12 +1252,8 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       const c = centerOf(userTickerRef.current);
       if (fx && c) {
         if (userEval.statCount > 0) {
-          fx.flash(c.x, c.y, GOLD_RGB, 120, 0.4);
-          fx.shockwave(c.x, c.y, BLAZE_RGB, 130, 0.6, 4);
           fx.burst(c.x, c.y, GOLD_RGB, 30 + Math.min(40, userEval.statCount / 6), 520);
           fx.embers(c.x, c.y, BLAZE_RGB, 12, 80);
-        } else {
-          fx.flash(c.x, c.y, ROSE_RGB, 80, 0.3);
         }
       }
     }
@@ -1266,8 +1261,6 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       restartClass(oppCardRef.current, 'rb-slam');
       const c = centerOf(oppTickerRef.current);
       if (fx && c) {
-        fx.flash(c.x, c.y, SKY_RGB, 110, 0.4);
-        fx.shockwave(c.x, c.y, SKY_RGB, 120, 0.6, 4);
         if (opponentEval.statCount > 0) fx.burst(c.x, c.y, SKY_RGB, 26, 480);
       }
       scheduleFx(() => {
@@ -1276,13 +1269,11 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
         if (userEval.statCount > opponentEval.statCount) {
           const u = centerOf(userCardRef.current);
           if (u) {
-            f.shockwave(u.x, u.y - u.h * 0.5, GOLD_RGB, u.w * 0.8, 0.7, 4);
             f.confetti(u.x, u.y - u.h * 0.3, 90, [GOLD_RGB, BLAZE_RGB, '255,255,255', '255,236,179']);
           }
         } else if (opponentEval.statCount > userEval.statCount) {
           const o = centerOf(oppCardRef.current);
           if (o) {
-            f.shockwave(o.x, o.y - o.h * 0.5, SKY_RGB, o.w * 0.8, 0.7, 4);
             f.burst(o.x, o.y - o.h * 0.5, SKY_RGB, 26, 400);
           }
         }
@@ -1290,12 +1281,10 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     }
   }, [stage]);
 
-  // Duplicate pick rejection: console shake + rose flash.
+  // Duplicate pick rejection: console shake.
   useEffect(() => {
     if (!duplicateWarning) return;
     restartClass(consoleRef.current, 'rb-shake');
-    const c = centerOf(consoleRef.current);
-    if (c) fxRef.current?.flash(c.x, c.y, ROSE_RGB, c.w * 0.4, 0.35);
   }, [duplicateWarning]);
 
   // Full-time confetti for a victory.
@@ -1306,7 +1295,6 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
       if (!fx) return;
       const x = window.innerWidth / 2;
       fx.confetti(x, window.innerHeight * 0.28, 190, [GOLD_RGB, BLAZE_RGB, '255,255,255', '255,236,179']);
-      fx.shockwave(x, window.innerHeight * 0.28, GOLD_RGB, Math.max(window.innerWidth, window.innerHeight) * 0.55, 1.1, 7);
     }, 250);
   }, [isMatchOver]);
 
@@ -1325,7 +1313,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     const verdictColor = userWon ? GOLD : isDraw ? SKY : '#fb7185';
 
     return (
-      <div className="min-h-screen min-h-[100dvh] w-full bg-[#06080d] text-white flex flex-col items-center justify-center p-3 sm:p-6 relative overflow-x-hidden overflow-y-auto">
+      <div className="min-h-screen min-h-[calc(100dvh/var(--zoom,1))] w-full bg-[#06080d] text-white flex flex-col items-center justify-center p-3 sm:p-6 relative overflow-x-hidden overflow-y-auto">
         <style>{RB_CSS}</style>
         <VaultBackdrop />
         <RbFxCanvas engineRef={fxRef} />
@@ -1563,7 +1551,8 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
   const TIMER_CIRC = 2 * Math.PI * 16;
 
   return (
-    <div className="min-h-screen min-h-[100dvh] w-full bg-[#06080d] text-white flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden select-none">
+    <div className="min-h-screen min-h-[calc(100dvh/var(--zoom,1))] max-md:min-h-0 max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] w-full bg-[#06080d] text-white flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden select-none">
+      {keyboardKeeper}
       <style>{RB_CSS}</style>
       <VaultBackdrop />
       <RbFxCanvas engineRef={fxRef} />
@@ -1987,7 +1976,13 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
 
               {/* SEARCH INPUT BAR (while user has not locked in yet) OR ROUND DONE BAR */}
               {stage === 'playing' && userEval === null ? (
-                <div ref={consoleRef} className="rb-panel relative z-30 p-3 sm:p-4 overflow-visible" style={{ clipPath: 'none' }}>
+                <div
+                  ref={consoleRef}
+                  onPointerDown={keepTypingFocus}
+                  onMouseDown={keepTypingFocus}
+                  className="rb-panel relative z-30 p-3 sm:p-4 kb:p-2 overflow-visible"
+                  style={{ clipPath: 'none' }}
+                >
                   {duplicateWarning && (
                     <div className="rb-rise mb-3 px-3.5 py-2 bg-rose-500/15 border border-rose-500/40 flex items-center gap-2 text-xs font-semibold text-rose-200">
                       <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
@@ -2173,7 +2168,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                   </div>
 
                   {isMultiplayer ? (
-                    <div className="rb-chamfer relative overflow-hidden w-full sm:w-auto px-5 py-3 bg-white/[0.06] text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/15 shrink-0">
+                    <div className="rb-chamfer relative overflow-hidden w-full sm:w-auto px-5 py-3 kb:py-2.5 bg-white/[0.06] kb:bg-[#0b0d12] text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/15 shrink-0 kb:!sticky kb:bottom-1 kb:z-20">
                       <div
                         className="absolute left-0 bottom-0 h-[2px] bg-[#ff9f1c] transition-[width] duration-1000 ease-linear"
                         style={{ width: `${(autoAdvanceSeconds / 4) * 100}%`, boxShadow: '0 0 8px #ff9f1c' }}
@@ -2189,7 +2184,7 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
                     <button
                       type="button"
                       onClick={() => handleNextRound()}
-                      className="rb-press rb-sheen rb-chamfer w-full sm:w-auto px-6 py-3 bg-gradient-to-b from-[#ffc46b] via-[#ff9f1c] to-[#d97706] text-black font-athletic italic text-base font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(255,159,28,0.3)] cursor-pointer shrink-0 hover:brightness-110"
+                      className="rb-press rb-sheen rb-chamfer w-full sm:w-auto px-6 py-3 kb:py-2.5 kb:!sticky kb:bottom-1 kb:z-20 bg-gradient-to-b from-[#ffc46b] via-[#ff9f1c] to-[#d97706] text-black font-athletic italic text-base font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(255,159,28,0.3)] cursor-pointer shrink-0 hover:brightness-110"
                     >
                       <span>{roundIdx + 1 >= config.totalRounds ? 'FINAL SCOREBOARD' : 'NEXT CLUB'}</span>
                       <span className="px-1.5 py-0.5 bg-black/20 text-[10px] font-mono font-bold not-italic tracking-tight">ENTER</span>
@@ -2279,11 +2274,11 @@ const VaultBackdrop: React.FC = () => (
     </div>
     {/* Gold floodlights */}
     <div
-      className="rb-beam-l absolute -top-[8vh] left-[16%] w-[24vw] h-[115vh] opacity-60"
+      className="rb-beam-l absolute -top-[calc(8vh/var(--zoom,1))] left-[16%] w-[calc(24vw/var(--zoom,1))] h-[calc(115vh/var(--zoom,1))] opacity-60"
       style={{ background: 'linear-gradient(180deg, rgba(251,191,36,0.14), transparent 70%)', clipPath: 'polygon(44% 0, 56% 0, 100% 100%, 0 100%)' }}
     />
     <div
-      className="rb-beam-r absolute -top-[8vh] right-[16%] w-[24vw] h-[115vh] opacity-50"
+      className="rb-beam-r absolute -top-[calc(8vh/var(--zoom,1))] right-[16%] w-[calc(24vw/var(--zoom,1))] h-[calc(115vh/var(--zoom,1))] opacity-50"
       style={{ background: 'linear-gradient(180deg, rgba(255,159,28,0.12), transparent 70%)', clipPath: 'polygon(44% 0, 56% 0, 100% 100%, 0 100%)' }}
     />
     <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.75) 100%)' }} />

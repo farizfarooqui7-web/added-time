@@ -148,9 +148,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
       accent="#f59e0b"
       accent2="#fbbf24"
       code="03"
-      badge="Stat vault · Tally duel"
       title="The Record Books"
-      tagline="Name a club's league scorers and bank their tallies. Every goal is checked against Wikipedia."
       mark="#1"
       onClose={onClose}
       footer={
@@ -186,7 +184,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
     >
       {isGuestInParty && <GuestNotice>The host is configuring this match. Settings update live.</GuestNotice>}
 
-      <SetupSection index="01" label="Statistic" hint="Source: Wikipedia infoboxes">
+      <SetupSection index="01" label="Statistic">
         <OptionTile
           selected={metric === 'Goals'}
           disabled={isGuestInParty}
@@ -197,7 +195,7 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
         />
       </SetupSection>
 
-      <SetupSection index="02" label="Club pool tier" hint={`${totalRounds} clubs · 10 rounds`}>
+      <SetupSection index="02" label="Difficulty">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {DIFFICULTY_PRESETS.map((d) => (
             <OptionTile
@@ -206,7 +204,6 @@ export const RecordBooksSetupModal: React.FC<RecordBooksSetupModalProps> = ({
               disabled={isGuestInParty}
               onClick={() => handleDifficultyChange(d.id)}
               title={d.title}
-              sub={d.description}
             />
           ))}
         </div>

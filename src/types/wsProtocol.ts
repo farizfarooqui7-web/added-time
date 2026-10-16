@@ -13,6 +13,17 @@ export interface PartyMember {
   formationId?: string;
 }
 
+/** A public squad as listed on the hub (private squads are never listed: code-only). */
+export interface PublicSquadInfo {
+  roomId: string;
+  hostName: string;
+  memberCount: number;
+  maxSlots: number;
+  status: 'lobby' | 'in-game';
+  modeId?: string;
+  updatedAt: number;
+}
+
 export interface PartyRoom {
   roomId: string;
   hostId: string;
@@ -83,6 +94,7 @@ export type ServerToClientMessage =
   | { type: 'game_event'; payload: { modeId: string; event: string; data?: any; senderId?: string; senderName?: string; _eventId?: string } }
   | { type: 'player_forfeit'; payload: { playerId: string; playerName: string; reason: string } }
   | { type: 'presence_update'; payload: { presence: GlobalPresence } }
+  | { type: 'public_squads'; payload: { squads: PublicSquadInfo[] } }
   | { type: 'queue_status'; payload: { modeId: string; status: 'queued' | 'matched' | 'timeout_bot' | 'idle'; elapsedSeconds: number; queueType?: string; joinedCount?: number; requiredCount?: number } }
   | { type: 'party_disbanded'; payload: { reason: string } }
   | { type: 'party_kicked'; payload: { reason: string } }

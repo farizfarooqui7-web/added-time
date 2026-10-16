@@ -119,7 +119,7 @@ export const GameModeModal: React.FC<GameModeModalProps> = ({
       {/* Tactile Claymorphic Modal Surface */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-xl bg-[#12151e] rounded-3xl border border-white/10 text-white shadow-[0_24px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col overflow-hidden max-h-[92vh]"
+        className="relative w-full max-w-xl bg-[#12151e] rounded-3xl border border-white/10 text-white shadow-[0_24px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col overflow-hidden max-h-[calc(92vh/var(--zoom,1))]"
       >
         {/* Top Header */}
         <div className="bg-[#0b0e14] border-b border-white/5 px-6 py-4 flex items-center justify-between">

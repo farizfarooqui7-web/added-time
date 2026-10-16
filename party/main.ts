@@ -6,6 +6,7 @@ import type {
   PartyRoom,
   PartyMember,
   GlobalPresence,
+  PublicSquadInfo,
 } from '../src/types/wsProtocol';
 import { getDeckById } from '../src/data/decks';
 import { FORMATION_PRESETS } from '../src/games/auction-draft/formations';
@@ -78,7 +79,6 @@ const IMPOSTER_CATEGORIES: ImposterCategory[] = [
 
 // Quick Match Imposter: categories whose secret player is drawn from well-known players only
 const IMPOSTER_QUICK_MATCH_CATEGORIES: ImposterCategory[] = [
-  'All Players',
   'All-Time Legends',
   'Modern Superstars',
   'Premier League Icons',
@@ -312,6 +312,8 @@ interface InitMatchRequest {
 export class TopBinsServer extends Server {
   // Global Matchmaker State (used when this.name === 'global-lobby')
   private duelQueues = new Map<string, QueuedClient[]>();
+  // Public squad listings, reported by the squad rooms themselves (see syncPublicListing)
+  private publicSquads = new Map<string, PublicSquadInfo>();
 
   // Squad / Game Room State (used when this.name !== 'global-lobby')
   private partyRoom: PartyRoom | null = null;
@@ -320,6 +322,8 @@ export class TopBinsServer extends Server {
   private recentEvents: ServerToClientMessage[] = [];
   private disconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
   private matchSeq = 0;
+  // Last listing this squad room sent to the lobby ('' = not listed)
+  private lastListingKey = '';
   private imposterLastStandTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Our own registry of live sockets keyed by player id. Clients reuse a stable id across
@@ -401,6 +405,7 @@ export class TopBinsServer extends Server {
         type: 'presence_update',
         payload: { presence: this.computeGlobalPresence() },
       });
+      this.sendToConn(conn, { type: 'public_squads', payload: { squads: this.publicSquadList() } });
       return;
     }
 
@@ -734,6 +739,53 @@ export class TopBinsServer extends Server {
       };
     }
     return presence;
+  }
+
+  /**
+   * Called by squad rooms (Durable Object RPC, not reachable from clients): upsert or drop the
+   * room's public listing, then push the fresh list to every hub client.
+   */
+  async reportSquad(roomId: string, info: PublicSquadInfo | null): Promise<void> {
+    if (!this.isGlobalLobby()) return;
+    if (info) this.publicSquads.set(roomId, info);
+    else this.publicSquads.delete(roomId);
+    this.broadcastToRoom({ type: 'public_squads', payload: { squads: this.publicSquadList() } });
+  }
+
+  private publicSquadList(): PublicSquadInfo[] {
+    // Safety net for rooms that vanished without reporting: listings go stale after 45 minutes
+    const cutoff = Date.now() - 45 * 60 * 1000;
+    for (const [id, s] of this.publicSquads) if (s.updatedAt < cutoff) this.publicSquads.delete(id);
+    return [...this.publicSquads.values()].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 30);
+  }
+
+  /** Squad rooms: keep this squad's public listing in the lobby in step with the room. */
+  private syncPublicListing() {
+    if (this.isGlobalLobby() || this.isMatchRoom()) return;
+    const room = this.partyRoom;
+    const info: PublicSquadInfo | null =
+      room && room.visibility === 'public' && room.members.length > 0
+        ? {
+            roomId: this.name,
+            hostName: room.members.find((m) => m.isHost)?.name || 'Host',
+            memberCount: room.members.length,
+            maxSlots: room.maxSlots,
+            status: room.currentGame?.status === 'in-game' ? 'in-game' : 'lobby',
+            modeId: room.currentGame?.status === 'in-game' ? room.currentGame.modeId : undefined,
+            updatedAt: Date.now(),
+          }
+        : null;
+    const key = info ? JSON.stringify({ ...info, updatedAt: 0 }) : '';
+    if (key === this.lastListingKey) return; // unchanged (private squads never get here with a key)
+    this.lastListingKey = key;
+    void (async () => {
+      try {
+        const lobby = (await getServerByName((this.env as any).Main, 'global-lobby')) as any;
+        await lobby.reportSquad(this.name, info);
+      } catch (err) {
+        console.error(`[TopBinsServer Room ${this.name}] Public listing update failed:`, err);
+      }
+    })();
   }
 
   private broadcastGlobalPresence() {
@@ -1102,6 +1154,7 @@ export class TopBinsServer extends Server {
       type: 'party_created',
       payload: { room: this.partyRoom, myPlayerId: playerId },
     });
+    this.syncPublicListing();
   }
 
   private startMatch(modeId: string, config: any, roster: PartyMember[], hostId: string): MatchSession {
@@ -1439,6 +1492,10 @@ export class TopBinsServer extends Server {
 
   // Helper to broadcast typed message to all connections in room
   private broadcastToRoom(message: ServerToClientMessage) {
+    // Every squad change goes out through here, so the public listing follows it
+    if (message.type === 'party_updated' || message.type === 'party_disbanded' || message.type === 'match_launched') {
+      this.syncPublicListing();
+    }
     const raw = JSON.stringify(message);
     for (const conn of this.liveConnections()) {
       try {

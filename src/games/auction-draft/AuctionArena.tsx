@@ -18,6 +18,7 @@ import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
+import { getUiZoom } from '../../utils/screenScale';
 import {
   Eye,
   EyeOff,
@@ -30,6 +31,9 @@ import {
   Bot,
   User,
   Radio,
+  X as CloseIcon,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 interface ErrorBoundaryProps {
@@ -529,7 +533,7 @@ const FxCanvas: React.FC<{ engineRef: React.RefObject<FxEngine | null> }> = ({ e
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[45] w-full h-full pointer-events-none"
+      className="hidden fixed inset-0 z-[45] w-full h-full pointer-events-none"
       aria-hidden="true"
     />
   );
@@ -807,6 +811,9 @@ const AX_CSS = `
   @keyframes axSpinRev { to { transform: rotate(-360deg); } }
   .ax-spin { animation: axSpin 22s linear infinite; }
   .ax-spin-rev { animation: axSpinRev 34s linear infinite; }
+  /* The card podium keeps its spin (other ax-spin loops are calmed in index.css) */
+  .ax-podium-spin { animation: axSpin 22s linear infinite; }
+  .ax-podium-spin-rev { animation: axSpinRev 34s linear infinite; }
 
   @keyframes axBidSlam {
     0% { transform: scale(1.9) translate3d(0, -10px, 0); opacity: 0; }
@@ -942,7 +949,7 @@ const AX_CSS = `
   .no-scrollbar { scrollbar-width: none; }
 
   @media (prefers-reduced-motion: reduce) {
-    .ax-float, .ax-marquee, .ax-grid-run, .ax-sweep-l, .ax-sweep-r, .ax-spin, .ax-spin-rev, .ax-scan, .ax-flicker, .ax-ping, .ax-glow-pulse, .ax-sheen::after {
+    .ax-podium-spin, .ax-podium-spin-rev, .ax-float, .ax-marquee, .ax-grid-run, .ax-sweep-l, .ax-sweep-r, .ax-spin, .ax-spin-rev, .ax-scan, .ax-flicker, .ax-ping, .ax-glow-pulse, .ax-sheen::after {
       animation: none !important;
     }
     .ax-shake { animation: none !important; }
@@ -1088,6 +1095,8 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   const [stampColor, setStampColor] = useState<'volt' | 'red' | 'amber'>('volt');
   const [flyDirection, setFlyDirection] = useState<'left' | 'right' | null>(null);
   const [flashingSlotId, setFlashingSlotId] = useState<string | null>(null);
+  // Phones: both squads live in slide-out drawers so the live lot never scrolls away
+  const [mobileSquad, setMobileSquad] = useState<'user' | 'rival' | null>(null);
 
   // Streamer Code Privacy
   const [isMasked, setIsMasked] = useState(config.isRoomCodeMasked);
@@ -1962,7 +1971,8 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     setFlyState({
       key: lotKey,
       style: {
-        transform: `translate3d(${b.x - a.x}px, ${b.y - a.y}px, 0) scale(0.16) rotate(${dir * 16}deg)`,
+        // Measured distances are screen pixels; divide by the big-screen UI zoom to get CSS pixels
+        transform: `translate3d(${(b.x - a.x) / getUiZoom()}px, ${(b.y - a.y) / getUiZoom()}px, 0) scale(0.16) rotate(${dir * 16}deg)`,
         opacity: 0.2,
         filter: 'brightness(1.6)',
         transition: 'transform 0.4s cubic-bezier(0.55, 0, 0.75, 0.2), opacity 0.4s ease-in, filter 0.4s',
@@ -2081,9 +2091,18 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
     return (
       <section
         ref={isRival ? rivalDugoutRef : userDugoutRef}
+        aria-hidden={mobileSquad !== (isRival ? 'rival' : 'user') ? undefined : false}
         className={`ax-panel flex flex-col p-2.5 sm:p-3 min-h-0 overflow-hidden ${
           isRival ? 'order-3 lg:order-3' : 'order-2 lg:order-1'
-        } lg:col-span-3`}
+        } lg:col-span-3 max-md:!fixed max-md:inset-y-0 max-md:z-50 max-md:w-[calc(88vw/var(--zoom,1))] max-md:max-w-[380px] max-md:!bg-[#07090d] max-md:pt-[max(0.75rem,env(safe-area-inset-top))] max-md:pb-[max(0.75rem,env(safe-area-inset-bottom))] max-md:transition-transform max-md:duration-300 max-md:ease-out ${
+          isRival ? 'max-md:right-0' : 'max-md:left-0'
+        } ${
+          mobileSquad === (isRival ? 'rival' : 'user')
+            ? 'max-md:translate-x-0'
+            : isRival
+            ? 'max-md:translate-x-[105%]'
+            : 'max-md:-translate-x-[105%]'
+        }`}
         style={{ ['--ax-accent' as string]: `rgba(${accentRgb},0.85)` } as React.CSSProperties}
       >
         <div className="absolute inset-0 ax-carbon opacity-30 pointer-events-none" />
@@ -2091,6 +2110,21 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           className="absolute inset-x-0 top-0 h-28 pointer-events-none"
           style={{ background: `radial-gradient(ellipse at 50% 0%, rgba(${accentRgb},0.12), transparent 70%)` }}
         />
+
+        {/* Phone drawer title bar */}
+        <div className="md:hidden relative flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] shrink-0">
+          <span className="font-athletic italic font-black text-xl uppercase tracking-wide leading-none" style={{ color: accent }}>
+            {isRival ? `${rivalShort}'s squad` : 'Your squad'}
+          </span>
+          <button
+            type="button"
+            onClick={() => setMobileSquad(null)}
+            aria-label="Close squad"
+            className="ax-press w-9 h-9 flex items-center justify-center border border-white/15 bg-white/[0.04] text-slate-300 cursor-pointer"
+          >
+            <CloseIcon className="w-4 h-4" />
+          </button>
+        </div>
 
         {/* Header & Bankroll HUD (Strict Escrow Release Formula) */}
         <div className="relative flex items-center gap-2.5 pb-2 border-b border-white/[0.06] shrink-0">
@@ -2183,7 +2217,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
             ) : highBidderId === 'gaffer' ? (
               <span className="text-[#ff6b00] font-bold">[ HIGH BIDDER ]</span>
             ) : (
-              <span className="text-slate-500">[ EVALUATING ]</span>
+              <span className="invisible text-slate-500">[ EVALUATING ]</span>
             )
           ) : userState.hasFolded ? (
             <span className="text-red-400 font-bold">[ FOLDED LOT ]</span>
@@ -2192,7 +2226,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           ) : isUserHighBidder ? (
             <span className="text-[#ccff00] font-bold">[ HIGH BIDDER ]</span>
           ) : (
-            <span className="text-slate-500">[ READY ]</span>
+            <span className="invisible text-slate-500">[ READY ]</span>
           )}
         </div>
       </section>
@@ -2200,11 +2234,11 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
   };
 
   return (
-    <div className="relative min-h-screen min-h-[100dvh] lg:h-[100dvh] w-full bg-[#040507] text-neutral-100 flex flex-col overflow-x-hidden overflow-y-auto lg:overflow-hidden select-none font-sans">
+    <div className="relative h-[calc(100dvh/var(--zoom,1))] md:h-auto md:min-h-[calc(100dvh/var(--zoom,1))] lg:h-[calc(100dvh/var(--zoom,1))] w-full bg-[#040507] text-neutral-100 flex flex-col overflow-hidden md:overflow-y-auto lg:overflow-hidden select-none font-sans">
       <style>{AX_CSS}</style>
 
       {/* ================= AMBIENT TRADING FLOOR (GPU-only transforms) ================= */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div className="hidden pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 ax-carbon opacity-50" />
         <div
           className="absolute inset-0"
@@ -2227,11 +2261,11 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #040507 0%, rgba(4,5,7,0.2) 40%, rgba(4,5,7,0.4) 75%, #040507 100%)' }} />
         </div>
         <div
-          className="ax-sweep-l absolute -top-[10vh] left-[14%] w-[26vw] h-[125vh] opacity-60"
+          className="ax-sweep-l absolute -top-[calc(10vh/var(--zoom,1))] left-[14%] w-[calc(26vw/var(--zoom,1))] h-[calc(125vh/var(--zoom,1))] opacity-60"
           style={{ background: 'linear-gradient(180deg, rgba(204,255,0,0.13), transparent 72%)', clipPath: 'polygon(44% 0, 56% 0, 100% 100%, 0 100%)' }}
         />
         <div
-          className="ax-sweep-r absolute -top-[10vh] right-[14%] w-[26vw] h-[125vh] opacity-50"
+          className="ax-sweep-r absolute -top-[calc(10vh/var(--zoom,1))] right-[14%] w-[calc(26vw/var(--zoom,1))] h-[calc(125vh/var(--zoom,1))] opacity-50"
           style={{ background: 'linear-gradient(180deg, rgba(0,240,255,0.12), transparent 72%)', clipPath: 'polygon(44% 0, 56% 0, 100% 100%, 0 100%)' }}
         />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%)' }} />
@@ -2302,7 +2336,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
               </span>
             </div>
 
-            <div className="hidden xl:block leading-none pl-1">
+            <div className="hidden leading-none pl-1">
               <span className="font-athletic italic font-black text-xl text-white tracking-wide">
                 DEADLINE <span className="text-[#ccff00]">DAY</span>
               </span>
@@ -2317,7 +2351,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           </div>
 
           {/* Compact Mobile Live Bankroll Bar */}
-          <div className="flex sm:hidden items-center gap-1.5 px-2.5 py-1 bg-black/60 border border-white/10 text-[10px] font-mono">
+          <div className="hidden items-center gap-1.5 px-2.5 py-1 bg-black/60 border border-white/10 text-[10px] font-mono">
             <span className="text-[#ccff00] font-bold">${userRemainingCash.toFixed(1)}</span>
             <span className="text-neutral-500">•</span>
             <span className="text-slate-400">${botRemainingCash.toFixed(1)}</span>
@@ -2378,8 +2412,62 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
           </div>
         </header>
 
+        {/* ================= PHONE SQUAD TABS: open each side's squad drawer ================= */}
+        <div className="md:hidden grid grid-cols-2 gap-2 shrink-0">
+          {(['user', 'rival'] as const).map((side) => {
+            const isRival = side === 'rival';
+            const st = isRival ? botState : userState;
+            const cash = isRival ? botRemainingCash : userRemainingCash;
+            const accent = isRival ? RIVAL : VOLT;
+            const flashing = Boolean(flashingSlotId && flashingSlotId.startsWith(isRival ? 'gaffer-' : 'user-'));
+            const leading = highBidderId === (isRival ? 'gaffer' : 'user');
+            return (
+              <button
+                key={side}
+                type="button"
+                onClick={() => {
+                  soundFX.playClick(isRival ? 620 : 700);
+                  setMobileSquad(side);
+                }}
+                aria-label={isRival ? `Open ${rivalShort}'s squad` : 'Open your squad'}
+                className={`ax-press ax-chamfer-sm h-12 px-2.5 flex items-center gap-2 bg-black/60 border cursor-pointer transition-shadow ${
+                  isRival ? 'flex-row-reverse text-right' : ''
+                }`}
+                style={{
+                  borderColor: flashing || leading ? accent : 'rgba(255,255,255,0.12)',
+                  boxShadow: flashing ? `0 0 18px ${accent}` : undefined,
+                }}
+              >
+                {/* children run label → cash → chevron; the rival tab is mirrored with flex-row-reverse */}
+                <span className="min-w-0 flex-1">
+                  <span className="block font-mono text-[9px] font-black tracking-[0.18em] uppercase truncate" style={{ color: accent }}>
+                    {isRival ? rivalShort : 'You'}
+                  </span>
+                  <span className={`mt-1 flex gap-1 ${isRival ? 'justify-end' : ''}`}>
+                    {st.slots.map((slot) => (
+                      <span
+                        key={slot.id}
+                        className="w-2.5 h-1.5"
+                        style={{ background: slot.filledPlayer ? accent : 'rgba(255,255,255,0.12)' }}
+                      />
+                    ))}
+                  </span>
+                </span>
+                <span className="font-athletic italic font-black text-xl leading-none tabular-nums text-white shrink-0">
+                  ${cash.toFixed(0)}
+                </span>
+                {isRival ? (
+                  <ChevronLeft className="w-4 h-4 shrink-0 text-slate-400" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
         {/* ================= LIVE MARKET TICKER TAPE ================= */}
-        <div className="relative h-7 shrink-0 flex items-stretch overflow-hidden border border-white/[0.06] bg-black/70">
+        <div className="relative h-7 shrink-0 hidden flex items-stretch overflow-hidden border border-white/[0.06] bg-black/70">
           <div className="shrink-0 z-10 px-2.5 flex items-center gap-1.5 bg-[#ccff00] text-black font-mono text-[10px] font-black tracking-[0.2em]">
             <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
             LIVE<span className="hidden sm:inline"> MARKET</span>
@@ -2407,6 +2495,14 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
         </div>
 
         {/* ================= 2. AUCTION FLOOR GRID (30% / 40% / 30%) ================= */}
+        {/* Phone squad drawer backdrop: inside the shake wrapper so it shares the drawers' stacking context */}
+        <div
+          onClick={() => setMobileSquad(null)}
+          className={`md:hidden fixed inset-0 z-40 bg-black/65 transition-opacity duration-300 ${
+            mobileSquad ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        />
+
         <main className="flex-1 min-h-0 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-10 gap-2 lg:gap-3 items-stretch">
           {renderDugout(false)}
 
@@ -2471,7 +2567,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                   </div>
                 ))}
                 {bidLog.length === 0 && (
-                  <span className="font-mono text-[9px] tracking-[0.25em] text-slate-600 text-center">ORDER BOOK EMPTY</span>
+                  <span className="hidden font-mono text-[9px] tracking-[0.25em] text-slate-600 text-center">ORDER BOOK EMPTY</span>
                 )}
               </div>
 
@@ -2555,7 +2651,7 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                   <div
                     ref={cardWrapRef}
                     key={lotKey}
-                    className="relative z-20 w-[220px] sm:w-[270px] md:w-[290px] lg:w-[min(300px,24vh)] xl:w-[min(310px,30vh)] 2xl:w-[min(340px,32vh)] max-h-[40vh] sm:max-h-[48vh] lg:max-h-none"
+                    className="relative z-20 w-[min(220px,calc(27dvh/var(--zoom,1)))] sm:w-[270px] md:w-[290px] lg:w-[min(300px,calc(24vh/var(--zoom,1)))] xl:w-[min(310px,calc(30vh/var(--zoom,1)))] 2xl:w-[min(340px,calc(32vh/var(--zoom,1)))] max-h-[calc(40vh/var(--zoom,1))] sm:max-h-[calc(48vh/var(--zoom,1))] lg:max-h-none"
                     style={flyState && flyState.key === lotKey ? flyState.style : undefined}
                   >
                     <div className="ax-deal">
@@ -2614,14 +2710,14 @@ const AuctionArenaInner: React.FC<AuctionArenaProps> = ({ config, onExitMatch })
                     <div className="absolute inset-0" style={{ perspective: '600px' }}>
                       <div className="absolute inset-0" style={{ transform: 'rotateX(74deg)' }}>
                         <div
-                          className="ax-spin absolute inset-[-40%] rounded-full"
+                          className="ax-podium-spin absolute inset-[-40%] rounded-full"
                           style={{
                             background: `conic-gradient(from 0deg, transparent 0deg, rgba(${bidGlowRgb},0.3) 40deg, transparent 90deg, rgba(0,240,255,0.22) 180deg, transparent 230deg, rgba(${bidGlowRgb},0.25) 300deg, transparent 360deg)`,
                             WebkitMask: 'radial-gradient(circle, transparent 52%, #000 54%, #000 60%, transparent 62%)',
                             mask: 'radial-gradient(circle, transparent 52%, #000 54%, #000 60%, transparent 62%)',
                           }}
                         />
-                        <div className="ax-spin-rev absolute inset-[-18%] rounded-full border border-dashed border-[#ccff00]/15" />
+                        <div className="ax-podium-spin-rev absolute inset-[-18%] rounded-full border border-dashed border-[#ccff00]/15" />
                         <div
                           className="absolute inset-[2%] rounded-full"
                           style={{ background: 'radial-gradient(circle, rgba(204,255,0,0.22), rgba(0,240,255,0.06) 55%, transparent 70%)' }}
@@ -2958,7 +3054,7 @@ const HorizontalCollectorSlab: React.FC<HorizontalCollectorSlabProps> = ({
             </span>
           </div>
         </div>
-        <span className="font-athletic italic font-black text-3xl md:text-4xl text-white/[0.05] select-none pointer-events-none shrink-0">
+        <span className="hidden font-athletic italic font-black text-3xl md:text-4xl text-white/[0.05] select-none pointer-events-none shrink-0">
           {slot.position}
         </span>
       </div>

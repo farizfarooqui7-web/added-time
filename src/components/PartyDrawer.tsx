@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParty } from '../context/PartyContext';
 import { soundFX } from '../utils/audio';
 import { GuestNotice, OptionTile } from './setup/SetupKit';
+import { PublicSquadsList } from './PublicSquads';
 import {
   X,
   Crown,
@@ -126,7 +127,7 @@ export const PartyDrawer: React.FC = () => {
     e.preventDefault();
     const cleanName = hostNameInput.trim();
     if (!cleanName) {
-      setHostSetupError('Please enter your name to host a squad');
+      setHostSetupError('Please enter a username to host a squad');
       soundFX.playVoltBuzz();
       hostNameInputRef.current?.focus();
       return;
@@ -189,7 +190,7 @@ export const PartyDrawer: React.FC = () => {
       {/* Non-modal persistent companion dock: pointer-events-none on outer container so background remains 100% interactive */}
       <aside
         aria-label="Party Companion Dock"
-        className="fixed inset-y-0 right-0 z-40 pointer-events-none flex justify-end w-full md:w-auto select-none"
+        className="fixed inset-y-0 max-md:bottom-auto max-md:h-[var(--app-h,calc(100dvh/var(--zoom,1)))] right-0 z-40 pointer-events-none flex justify-end w-full md:w-auto select-none"
       >
         <div
           style={{ ['--acc' as string]: accent } as React.CSSProperties}
@@ -375,8 +376,8 @@ export const PartyDrawer: React.FC = () => {
                                           setEditingName(true);
                                         }}
                                         className="p-0.5 text-slate-500 hover:text-white opacity-70 group-hover/name:opacity-100 transition-opacity cursor-pointer shrink-0"
-                                        title="Click to edit your display callsign"
-                                        aria-label="Edit your name"
+                                        title="Click to edit your username"
+                                        aria-label="Edit your username"
                                       >
                                         <Edit2 className="w-3 h-3" />
                                       </button>
@@ -485,7 +486,7 @@ export const PartyDrawer: React.FC = () => {
                     </p>
 
                     <label className="flex flex-col gap-2">
-                      {label('01', 'Your name')}
+                      {label('01', 'Username')}
                       <input
                         ref={hostNameInputRef}
                         type="text"
@@ -502,7 +503,7 @@ export const PartyDrawer: React.FC = () => {
                     </label>
 
                     <div className="flex flex-col gap-2">
-                      {label('02', 'Server visibility')}
+                      {label('02', 'Privacy')}
                       <div className="grid grid-cols-2 gap-2">
                         <OptionTile
                           selected={serverVisibility === 'private'}
@@ -570,7 +571,7 @@ export const PartyDrawer: React.FC = () => {
                     </div>
 
                     <label className="flex flex-col gap-2">
-                      {label('02', 'Your callsign')}
+                      {label('02', 'Username')}
                       <input
                         type="text"
                         maxLength={16}
@@ -590,6 +591,11 @@ export const PartyDrawer: React.FC = () => {
                       Join squad
                       <ArrowRight className="w-4 h-4" />
                     </button>
+
+                    <div className="flex flex-col gap-2 pt-1">
+                      {label('03', 'Or join a public squad')}
+                      <PublicSquadsList />
+                    </div>
                   </form>
                 )}
               </>

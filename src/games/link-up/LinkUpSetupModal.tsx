@@ -202,9 +202,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
       accent="#3dff8f"
       accent2="#00f0ff"
       code="02"
-      badge="Speed trivia · 3-slot matrix"
       title="The Link-Up"
-      tagline="Three clues, one baller. Shape the clue slots, pick a tier, and race to lock the link first."
       mark="3/3"
       onClose={onClose}
       footer={
@@ -249,7 +247,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
 
       <SetupSection
         index="01"
-        label="Clue slots"
+        label="Slots"
         aside={
           <span className="flex items-center gap-1.5">
             <ChipButton icon={Shuffle} disabled={isGuestInParty} onClick={handleShuffleSlots}>
@@ -313,7 +311,7 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
         </div>
       </SetupSection>
 
-      <SetupSection index="02" label="Difficulty tier" hint="10 rounds">
+      <SetupSection index="02" label="Difficulty">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {DIFFICULTY_PRESETS.map((preset) => (
             <OptionTile
@@ -322,8 +320,6 @@ export const LinkUpSetupModal: React.FC<LinkUpSetupModalProps> = ({
               disabled={isGuestInParty}
               onClick={() => handleDifficultyChange(preset.id)}
               title={preset.title}
-              tag={preset.badge}
-              sub={preset.description}
             />
           ))}
         </div>
