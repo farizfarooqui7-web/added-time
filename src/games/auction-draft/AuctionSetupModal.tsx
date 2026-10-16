@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FORMATION_PRESETS } from './formations';
 import type { FormationId, MatchConfig, LeagueDeckId } from './types';
 import { soundFX } from '../../utils/audio';
-import { Users, Bot, Zap, X, Play } from 'lucide-react';
+import { Users, Bot, Zap } from 'lucide-react';
+import { SetupShell, SetupSection, OptionTile, PathwayButton, PathwayGrid, GuestNotice } from '../../components/setup/SetupKit';
 import { useParty } from '../../context/PartyContext';
 
 interface AuctionSetupModalProps {
@@ -147,233 +148,76 @@ export const AuctionSetupModal: React.FC<AuctionSetupModalProps> = ({
   };
 
   return (
-    <div
-      onClick={() => {
-        soundFX.playClick(500);
-        onClose();
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto select-none"
+    <SetupShell
+      accent="#ccff00"
+      code="01"
+      badge="1v1 Duel · Salary cap"
+      title="$20 Auction Draft"
+      tagline="Twenty dollars, five slots, one rival. Bid live on every lot and build the stronger five-a-side."
+      mark="$20"
+      onClose={onClose}
+      footer={
+        <PathwayGrid>
+          <PathwayButton
+            icon={Bot}
+            title="Solo vs The Gaffer"
+            desc="Instant match against a tactical AI that bids with real psychology."
+            onClick={handleLaunchSolo}
+          />
+          <PathwayButton
+            icon={Zap}
+            title="Quick Match"
+            chip="<10s"
+            primary={!isSquadReady}
+            desc="Your formation vs theirs on a random league deck. Bot steps in at 10s."
+            onClick={handleQuickMatch}
+          />
+          {isGuestInParty ? (
+            <PathwayButton icon={Users} title="Waiting for host" chip="HOST ONLY" locked desc="Only the squad host can launch the draft." />
+          ) : (
+            <PathwayButton
+              icon={Users}
+              title={isSquadReady ? 'Launch with squad' : 'Play with squad'}
+              chip={isSquadReady ? '2/2 READY' : 'PARTY DOCK'}
+              primary={isSquadReady}
+              desc={isSquadReady ? 'Both managers are in. Send the squad into the live auction.' : 'Open the Party Dock to invite or duel a friend.'}
+              onClick={handleSquadAction}
+            />
+          )}
+        </PathwayGrid>
+      }
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl bg-[#0e111a] border border-white/10 rounded-2xl px-5 py-4 md:px-7 md:py-5 shadow-[0_30px_90px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] flex flex-col justify-between gap-4 max-h-[92dvh] overflow-y-auto"
-      >
-        {/* Top Header Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#ccff00] animate-pulse shadow-[0_0_10px_rgba(204,255,0,0.8)]" />
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h2 className="font-sans font-black text-xl md:text-2xl text-white uppercase tracking-tight leading-none">
-                  $20 AUCTION DRAFT
-                </h2>
-                <span className="px-2 py-0.5 rounded-full bg-[#ccff00]/15 border border-[#ccff00]/40 text-[#ccff00] font-mono text-[10px] font-bold tracking-wider uppercase">
-                  1v1 DUEL
-                </span>
-              </div>
-              <p className="text-xs font-mono text-slate-400 mt-1">
-                Out-bid and out-think your opponent across 5 high-stakes rounds.
-              </p>
-            </div>
-          </div>
+      {isGuestInParty && <GuestNotice>The host sets the league deck. Your formation is yours to pick.</GuestNotice>}
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
+      <SetupSection index="01" label="Your formation" hint="5 slots · GK always included">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {Object.values(FORMATION_PRESETS).map((formation) => (
+            <OptionTile
+              key={formation.id}
+              selected={selectedFormation === formation.id}
+              onClick={() => handleFormationChange(formation.id)}
+              title={formation.name}
+              sub={formation.slots.join(' · ')}
+            />
+          ))}
         </div>
+      </SetupSection>
 
-        {/* Guest Read-Only Advisory Banner */}
-        {isGuestInParty && (
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center justify-between shrink-0">
-            <span>Host is configuring match... pick your own formation.</span>
-            <span className="text-[10px] uppercase font-bold text-amber-400/80">READ-ONLY</span>
-          </div>
-        )}
-
-        {/* 1. FORMATION PRESET */}
-        <div className="flex flex-col gap-2 shrink-0">
-          <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-            <span className="text-[#ccff00]">01.</span> ROSTER FORMATION
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {Object.values(FORMATION_PRESETS).map((formation) => {
-              const isSelected = selectedFormation === formation.id;
-              return (
-                <div
-                  key={formation.id}
-                  onClick={() => handleFormationChange(formation.id)}
-                  className={`p-3 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
-                    isSelected
-                      ? 'bg-[#181e2b] border-[#ccff00] ring-1 ring-[#ccff00] shadow-[0_0_16px_rgba(204,255,0,0.2)] cursor-pointer'
-                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono font-black text-xs text-white uppercase tracking-tight">
-                      {formation.name}
-                    </span>
-                    {isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] shadow-[0_0_6px_#ccff00]" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-400">
-                    <span>{formation.slots.join(' • ')}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      <SetupSection index="02" label="League card pool" hint={isGuestInParty ? 'Set by host' : undefined}>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {LEAGUE_DECKS.map((deck) => (
+            <OptionTile
+              key={deck.id}
+              selected={selectedDeck === deck.id}
+              disabled={isGuestInParty}
+              onClick={() => handleDeckChange(deck.id)}
+              title={deck.name}
+              sub={deck.tag}
+            />
+          ))}
         </div>
-
-        {/* 2. LEAGUE DECK */}
-        <div className="flex flex-col gap-2 shrink-0">
-          <label className="text-xs font-mono text-slate-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-            <span className="text-[#00f0ff]">02.</span> LEAGUE CARD POOL
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-            {LEAGUE_DECKS.map((deck) => {
-              const isSelected = selectedDeck === deck.id;
-              return (
-                <div
-                  key={deck.id}
-                  onClick={() => {
-                    if (isGuestInParty) return;
-                    handleDeckChange(deck.id);
-                  }}
-                  className={`p-2.5 rounded-xl transition-all duration-200 border flex flex-col justify-between gap-1 ${
-                    isGuestInParty
-                      ? isSelected
-                        ? 'bg-[#181e2b] border-[#00f0ff]/60 opacity-80 cursor-not-allowed'
-                        : 'bg-[#12151e] border-white/5 opacity-50 cursor-not-allowed'
-                      : isSelected
-                      ? 'bg-[#181e2b] border-[#00f0ff] ring-1 ring-[#00f0ff] shadow-[0_0_16px_rgba(0,240,255,0.2)] cursor-pointer'
-                      : 'bg-[#12151e] border-white/10 hover:border-white/20 hover:bg-[#151924] cursor-pointer'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-white/5 text-slate-400">
-                      {deck.tag}
-                    </span>
-                    {isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] shadow-[0_0_6px_#00f0ff]" />
-                    )}
-                  </div>
-                  <span className="font-sans font-black text-xs text-white uppercase tracking-tight">
-                    {deck.name}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 3. GAME PATHWAYS */}
-        <div className="space-y-2.5 pt-3 border-t border-white/10 shrink-0">
-          <label className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider block">
-            CHOOSE MATCH PATHWAY
-          </label>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* Pathway 1: Solo vs AI */}
-            <button
-              type="button"
-              onClick={handleLaunchSolo}
-              className="py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/15 hover:border-[#ccff00]/40 text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group"
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <Bot className="w-4 h-4 text-[#ccff00]" />
-                  <span className="font-sans font-black text-xs text-white uppercase tracking-wide group-hover:text-[#ccff00]">
-                    SOLO VS THE GAFFER
-                  </span>
-                </div>
-                <Play className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#ccff00]" />
-              </div>
-              <p className="text-[11px] font-mono text-slate-400 leading-snug">
-                Instant match against tactical AI with dynamic bidding psychology.
-              </p>
-            </button>
-
-            {/* Pathway 2: 1v1 Quick Match (Drop-In) */}
-            <button
-              type="button"
-              onClick={handleQuickMatch}
-              className="py-3 px-4 rounded-xl bg-[#ccff00]/10 hover:bg-[#ccff00]/20 border border-[#ccff00]/40 hover:border-[#ccff00] text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group"
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#ccff00] fill-current" />
-                  <span className="font-sans font-black text-xs text-[#ccff00] uppercase tracking-wide">
-                    1v1 QUICK MATCH
-                  </span>
-                </div>
-                <span className="text-[9px] font-mono font-bold bg-[#ccff00]/20 px-1.5 py-0.5 rounded text-[#ccff00]">
-                  &lt;10s
-                </span>
-              </div>
-              <p className="text-[11px] font-mono text-slate-300 leading-snug">
-                Your formation vs theirs • random league deck. Pairs with a live baller or a bot at 10s.
-              </p>
-            </button>
-
-            {/* Pathway 3: Play with Squad / Guest Lock */}
-            {isGuestInParty ? (
-              <button
-                type="button"
-                disabled
-                className="py-3 px-4 rounded-xl border border-white/10 bg-white/[0.02] text-left flex flex-col justify-between gap-1.5 cursor-not-allowed opacity-70"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-neutral-500" />
-                    <span className="font-sans font-black text-xs text-neutral-400 uppercase tracking-wide">
-                      WAITING FOR HOST TO LAUNCH...
-                    </span>
-                  </div>
-                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/5 text-neutral-500">
-                    HOST ONLY
-                  </span>
-                </div>
-                <p className="text-[11px] font-mono text-neutral-500 leading-snug">
-                  Only the squad host can configure and launch Auction Draft matches.
-                </p>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSquadAction}
-                className={`py-3 px-4 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 cursor-pointer group ${
-                  isSquadReady
-                    ? 'bg-amber-500/15 border-amber-400/50 hover:bg-amber-500/25'
-                    : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.06]'
-                }`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-cyan-400" />
-                    <span className="font-sans font-black text-xs text-white uppercase tracking-wide">
-                      {isSquadReady ? 'LAUNCH WITH SQUAD' : 'PLAY WITH SQUAD'}
-                    </span>
-                  </div>
-                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
-                    {isSquadReady ? '2/2 SQUAD' : 'PARTY DOCK'}
-                  </span>
-                </div>
-                <p className="text-[11px] font-mono text-slate-400 leading-snug">
-                  {isSquadReady
-                    ? 'Squad is ready. Click to launch both players into the live auction.'
-                    : 'Open the right slide-over Party Dock to invite or duel a friend.'}
-                </p>
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+      </SetupSection>
+    </SetupShell>
   );
 };
 

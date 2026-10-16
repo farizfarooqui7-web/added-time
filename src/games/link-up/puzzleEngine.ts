@@ -17,7 +17,15 @@ import {
   POSITION_META,
 } from './clubAssets';
 
-const DATABASE: LinkUpPlayerRecord[] = rawDatabase as LinkUpPlayerRecord[];
+// Normalised on load: a record missing an optional array (e.g. a hand-added player without aliases)
+// used to throw inside search and blank out every autocomplete result.
+const DATABASE: LinkUpPlayerRecord[] = (rawDatabase as Partial<LinkUpPlayerRecord>[]).map((p) => ({
+  ...p,
+  aliases: p.aliases ?? [],
+  commonName: p.commonName ?? p.name,
+  clubs: p.clubs ?? [],
+  difficulty: p.difficulty ?? 'Hard',
+})) as LinkUpPlayerRecord[];
 
 export function getAllLinkUpPlayers(): LinkUpPlayerRecord[] {
   return DATABASE;

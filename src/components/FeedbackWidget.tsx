@@ -87,163 +87,158 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({ currentView }) =
     }, 4500);
   };
 
+  const fieldClass =
+    'w-full rounded-lg bg-black/40 border border-white/10 focus:border-[color:var(--acc-line)] focus:ring-1 focus:ring-[color:var(--acc-soft)] text-base sm:text-sm text-white placeholder-slate-600 focus:outline-none transition-colors';
+
   return (
     <>
-      {/* Discreet Floating Trigger Pill anchored at bottom-left */}
-      <div className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-40 select-none flex items-center gap-2">
+      {/* Floating trigger, bottom-left */}
+      <div className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-40 select-none">
         <button
           type="button"
           onClick={handleOpen}
           aria-label="Report Bug or Send Feedback"
-          className="min-h-[44px] px-3.5 py-2 rounded-full bg-[#0a0d14]/90 hover:bg-[#121622] border border-white/10 hover:border-amber-400/40 text-neutral-300 hover:text-white backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.6)] flex items-center gap-2 text-xs font-mono transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer group"
+          style={{ ['--acc' as string]: '#fbbf24' } as React.CSSProperties}
+          className="bc-scope bc-btn h-9 pl-2.5 pr-3 rounded-lg bg-[#0b0e14]/90 border border-white/10 hover:border-amber-400/50 text-slate-300 hover:text-white backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.6)] inline-flex items-center gap-2 cursor-pointer"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
-          </span>
-          <Bug className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
-          <span className="font-semibold tracking-wide hidden xs:inline sm:inline">Report Bug</span>
+          <Bug className="w-3.5 h-3.5 text-amber-400" />
+          <span className="hidden sm:inline font-mono text-[10px] font-black tracking-[0.18em] uppercase">Report bug</span>
         </button>
       </div>
 
-      {/* Floating Success Toast */}
+      {/* Success toast */}
       {toastMessage && (
-        <div className="fixed bottom-16 left-3 sm:left-4 z-50 animate-in slide-in-from-bottom-2 duration-200 select-none">
-          <div className="px-4 py-3 rounded-2xl bg-[#0c121e] border border-emerald-500/40 shadow-[0_12px_40px_rgba(0,0,0,0.85)] flex items-center gap-2.5 text-xs font-mono text-emerald-300">
+        <div className="bc-overlay fixed bottom-14 left-3 sm:left-4 z-50 select-none">
+          <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/40 bg-[#0b0e14] px-3.5 py-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] text-[12px] text-emerald-200">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{toastMessage}</span>
           </div>
         </div>
       )}
 
-      {/* Bug Report & Feedback Modal */}
+      {/* Bug report & feedback sheet */}
       {isOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="feedback-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 select-none"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') handleClose();
+          }}
+          className="bc-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-5 bg-black/80 backdrop-blur-md select-none"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg rounded-2xl bg-[#0c1018] border border-white/10 p-5 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.95)] flex flex-col gap-4 overflow-hidden animate-in zoom-in-95 duration-200"
+            style={{ ['--acc' as string]: '#fbbf24' } as React.CSSProperties}
+            className="bc-scope bc-panel relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[94dvh]"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.2)]">
-                  <MessageSquare className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3
-                    id="feedback-title"
-                    className="font-sans font-black text-lg text-white uppercase tracking-tight"
-                  >
-                    Feedback &amp; Bug Report
-                  </h3>
-                  <p className="text-[11px] font-mono text-neutral-400">
-                    Help us elevate the pitch experience.
-                  </p>
-                </div>
-              </div>
+            <div className="bc-rail absolute inset-x-0 top-0 h-[2px]" />
+            <div className="bc-sheen absolute inset-x-0 top-0 h-32 pointer-events-none" />
 
+            <div className="relative shrink-0 flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-white/[0.07]">
+              <div>
+                <div className="flex items-center gap-2.5 font-mono text-[10px] font-bold tracking-[0.22em] uppercase">
+                  <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-amber-300">Support desk</span>
+                </div>
+                <h3
+                  id="feedback-title"
+                  className="mt-2 font-athletic italic font-black text-4xl uppercase text-white leading-[0.9] tracking-tight"
+                >
+                  Report a bug
+                </h3>
+                <p className="mt-2 text-[13px] text-slate-400">Spotted something off, or got an idea? Tell us.</p>
+              </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                aria-label="Close"
+                className="bc-btn bc-btn-ghost shrink-0 w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {/* Type Tabs */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-mono font-bold text-neutral-300 uppercase tracking-wider">
-                  Feedback Category
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'bug' as FeedbackType, label: 'Bug', icon: Bug, color: 'text-rose-400' },
-                    { id: 'suggestion' as FeedbackType, label: 'Idea', icon: Sparkles, color: 'text-[#ccff00]' },
-                    { id: 'question' as FeedbackType, label: 'Question', icon: HelpCircle, color: 'text-cyan-400' },
-                  ].map((item) => {
-                    const isSelected = feedbackType === item.id;
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => {
-                          soundFX.playClick(600);
-                          setFeedbackType(item.id);
-                        }}
-                        className={`min-h-[44px] py-2 px-3 rounded-xl border font-mono text-xs font-bold uppercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#181e2b] border-[#ccff00] text-white shadow-[0_0_14px_rgba(204,255,0,0.2)]'
-                            : 'bg-white/[0.03] border-white/10 text-neutral-400 hover:text-neutral-200 hover:bg-white/[0.06]'
-                        }`}
-                      >
-                        <Icon className={`w-3.5 h-3.5 ${item.color}`} />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
+            <form onSubmit={handleSubmit} className="relative flex flex-col min-h-0">
+              <div className="flex flex-col gap-4 px-6 py-5 overflow-y-auto">
+                <div className="flex flex-col gap-2">
+                  <span className="font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-slate-300">
+                    <span style={{ color: 'var(--acc)' }}>01</span> Category
+                  </span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'bug' as FeedbackType, label: 'Bug', icon: Bug },
+                      { id: 'suggestion' as FeedbackType, label: 'Idea', icon: Sparkles },
+                      { id: 'question' as FeedbackType, label: 'Question', icon: HelpCircle },
+                    ].map((item) => {
+                      const Icon = item.icon;
+                      const isSelected = feedbackType === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => {
+                            soundFX.playClick(600);
+                            setFeedbackType(item.id);
+                          }}
+                          className={`bc-tile ${isSelected ? 'is-selected' : ''} h-11 rounded-lg inline-flex items-center justify-center gap-2 font-mono text-[11px] font-black tracking-[0.12em] uppercase text-slate-200 cursor-pointer`}
+                        >
+                          <Icon className="w-3.5 h-3.5" style={{ color: isSelected ? 'var(--acc)' : '#94a3b8' }} />
+                          {item.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              {/* Description */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-mono font-bold text-neutral-300 uppercase tracking-wider">
-                  Description
+                <label className="flex flex-col gap-2">
+                  <span className="font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-slate-300">
+                    <span style={{ color: 'var(--acc)' }}>02</span> What happened?
+                  </span>
+                  <textarea
+                    required
+                    rows={4}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="What you saw, steps to reproduce, or your idea..."
+                    className={`${fieldClass} p-3 resize-none select-text`}
+                  />
                 </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe what occurred, steps to reproduce, or your gameplay suggestion..."
-                  className="w-full rounded-xl bg-[#121622] border border-white/10 focus:border-[#ccff00]/60 p-3 text-base sm:text-sm font-sans text-white placeholder-neutral-500 focus:outline-none transition-all resize-none"
-                />
-              </div>
 
-              {/* Optional Contact Email */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-mono font-bold text-neutral-300 uppercase tracking-wider">
-                  Contact Email (Optional)
+                <label className="flex flex-col gap-2">
+                  <span className="font-mono text-[10px] font-bold tracking-[0.22em] uppercase text-slate-300">
+                    <span style={{ color: 'var(--acc)' }}>03</span> Email <span className="text-slate-500">(optional)</span>
+                  </span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@domain.com, for a follow-up"
+                    className={`${fieldClass} h-11 px-3 select-text`}
+                  />
                 </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@domain.com for follow-up"
-                  className="min-h-[44px] w-full rounded-xl bg-[#121622] border border-white/10 focus:border-[#ccff00]/60 px-3 py-2 text-base sm:text-sm font-sans text-white placeholder-neutral-500 focus:outline-none transition-all"
-                />
+
+                <span className="font-mono text-[10px] tracking-[0.12em] text-slate-500 uppercase">
+                  Attaches: {currentView || 'hub'} · device info
+                </span>
               </div>
 
-              {/* Silent Metadata Notice */}
-              <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>Includes active arena: {currentView || 'hub'}</span>
-                <span>Silent diagnostics</span>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-2">
+              <div className="shrink-0 grid grid-cols-2 gap-2 px-6 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] border-t border-white/[0.07] bg-black/30">
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="min-h-[44px] py-2 px-4 rounded-xl text-neutral-400 hover:text-white font-mono text-xs uppercase cursor-pointer"
+                  className="bc-btn bc-btn-ghost h-11 rounded-lg font-mono text-[11px] font-black tracking-[0.14em] uppercase cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting || !description.trim()}
-                  className="min-h-[44px] py-2.5 px-5 rounded-xl bg-[#ccff00] hover:bg-[#d8ff33] disabled:opacity-50 text-black font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(204,255,0,0.3)] active:scale-95"
+                  className="bc-btn bc-btn-primary h-11 rounded-lg inline-flex items-center justify-center gap-2 font-mono text-[11px] font-black tracking-[0.14em] uppercase cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>{isSubmitting ? 'Sending...' : 'Submit Report'}</span>
+                  {isSubmitting ? 'Sending...' : 'Send report'}
                 </button>
               </div>
             </form>

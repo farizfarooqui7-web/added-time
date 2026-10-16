@@ -1,5 +1,5 @@
-import React from 'react';
-import { ShieldAlert, ArrowLeft, LogOut } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { ArrowLeft, LogOut, ShieldAlert } from 'lucide-react';
 import { soundFX } from '../utils/audio';
 
 interface ForfeitMatchModalProps {
@@ -17,6 +17,19 @@ export const ForfeitMatchModal: React.FC<ForfeitMatchModalProps> = ({
   title = 'Forfeit Match?',
   description = 'Are you sure you want to leave? Your active progress and match points will be discarded.',
 }) => {
+  // Escape keeps you in the match (the safe choice)
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        soundFX.playClick(650);
+        onStay();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onStay]);
+
   if (!isOpen) return null;
 
   const handleStay = () => {
@@ -34,51 +47,48 @@ export const ForfeitMatchModal: React.FC<ForfeitMatchModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="forfeit-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 select-none"
+      className="bc-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-md select-none"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-2xl bg-[#0c1018] border border-white/10 p-6 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.9)] flex flex-col items-center text-center overflow-hidden animate-in zoom-in-95 duration-200"
+        style={{ ['--acc' as string]: '#ef4444' } as React.CSSProperties}
+        className="bc-scope bc-panel relative w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden"
       >
-        {/* Ambient Top Glow */}
-        <div className="pointer-events-none absolute -top-24 inset-x-0 mx-auto w-48 h-48 rounded-full blur-3xl bg-rose-500/20" />
+        <div className="bc-rail absolute inset-x-0 top-0 h-[2px]" />
+        <div className="bc-lock-stripes absolute inset-x-0 top-0 h-16 opacity-60 pointer-events-none [mask-image:linear-gradient(to_bottom,black,transparent)]" />
 
-        {/* Warning Badge */}
-        <div className="relative w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mb-4 text-rose-400 shadow-[0_0_25px_rgba(244,63,94,0.25)]">
-          <ShieldAlert className="w-7 h-7" />
+        <div className="relative px-6 pt-6 pb-5">
+          <div className="flex items-center gap-2.5 font-mono text-[10px] font-bold tracking-[0.22em] uppercase">
+            <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+            <span className="text-red-400">Match in progress</span>
+          </div>
+          <h3
+            id="forfeit-title"
+            className="mt-2 font-athletic italic font-black text-4xl uppercase text-white leading-[0.9] tracking-tight"
+          >
+            {title}
+          </h3>
+          <p className="mt-3 text-[13px] text-slate-400 leading-snug">{description}</p>
         </div>
 
-        {/* Title */}
-        <h3
-          id="forfeit-title"
-          className="font-sans font-black text-2xl text-white uppercase tracking-tight mb-2"
-        >
-          {title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-xs sm:text-sm font-sans text-neutral-300 leading-relaxed mb-6 max-w-sm">
-          {description}
-        </p>
-
-        {/* Action Buttons */}
-        <div className="w-full flex flex-col-reverse sm:flex-row items-center gap-3">
-          <button
-            type="button"
-            onClick={handleForfeit}
-            className="w-full sm:w-1/2 min-h-[44px] py-3 px-4 rounded-xl bg-rose-600/20 hover:bg-rose-600 border border-rose-500/40 hover:border-rose-500 text-rose-300 hover:text-white font-sans font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(244,63,94,0.2)] active:scale-95"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Leave &amp; Forfeit</span>
-          </button>
-
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-2 px-6 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] border-t border-white/[0.07] bg-black/30">
           <button
             type="button"
             onClick={handleStay}
-            className="w-full sm:w-1/2 min-h-[44px] py-3 px-4 rounded-xl bg-[#ccff00] hover:bg-[#d8ff33] text-black font-sans font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(204,255,0,0.3)] active:scale-95"
+            autoFocus
+            style={{ ['--acc' as string]: '#ccff00' } as React.CSSProperties}
+            className="bc-scope bc-btn bc-btn-primary sm:order-2 h-11 rounded-lg inline-flex items-center justify-center gap-2 font-mono text-[11px] font-black tracking-[0.14em] uppercase cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Stay in Match</span>
+            Stay in match
+          </button>
+          <button
+            type="button"
+            onClick={handleForfeit}
+            className="bc-btn sm:order-1 h-11 rounded-lg inline-flex items-center justify-center gap-2 border border-red-500/45 text-red-300 hover:bg-red-500 hover:text-white hover:border-red-500 font-mono text-[11px] font-black tracking-[0.14em] uppercase cursor-pointer"
+          >
+            <LogOut className="w-4 h-4" />
+            Leave &amp; forfeit
           </button>
         </div>
       </div>

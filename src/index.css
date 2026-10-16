@@ -120,3 +120,109 @@
     opacity: 0.9;
   }
 }
+
+/* =====================================================================
+   Broadcast design kit (hub cards, header, setup modals).
+   Every block reads its accent from the --acc custom property.
+   ===================================================================== */
+.bc-scope {
+  --acc: #ccff00;
+  --acc2: var(--acc);
+  --acc-soft: color-mix(in srgb, var(--acc) 14%, transparent);
+  --acc-line: color-mix(in srgb, var(--acc) 55%, transparent);
+}
+
+/* ---- hub cartridges ---- */
+.hub-card {
+  background: linear-gradient(180deg, #11141c 0%, #0c0f15 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: border-color 220ms ease, box-shadow 260ms ease;
+  outline: none;
+}
+.hub-card:not(.is-locked):hover,
+.hub-card:not(.is-locked):focus-visible {
+  border-color: var(--acc-line);
+  box-shadow: 0 0 0 1px var(--acc-soft), 0 22px 48px -24px color-mix(in srgb, var(--acc) 45%, transparent);
+}
+.hub-card:focus-visible { box-shadow: 0 0 0 2px var(--acc-line); }
+.bc-rail { background: var(--acc); opacity: 0.85; transition: opacity 220ms ease; }
+.hub-card:not(.is-locked):hover .bc-rail { opacity: 1; }
+.hub-mark { color: var(--acc); opacity: 0.05; transition: opacity 260ms ease; }
+.hub-card:not(.is-locked):hover .hub-mark { opacity: 0.09; }
+.bc-sheen {
+  background: radial-gradient(120% 80% at 100% 0%, var(--acc-soft), transparent 55%);
+  opacity: 0.55;
+  transition: opacity 260ms ease;
+}
+.hub-card:not(.is-locked):hover .bc-sheen { opacity: 1; }
+
+/* ---- buttons ---- */
+.bc-btn {
+  transition: transform 380ms cubic-bezier(.34, 1.56, .64, 1), background-color 160ms ease, border-color 160ms ease,
+    color 160ms ease, box-shadow 200ms ease;
+}
+.bc-btn:not(:disabled):hover { transform: translateY(-1px); }
+.bc-btn:not(:disabled):active { transform: scale(0.96); transition-duration: 90ms; }
+.bc-btn:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.bc-btn-primary { background: var(--acc); color: #06080c; }
+.bc-btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--acc) 86%, #ffffff);
+  box-shadow: 0 10px 28px -12px var(--acc);
+}
+.bc-btn-ghost { border: 1px solid rgba(255, 255, 255, 0.12); color: #cbd5e1; }
+.bc-btn-ghost:not(:disabled):hover { border-color: var(--acc-line); color: #ffffff; background: var(--acc-soft); }
+
+.bc-lock-stripes {
+  background-image: repeating-linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0 6px, transparent 6px 12px);
+}
+
+@keyframes bc-radar { 0% { transform: scale(1); opacity: 0.55; } 100% { transform: scale(2.6); opacity: 0; } }
+.bc-radar { animation: bc-radar 2.4s cubic-bezier(0, 0, .2, 1) infinite; }
+
+/* ---- setup modals ---- */
+@keyframes bc-panel-in { from { opacity: 0; transform: translateY(10px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes bc-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.bc-overlay { animation: bc-fade-in 180ms ease-out both; }
+.bc-panel {
+  background: linear-gradient(180deg, #10131b 0%, #0b0e14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.95), 0 0 0 1px var(--acc-soft);
+  animation: bc-panel-in 260ms cubic-bezier(.2, .9, .3, 1.1) both;
+}
+.bc-tile {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 200ms ease, transform 300ms cubic-bezier(.34, 1.56, .64, 1);
+}
+.bc-tile:not(:disabled):hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.04); }
+.bc-tile:not(:disabled):active { transform: scale(0.98); }
+.bc-tile:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.bc-tile.is-selected {
+  border-color: var(--acc-line);
+  background: var(--acc-soft);
+  box-shadow: inset 0 0 0 1px var(--acc-soft), 0 10px 26px -18px var(--acc);
+}
+.bc-tile:disabled { cursor: not-allowed; opacity: 0.5; }
+.bc-tile.is-selected:disabled { opacity: 0.8; }
+.bc-tick { background: var(--acc); box-shadow: 0 0 8px var(--acc); }
+
+.bc-path {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 220ms ease,
+    transform 380ms cubic-bezier(.34, 1.56, .64, 1);
+}
+.bc-path:not(:disabled):hover { border-color: var(--acc-line); background: var(--acc-soft); transform: translateY(-1px); }
+.bc-path:not(:disabled):active { transform: scale(0.98); transition-duration: 90ms; }
+.bc-path:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.bc-path.is-primary { background: var(--acc); border-color: var(--acc); color: #06080c; }
+.bc-path.is-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--acc) 86%, #ffffff);
+  box-shadow: 0 14px 34px -16px var(--acc);
+}
+.bc-path:disabled { cursor: not-allowed; opacity: 0.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-card, .bc-btn, .hub-mark, .bc-sheen, .bc-tile, .bc-path, .bc-panel, .bc-overlay { transition: none; animation: none; }
+  .bc-radar { animation: none; opacity: 0; }
+}

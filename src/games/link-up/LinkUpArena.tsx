@@ -854,11 +854,19 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   }, [isMultiplayer, phase, currentPuzzle.id]);
 
   const lastProcessedEventIdRef = useRef<number | string | null>(null);
+  // Round whose own lock-in the server has echoed back. The match room stamps events in one order for both
+  // players, so "their lock arrived before our echo" means they claimed first on both screens.
+  const ownLockEchoedRoundRef = useRef<number | null>(null);
 
   // Synchronize incoming multiplayer events
   useEffect(() => {
     if (!isMultiplayer || !lastGameEvent) return;
-    if (lastGameEvent.senderId === myPlayerId) return;
+    if (lastGameEvent.senderId === myPlayerId) {
+      if (lastGameEvent.event === 'player_lock_in' && lastGameEvent.data?.roundNumber === roundNumber) {
+        ownLockEchoedRoundRef.current = roundNumber;
+      }
+      return;
+    }
 
     // Process each relayed event exactly once (guards StrictMode double effects & re-deliveries)
     if (lastGameEvent._eventId && lastProcessedEventIdRef.current === lastGameEvent._eventId) return;
@@ -877,7 +885,18 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
         setIsOpponentTyping(false);
 
         if (userSubmittedEval) {
-          finalizeRound(userSubmittedEval, evaluation);
+          // Both locked the same player at once: the later lock in server order loses it
+          const sameAnswer =
+            userSubmittedEval.matchedPlayer &&
+            evaluation.matchedPlayer &&
+            userSubmittedEval.matchedPlayer.id === evaluation.matchedPlayer.id;
+          if (sameAnswer && ownLockEchoedRoundRef.current !== roundNumber) {
+            finalizeRound(voidClaimedAnswer(userSubmittedEval), evaluation);
+          } else if (sameAnswer) {
+            finalizeRound(userSubmittedEval, voidClaimedAnswer(evaluation));
+          } else {
+            finalizeRound(userSubmittedEval, evaluation);
+          }
         } else {
           setPressureTimeLeft(30.0);
         }
@@ -1025,6 +1044,16 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     submitUserChoice(skippedEval);
   };
 
+  // An answer the other side claimed first scores nothing
+  const voidClaimedAnswer = (ev: LinkUpPlayerEvaluation): LinkUpPlayerEvaluation => ({
+    ...ev,
+    playerName: `${ev.playerName} (CLAIMED)`,
+    criteriaMetCount: 0,
+    matchedSlotIndices: [],
+    pointsAwarded: 0,
+    isLinkVerified: false,
+  });
+
   const isPlayerLockedByOpponent = (playerOrName: LinkUpPlayerRecord | string): boolean => {
     if (!opponentLockedIn || !opponentLockedEval || !opponentLockedEval.matchedPlayer) {
       return false;
@@ -1052,14 +1081,14 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     // Check if the selected/typed player is already locked in by the opponent
     if (explicitPlayer && isPlayerLockedByOpponent(explicitPlayer)) {
       soundFX.playVoltBuzz();
-      setTakenWarningMessage(`"${explicitPlayer.name}" was already taken by ${opponentLabel}! Choose another player.`);
+      setTakenWarningMessage(`"${explicitPlayer.name}": answer claimed by ${opponentLabel} — find an alternative!`);
       setTimeout(() => setTakenWarningMessage(null), 3500);
       return;
     }
 
     if (!explicitPlayer && searchInput.trim() && isPlayerLockedByOpponent(searchInput.trim())) {
       soundFX.playVoltBuzz();
-      setTakenWarningMessage(`This player was already taken by ${opponentLabel}! Choose another player.`);
+      setTakenWarningMessage(`Answer claimed by ${opponentLabel} — find an alternative!`);
       setTimeout(() => setTakenWarningMessage(null), 3500);
       return;
     }
@@ -1069,7 +1098,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     // If evaluated player resolved to the opponent's locked player
     if (userEval.matchedPlayer && isPlayerLockedByOpponent(userEval.matchedPlayer)) {
       soundFX.playVoltBuzz();
-      setTakenWarningMessage(`"${userEval.matchedPlayer.name}" was already taken by ${opponentLabel}! Choose another player.`);
+      setTakenWarningMessage(`"${userEval.matchedPlayer.name}": answer claimed by ${opponentLabel} — find an alternative!`);
       setTimeout(() => setTakenWarningMessage(null), 3500);
       return;
     }
@@ -1965,6 +1994,32 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                 <div className="lu-rise lu-chamfer px-4 py-2 bg-rose-950/85 border border-rose-500/70 text-rose-300 font-mono text-xs font-bold flex items-center gap-2">
                   <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
                   <span>{takenWarningMessage}</span>
+                </div>
+              )}
+
+              {/* Rival's locked answer, revealed the moment it lands (it is now claimed for this round) */}
+              {opponentLockedIn && opponentLockedEval && (
+                <div className="lu-rise lu-chamfer px-3 py-2 bg-[#00f0ff]/[0.07] border border-[#00f0ff]/45 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="block font-mono text-[9px] font-black tracking-[0.25em] text-[#00f0ff]/80 uppercase">
+                      {opponentLabel} locked in
+                    </span>
+                    <span className="block font-athletic italic font-black text-lg sm:text-xl text-white uppercase leading-tight truncate">
+                      {opponentLockedEval.skipped ? 'Skipped' : opponentLockedEval.matchedPlayer?.name ?? opponentLockedEval.playerName}
+                    </span>
+                  </div>
+                  {!opponentLockedEval.skipped && (
+                    <div className="shrink-0 flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-bold text-slate-300">
+                        {opponentLockedEval.criteriaMetCount}/3
+                      </span>
+                      {opponentLockedEval.matchedPlayer && (
+                        <span className="px-1.5 py-0.5 bg-[#00f0ff] text-black font-mono text-[9px] font-black tracking-wider">
+                          CLAIMED
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
