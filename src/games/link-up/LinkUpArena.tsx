@@ -17,6 +17,9 @@ import {
 } from './puzzleEngine';
 import { POSITION_META } from './clubAssets';
 import { soundFX } from '../../utils/audio';
+import { useRecordMatch } from '../../utils/stats';
+import { linkUpShareText, type LinkUpRoundMark } from '../../utils/share';
+import { ShareResultButton } from '../../components/ShareResultButton';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
@@ -736,6 +739,12 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
   const [userScore, setUserScore] = useState<number>(0);
   const [opponentScore, setOpponentScore] = useState<number>(0);
   const [roundHistory, setRoundHistory] = useState<LinkUpRoundResult[]>([]);
+  // Lock-in timing for "Fastest link": when the current round went live, and the best verified lock this match
+  const playingSinceRef = useRef(Date.now());
+  const fastestLockRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (phase === 'playing') playingSinceRef.current = Date.now();
+  }, [phase, roundNumber]);
 
   // 30s Pressure Timer State (triggers ONLY after opponent locks in an answer)
   const [opponentLockedIn, setOpponentLockedIn] = useState<boolean>(false);
@@ -1122,6 +1131,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
 
     if (userEval.isLinkVerified) {
       soundFX.playSuccess();
+      const lockSeconds = (Date.now() - playingSinceRef.current) / 1000;
+      if (fastestLockRef.current === undefined || lockSeconds < fastestLockRef.current) {
+        fastestLockRef.current = Math.round(lockSeconds * 10) / 10;
+      }
     } else if (userEval.criteriaMetCount > 0) {
       soundFX.playClick(750);
     } else {
@@ -1270,6 +1283,7 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     setUserScore(0);
     setOpponentScore(0);
     setRoundHistory([]);
+    fastestLockRef.current = undefined;
     setSearchInput('');
     setSuggestions([]);
     setLastRoundResult(null);
@@ -1451,6 +1465,25 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
     }, 60);
   }, [phase, lastRoundResult]);
 
+  // Locker Room: career stats + post-match share card
+  const matchOutcome = userScore > opponentScore ? 'win' : userScore < opponentScore ? 'loss' : 'draw';
+  useRecordMatch(phase === 'match-over', () => ({
+    mode: 'linkup',
+    outcome: matchOutcome,
+    bests: { score: userScore, lock: fastestLockRef.current },
+  }));
+  const getShareText = () =>
+    linkUpShareText({
+      outcome: matchOutcome,
+      userScore,
+      opponentScore,
+      opponentName: opponentLabel,
+      fastestLock: fastestLockRef.current,
+      rounds: roundHistory.map(({ userEval: e }): LinkUpRoundMark =>
+        e.skipped ? 'skip' : e.isLinkVerified ? 'verified' : e.criteriaMetCount > 0 ? 'partial' : 'miss'
+      ),
+    });
+
   // Full-time confetti for the winner.
   useEffect(() => {
     if (phase !== 'match-over' || userScore < opponentScore) return;
@@ -1625,6 +1658,10 @@ export const LinkUpArena: React.FC<LinkUpArenaProps> = ({ config, onExitArena })
                   : 'PLAY AGAIN'}
               </span>
             </button>
+            <ShareResultButton
+              getText={getShareText}
+              className="lu-press lu-chamfer px-7 py-3 bg-[#ccff00]/10 hover:bg-[#ccff00]/20 border border-[#ccff00]/50 text-[#ccff00] font-athletic italic font-black text-base md:text-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer"
+            />
             <button
               type="button"
               onClick={() => {

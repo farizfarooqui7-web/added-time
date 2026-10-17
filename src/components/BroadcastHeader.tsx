@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Users, Crown } from 'lucide-react';
+import { Volume2, VolumeX, Users, Crown, Trophy } from 'lucide-react';
+import { openLockerRoom } from './LockerRoom';
 import { soundFX } from '../utils/audio';
 import { useParty } from '../context/PartyContext';
 
@@ -73,6 +74,15 @@ export const BroadcastHeader: React.FC<BroadcastHeaderProps> = ({
 
       {/* Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={openLockerRoom}
+          className={`${iconBtn} hidden sm:flex`}
+          title="Locker Room: your career stats"
+          aria-label="Open Locker Room"
+        >
+          <Trophy className="w-4 h-4" />
+        </button>
         <button
           type="button"
           onClick={handleToggleSfx}

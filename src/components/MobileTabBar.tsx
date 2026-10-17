@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bug, Gamepad2, UserPlus, Users } from 'lucide-react';
+import { Bug, Gamepad2, Trophy, UserPlus, Users } from 'lucide-react';
+import { openLockerRoom } from './LockerRoom';
 import { useParty } from '../context/PartyContext';
 import { soundFX } from '../utils/audio';
 
@@ -44,6 +45,7 @@ export const MobileTabBar: React.FC<MobileTabBarProps> = ({ onHostParty, onJoinC
       },
     },
     { key: 'join', label: 'Join', icon: UserPlus, onClick: onJoinCode },
+    { key: 'locker', label: 'Locker', icon: Trophy, onClick: openLockerRoom },
     {
       key: 'report',
       label: 'Report',
@@ -58,7 +60,7 @@ export const MobileTabBar: React.FC<MobileTabBarProps> = ({ onHostParty, onJoinC
       style={{ ['--acc' as string]: '#ccff00' } as React.CSSProperties}
       className="bc-scope sm:hidden fixed inset-x-0 bottom-0 z-30 border-t border-white/[0.08] bg-[#090b10]/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]"
     >
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-5">
         {items.map(({ key, label, icon: Icon, active, badge, onClick }) => (
           <button
             key={key}

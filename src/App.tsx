@@ -18,6 +18,7 @@ import { SoloEscapeHatchModal } from './components/SoloEscapeHatchModal';
 import { MatchmakingOverlay } from './components/MatchmakingOverlay';
 import { FeedbackWidget } from './components/FeedbackWidget';
 import { MobileTabBar } from './components/MobileTabBar';
+import { LockerRoom } from './components/LockerRoom';
 import { useParty } from './context/PartyContext';
 import { GAME_MODES } from './data/gameModes';
 import type { GameModeInfo } from './types';
@@ -525,6 +526,7 @@ export function App() {
 
       {/* Persistent Bug Reporting & Feedback Widget */}
       <MobileTabBar onHostParty={handleHostParty} onJoinCode={handleJoinCode} />
+      <LockerRoom />
       <FeedbackWidget currentView={viewMode} />
     </div>
   );

@@ -263,3 +263,16 @@
 :is(.ax-holo, .ax-carbon, .ax-scan, .lu-scan-y) {
   display: none !important;
 }
+
+/* Share-result toast: pops up, holds, fades (see ShareResultButton) */
+@keyframes shareToast {
+  0% { opacity: 0; transform: translate(-50%, 16px) scale(0.92); }
+  10% { opacity: 1; transform: translate(-50%, 0) scale(1.04); }
+  16% { transform: translate(-50%, 0) scale(1); }
+  84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -6px) scale(1); }
+}
+.share-toast { transform: translateX(-50%); animation: shareToast 2.3s cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .share-toast { animation: none; }
+}

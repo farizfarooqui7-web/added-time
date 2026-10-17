@@ -27,6 +27,9 @@ import {
   getBallKnowerRating,
 } from './sideNettingEngine';
 import { soundFX } from '../../utils/audio';
+import { useRecordMatch } from '../../utils/stats';
+import { sideNettingShareText } from '../../utils/share';
+import { ShareResultButton } from '../../components/ShareResultButton';
 import { useGameSync } from '../../context/PartyContext';
 import { MultiplayerForfeitModal } from '../../components/MultiplayerForfeitModal';
 import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
@@ -2426,6 +2429,24 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
   const [totalScore, setTotalScore] = useState<number>(0);
   const [maxDepthReached, setMaxDepthReached] = useState<number>(0);
   const [roundResults, setRoundResults] = useState<SideNettingRoundResult[]>([]);
+
+  // Locker Room: career stats + post-match share card (solo drills count as played, not won/lost)
+  const matchOutcome = !isMultiplayer
+    ? 'solo'
+    : totalScore > opponentTotalScore
+    ? 'win'
+    : totalScore < opponentTotalScore
+    ? 'loss'
+    : 'draw';
+  useRecordMatch(diveState === 'game-over', () => ({ mode: 'sidenetting', outcome: matchOutcome, bests: { score: totalScore } }));
+  const getShareText = () =>
+    sideNettingShareText({
+      outcome: matchOutcome,
+      score: totalScore,
+      opponentScore: isMultiplayer ? opponentTotalScore : undefined,
+      opponentName: isMultiplayer ? opponent?.name : undefined,
+      rounds: roundResults.map((r) => (r.submission.isValid ? r.submission.tier : 'Miss')),
+    });
   const [showForfeitModal, setShowForfeitModal] = useState<boolean>(false);
 
   // Strike completion, post-round popup & rematch states
@@ -3537,6 +3558,11 @@ export const SideNettingArena: React.FC<SideNettingArenaProps> = ({
                   AVG {avgScore} PTS
                 </span>
               </div>
+
+              <ShareResultButton
+                getText={getShareText}
+                className="w-full mb-3 py-3 bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20 border border-[#00f0ff]/50 text-[#00f0ff] font-athletic italic font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer"
+              />
 
               {/* Actions */}
               <div className="flex items-stretch gap-3">

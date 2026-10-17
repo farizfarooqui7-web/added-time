@@ -33,6 +33,9 @@ import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import { useKeyboardKeeper, keepTypingFocus } from '../../hooks/useKeyboardKeeper';
 import { soundFX } from '../../utils/audio';
+import { useRecordMatch } from '../../utils/stats';
+import { recordBooksShareText } from '../../utils/share';
+import { ShareResultButton } from '../../components/ShareResultButton';
 
 /* ============================================================================
  * HALL OF FAME — palette & helpers
@@ -1287,6 +1290,22 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
     restartClass(consoleRef.current, 'rb-shake');
   }, [duplicateWarning]);
 
+  // Locker Room: career stats + post-match share card
+  const matchOutcome =
+    userTotalScore > opponentTotalScore ? 'win' : userTotalScore < opponentTotalScore ? 'loss' : 'draw';
+  useRecordMatch(isMatchOver, () => ({ mode: 'recordbooks', outcome: matchOutcome, bests: { goals: userTotalScore } }));
+  const getShareText = () =>
+    recordBooksShareText({
+      outcome: matchOutcome,
+      userTotal: userTotalScore,
+      opponentTotal: opponentTotalScore,
+      opponentName: opponentLabel,
+      unit: 'goals',
+      rounds: roundHistory.map(({ userEval: u, opponentEval: o }) =>
+        u.statCount > o.statCount ? 'win' : u.statCount < o.statCount ? 'loss' : 'draw'
+      ),
+    });
+
   // Full-time confetti for a victory.
   useEffect(() => {
     if (!isMatchOver || userTotalScore <= opponentTotalScore) return;
@@ -1460,6 +1479,11 @@ export const RecordBooksArena: React.FC<RecordBooksArenaProps> = ({
               );
             })}
           </div>
+
+          <ShareResultButton
+            getText={getShareText}
+            className="rb-press rb-chamfer w-full mb-3 py-3 bg-[#ff9f1c]/10 hover:bg-[#ff9f1c]/20 border border-[#ff9f1c]/50 text-[#ffc46b] font-athletic italic font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer"
+          />
 
           {/* Rematch / Exit Actions */}
           <div className="flex items-stretch gap-3">

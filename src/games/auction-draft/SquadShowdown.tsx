@@ -4,6 +4,9 @@ import type { PositionCategory } from '../../types';
 import { getSquadAverageOvr } from './formations';
 import { soundFX } from '../../utils/audio';
 import { RotateCcw, Home, ChevronRight, Zap, User } from 'lucide-react';
+import { useRecordMatch } from '../../utils/stats';
+import { auctionShareText } from '../../utils/share';
+import { ShareResultButton } from '../../components/ShareResultButton';
 
 interface SquadShowdownProps {
   userState: ManagerState;
@@ -40,6 +43,25 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
   const isUserWinner = userAvgOvr > botAvgOvr;
   const isBotWinner = botAvgOvr > userAvgOvr;
   const isComplete = revealedSlotCount >= 5;
+  const outcome = isUserWinner ? 'win' : isBotWinner ? 'loss' : 'draw';
+
+  // The result is settled the moment the showdown mounts (the reveal is just theatre)
+  useRecordMatch(true, () => ({ mode: 'auction', outcome, bests: { rating: userAvgOvr } }));
+
+  const getShareText = () =>
+    auctionShareText({
+      outcome,
+      rating: userAvgOvr,
+      opponentRating: botAvgOvr,
+      bankLeft: userState.bankroll,
+      squad: userState.slots
+        .filter((slot) => slot.filledPlayer)
+        .map((slot) => ({
+          position: slot.position,
+          name: slot.filledPlayer!.displayName || slot.filledPlayer!.name,
+          cost: slot.cost,
+        })),
+    });
 
   // Auto-advance reveal sequence every 2.4 seconds until all 5 slots are revealed
   useEffect(() => {
@@ -265,6 +287,8 @@ export const SquadShowdown: React.FC<SquadShowdownProps> = ({
                   : '[ RUN IT BACK ]'}
               </span>
             </button>
+
+            <ShareResultButton getText={getShareText} />
 
             {/* Return to Hub Button */}
             <button

@@ -44,6 +44,9 @@ import { ForfeitMatchModal } from '../../components/ForfeitMatchModal';
 import { useArenaBackGuard } from '../../hooks/useArenaBackGuard';
 import { useIsPhone } from '../../utils/viewport';
 import { soundFX } from '../../utils/audio';
+import { useRecordMatch } from '../../utils/stats';
+import { imposterShareText } from '../../utils/share';
+import { ShareResultButton } from '../../components/ShareResultButton';
 
 /* ============================================================================
  * CLASSIFIED TRIBUNAL — palette & helpers
@@ -1889,6 +1892,22 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
 
   const crewWonMatch = imposterCaught && !imposterStolenWin;
 
+  // Locker Room: career stats + post-match share card
+  const userWasImposter = Boolean(userParticipant?.isImposter);
+  const userWonMatch = userWasImposter ? !crewWonMatch : crewWonMatch;
+  useRecordMatch(stage === 'game-over', () => ({
+    mode: 'imposter',
+    outcome: userWonMatch ? 'win' : 'loss',
+    counts: { bluffs: userWasImposter && userWonMatch ? 1 : 0 },
+  }));
+  const getShareText = () =>
+    imposterShareText({
+      wasImposter: userWasImposter,
+      won: userWonMatch,
+      secretName: secretPlayer.name,
+      players: participants.length,
+    });
+
   /* ======================================================================
    * VISUAL CHOREOGRAPHY LAYER
    * Presentation-only refs, state & effects. They react to the tribunal
@@ -3439,6 +3458,11 @@ export const ImposterArena: React.FC<ImposterArenaProps> = ({
                   </p>
                 </div>
               </div>
+
+              <ShareResultButton
+                getText={getShareText}
+                className="im-press im-chamfer w-full mb-3 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 text-red-300 font-athletic italic font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer"
+              />
 
               <div className="flex items-stretch gap-3">
                 <button
